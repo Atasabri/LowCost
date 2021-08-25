@@ -1,0 +1,78 @@
+﻿@model PagedResult<ListingOrderViewModel>
+@{ 
+    ViewBag.Title = "Orders";
+    var pagingModel = new DashboardPagination() 
+    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount };
+
+}
+<h2>Orders</h2>
+
+<form class="form-inline my-2 my-lg-0">
+    <input class="form-control" name="id" type="search" placeholder="Enter Order Id" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+</form>
+<table class="table" id="ordertbl">
+    <caption>Page Number (@(Model.PageNumber))</caption>
+    <thead>
+        <tr>
+            <th scope="col">Order ID</th>
+            <th scope="col">Date</th>
+            <th scope="col">Paid</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Items)
+        {
+        <tr id="@item.Id">
+            <th scope="row">#@item.Id</th>
+            <td>@item.DateTime.ToString("dd-MM-yyyy HH:mm")</td>
+            <td>@Html.DisplayFor(model => item.Paid)</td>
+            <td>
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                <a class="btn btn-add" target="_blank" asp-action="AddStatus" asp-route-id="@item.Id">Add Status</a>
+                @if (string.IsNullOrEmpty(item.Driver_Id))
+                {
+                    <a class="btn btn-add" target="_blank" asp-action="AssignDriver" asp-route-id="@item.Id"> Assign Driver</a>
+                }
+                else
+                {
+                    <a class="btn btn-add" target="_blank" asp-action="AssignDriver" asp-route-id="@item.Id"> Change Driver</a>
+                }
+                @if (!item.Closed)
+                {
+                    <a id="close@(item.Id)" class="btn btn-danger" onclick="Close(@(item.Id));">Close</a>
+                }
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<partial name="Partials/_Pagination" model="pagingModel" />
+<script>
+    function Close(i) {
+
+        var Confirmed = confirm('Are You Sure You Want To Close This Order ??');
+
+        if (Confirmed == true) {
+            $.post("@Url.Action("Close", "Orders")", {
+
+                id: i
+            },
+                function (data) {
+                    if (data === 0) {
+                        alert("Error in Close Order")
+                    }
+                    if (typeof data == 'string') {
+                        alert(data);
+                    }
+                    $("#close" + data + "").remove();
+        }
+
+          )
+        }
+    }
+
+</script>

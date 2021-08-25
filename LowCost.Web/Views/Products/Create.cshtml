@@ -1,0 +1,196 @@
+﻿@model AddProductViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Add New Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name_AR" class="control-label"></label>
+                <input asp-for="Name_AR" class="form-control" />
+                <span asp-validation-for="Name_AR" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Serial_Number" class="control-label"></label>
+                <input asp-for="Serial_Number" class="form-control" />
+                <span asp-validation-for="Serial_Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Main Category</label>
+                <select id="MainCategory" onclick="GetCategories();" asp-items="@(new SelectList(ViewBag.MainCategories, "Id", "Name"))" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Category</label>
+                <span id="message" style="display:none;color:blue">Loading .....</span>
+                <select id="Category_Id" onclick="GetSubCategories();" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubCategory_Id" class="control-label"></label>
+                <span id="subCatMessage" style="display:none;color:blue">Loading .....</span>
+                <select asp-for="SubCategory_Id" class="form-control"></select>
+                <span asp-validation-for="SubCategory_Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Brand_Id" class="control-label"></label>
+                <select asp-for="Brand_Id" asp-items="@(new SelectList(ViewBag.Brands, "Id", "Name"))" class="form-control"></select>
+                <span asp-validation-for="Brand_Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Offer_Id" class="control-label"></label>
+                <select asp-for="Offer_Id" asp-items="@(new SelectList(ViewBag.Offers, "Id", "Name"))" class="form-control"></select>
+                <span asp-validation-for="Offer_Id" class="text-danger"></span>
+            </div>
+
+            <div class="form-row" style="width:1000px">
+                <div class="col">
+                    <input id="price" type="number" class="form-control" placeholder="Price">
+                </div>
+                <div class="col">
+                    <input id="oldprice" type="number" class="form-control" placeholder="Old Price">
+                </div>
+                <div class="col">
+                    <select id="marketId" asp-items="@(new SelectList(ViewBag.Markets, "Id", "Name"))" class="form-control"></select>
+                </div>
+                <div class="col">
+                    <input onclick="AddPrice();" type="button" class="btn btn-block" value="Add Price" />
+                </div>
+            </div>
+            <table class="table" style="width:1000px">
+                <thead>
+                    <tr>
+                        <th scope="col">Price</th>
+                        <th scope="col">Old Price</th>
+                        <th scope="col">Market</th>
+                    </tr>
+                </thead>
+                <tbody id="tbl">
+                </tbody>
+            </table>
+            <div class="form-group">
+                <label asp-for="Photo" class="control-label"></label>
+                <input asp-for="Photo" class="form-control" />
+                <span asp-validation-for="Photo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    function GetCategories() {
+        $("#Category_Id").html("")
+        $("#message").css("display", "block")
+
+            $.post("@Url.Action("CategoriesUsingMainCatId", "Categories")", {
+
+                mainCatId: $("#MainCategory").val()
+            },
+                function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $("#Category_Id").append("<option value=" + data[i].id + ">" + data[i].name + "</option>")
+                    }
+                    $("#message").css("display", "none")
+        }
+
+          )
+    }
+        function GetSubCategories() {
+        $("#SubCategory_Id").html("")
+            $("#subCatMessage").css("display", "block")
+
+            $.post("@Url.Action("SubCategoriesUsingCatId", "SubCategories")", {
+
+                catId: $("#Category_Id").val()
+            },
+                function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $("#SubCategory_Id").append("<option value=" + data[i].id + ">" + data[i].name + "</option>")
+                    }
+                    $("#subCatMessage").css("display", "none")
+        }
+
+          )
+    }
+
+    var prices = [];
+    function AddPrice() {
+        var price = $("#price").val();
+        if (price == "") {
+            alert("Please Add Price.")
+            return false;
+        }
+        var oldprice = $("#oldprice").val();
+        var marketId = $("#marketId").val();
+        var marketName = $("#marketId option:selected").text();
+
+        prices.push({ price: price, oldprice: oldprice, marketId: marketId, marketName: marketName });
+
+        $("#tbl").html("")
+        prices.forEach((item, index) =>
+            $("#tbl").append("<tr><td>"
+                + item.price +
+                "</td><td>"
+                + item.oldprice +
+                "</td><td>"
+                + item.marketName +
+                "</td><td><input onclick='DeletePrice("
+                + index +
+                ");' type='button' class='btn btn-danger' value='Delete' /><input name='Prices["
+                + index +
+                "].Price' value='"
+                + item.price + "' type='hidden' /><input name='Prices["
+                + index + "].OldPrice' value='"
+                + item.oldprice + "' type='hidden' /><input name='Prices["
+                + index + "].Market_Id' value='"
+                + item.marketId + "' type='hidden' /></td></tr>")
+        )
+        $("#price").val("")
+        $("#oldprice").val("")
+    }
+    function DeletePrice(i) {
+
+        prices.splice(i, 1)
+
+        $("#tbl").html("")
+        prices.forEach((item, index) =>
+            $("#tbl").append("<tr><td>"
+                + item.price +
+                "</td><td>"
+                + item.oldprice +
+                "</td><td>"
+                + item.marketName +
+                "</td><td><input onclick='DeletePrice("
+                + index +
+                ");' type='button' class='btn btn-danger' value='Delete' /><input name='Prices["
+                + index +
+                "].Price' value='"
+                + item.price + "' type='hidden' /><input name='Prices["
+                + index + "].OldPrice' value='"
+                + item.oldprice + "' type='hidden' /><input name='Prices["
+                + index + "].Market_Id' value='"
+                + item.marketId + "' type='hidden' /></td></tr>")        )
+    }
+
+</script>
+
+
+

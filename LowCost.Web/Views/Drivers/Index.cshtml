@@ -1,0 +1,64 @@
+﻿@model PagedResult<DriverViewModel>
+@{ 
+    int counter = 1;
+    ViewBag.Title = "Drivers";
+    var pagingModel = new DashboardPagination() 
+    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount };
+
+}
+<h2>Drivers</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-add"> New Driver </a>
+</p>
+
+<table class="table" id="tbl">
+    <caption>Page Number (@(Model.PageNumber))</caption>
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Items)
+        {
+        <tr id="@item.Id">
+            <th scope="row">@(counter++)</th>
+            <td>@item.FullName</td>
+            <td>@item.Email</td>
+            <td>@item.Phone</td>
+            <td>
+                <a class="btn btn-danger" onclick="Delete('@(item.Id)');">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<partial name="Partials/_Pagination" model="pagingModel" />
+<script>
+    function Delete(i) {
+
+        var Confirmed = confirm('Are You Sure You Want To Delete This Driver ??');
+
+        if (Confirmed == true) {
+            $.post("@Url.Action("Delete", "Drivers")", {
+
+                id: i
+            },
+                function (data) {
+                    if (data === 0) {
+                        alert("Error in Delete Driver")
+                    }
+                   $("#tbl tr#" + data + "").remove();
+            }
+          )
+        }
+    }
+
+</script>

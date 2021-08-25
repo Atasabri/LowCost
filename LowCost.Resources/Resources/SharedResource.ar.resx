@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="&quot;Can Not Login .. Invalid Email Or Password !!" xml:space="preserve">
+    <value>برجاء التأكد من البريد الالكتروني او كلمة السر </value>
+  </data>
+  <data name="A user with this login already exists." xml:space="preserve">
+    <value>يوجد بالفعل مستخدم مع التسجيل الخارجي هذا.</value>
+  </data>
+  <data name="An unknown failure has occurred." xml:space="preserve">
+    <value>حدث خطأ ما غير معروف</value>
+  </data>
+  <data name="Can Not Create This Order !" xml:space="preserve">
+    <value>لا يمكن انشاء هذا الطلب</value>
+  </data>
+  <data name="Can Not Find This Address" xml:space="preserve">
+    <value>هذا العنوان غير موجود</value>
+  </data>
+  <data name="Can Not Find This Payment Method" xml:space="preserve">
+    <value>طريقة الدفع غير موجودة</value>
+  </data>
+  <data name="Can Not Finish Order" xml:space="preserve">
+    <value>لا يمكن انهاء الطلب</value>
+  </data>
+  <data name="Can Not Found Price With This Product And Market" xml:space="preserve">
+    <value>لا يوجد سعر لهذا المنتج في الماركت المرسل</value>
+  </data>
+  <data name="Can Not Found This Promo Code !" xml:space="preserve">
+    <value>كود الخصم الذي ادخلت غير صحيح</value>
+  </data>
+  <data name="Can Not Start Order" xml:space="preserve">
+    <value>لا يمكن بدأ الطلب</value>
+  </data>
+  <data name="Email '{0}' is already taken." xml:space="preserve">
+    <value>البريد الالكتروني '{0}' مستخدم بالفعل</value>
+  </data>
+  <data name="Email '{0}' is invalid." xml:space="preserve">
+    <value>البريد الإلكتروني '{0}' غير صالح.</value>
+  </data>
+  <data name="Error In Adding Product To Favorites !" xml:space="preserve">
+    <value>حدث خطأ في اضافة هذا المنتج الي المفضلة</value>
+  </data>
+  <data name="Error in Adding This Address !" xml:space="preserve">
+    <value>حدث خطأ في اضافة هذا العنوان</value>
+  </data>
+  <data name="Error in Adding This Payment Method !" xml:space="preserve">
+    <value>حدث خطأ في اضافة طريقة الدفع</value>
+  </data>
+  <data name="Error In Delete This Address" xml:space="preserve">
+    <value>حدث خطأ في مسح هذا العنوان</value>
+  </data>
+  <data name="Error In Delete This Payment Method" xml:space="preserve">
+    <value>حدث خطأ عند مسح طريقة الدفع</value>
+  </data>
+  <data name="Error In Deleting Product To Favorites !" xml:space="preserve">
+    <value>حدث خطأ عند مسح المنتج من المفضلة</value>
+  </data>
+  <data name="Incorrect password." xml:space="preserve">
+    <value>كلمة المرور غير صحيحة</value>
+  </data>
+  <data name="Invalid token." xml:space="preserve">
+    <value>رمز غير صالح.</value>
+  </data>
+  <data name="Lockout is not enabled for this user." xml:space="preserve">
+    <value>لم يتم تمكين القفل لهذا المستخدم.</value>
+  </data>
+  <data name="New Order Assigned to You #{0}" xml:space="preserve">
+    <value>لديك طلب جديد يجب توصيله #{0}</value>
+  </data>
+  <data name="No User With Phone '{0}'" xml:space="preserve">
+    <value>لا يوجد مستخدم بهذا الهاتف '{0}'</value>
+  </data>
+  <data name="Optimistic concurrency failure, object has been modified." xml:space="preserve">
+    <value>فشل التزامن المتفائل ، تم تعديل الكائن.</value>
+  </data>
+  <data name="Order #{0}" xml:space="preserve">
+    <value>الطلب #{0}</value>
+  </data>
+  <data name="Order With Id #{0} Assigned To Driver" xml:space="preserve">
+    <value>تم تحديد سائق لطلبك #{0}</value>
+  </data>
+  <data name="Order With Id #{0} Status Changes" xml:space="preserve">
+    <value>تم تغير حالة الطلب #{0} الخاص بك</value>
+  </data>
+  <data name="Passwords must be at least {0} characters." xml:space="preserve">
+    <value>يجب أن تتكون كلمات المرور من {0} حرف على الأقل.</value>
+  </data>
+  <data name="Passwords must have at least one digit ('0'-'9')." xml:space="preserve">
+    <value>يجب أن تحتوي كلمات المرور على رقم واحد على الأقل ('0' - '9').</value>
+  </data>
+  <data name="Passwords must have at least one lowercase ('a'-'z')." xml:space="preserve">
+    <value>يجب أن تحتوي كلمات المرور على حرف صغير واحد على الأقل ('a' - 'z').</value>
+  </data>
+  <data name="Passwords must have at least one non alphanumeric character." xml:space="preserve">
+    <value>يجب أن تحتوي كلمات المرور على حرف واحد غير أبجدي رقمي على الأقل.</value>
+  </data>
+  <data name="Passwords must have at least one uppercase ('A'-'Z')." xml:space="preserve">
+    <value>يجب أن تحتوي كلمات المرور على حرف كبير واحد على الأقل ('A' - 'Z').</value>
+  </data>
+  <data name="Phone Number '{0}' already taken." xml:space="preserve">
+    <value>رقم الهاتف '{0}' مستخدم بالفعل</value>
+  </data>
+  <data name="Phone Number '{0}' is invalid." xml:space="preserve">
+    <value>رقم الهاتف '{0}' غير صالح</value>
+  </data>
+  <data name="Phone Number Is Unique." xml:space="preserve">
+    <value>يجب ادخال رقم الهاتف</value>
+  </data>
+  <data name="Please Add Quantity For Product '{0}' In Market '{1}'" xml:space="preserve">
+    <value>من فضلك قم باضافة كمية للمنتج '{0}' الموجود في المتجر '{1}'</value>
+  </data>
+  <data name="Role name '{0}' is already taken." xml:space="preserve">
+    <value>نوع المستخدمين '{0}' مستخدم بالفعل.</value>
+  </data>
+  <data name="Role name '{0}' is invalid." xml:space="preserve">
+    <value>اسم نوع المستخدم '{0}' غير صالح.</value>
+  </data>
+  <data name="There Is No Price With Product Id '{0}' and Market Id '{1}'" xml:space="preserve">
+    <value>لا يوجد سعر بالمنتج '{0}'  في المتجر '{1}'</value>
+  </data>
+  <data name="This Product Is Added To Favorites Before !" xml:space="preserve">
+    <value>هذا المنتج موجود بالفعل في المفضلة</value>
+  </data>
+  <data name="This Product Not Added To Favorites Before !" xml:space="preserve">
+    <value>هذا المنتج غير موجود في المفضلة</value>
+  </data>
+  <data name="To Order Zero With Cost Items You Must Order More Than {0} LE" xml:space="preserve">
+    <value>لكي تطلب منتجات مجانية يجب ان يكون الاوردر قيمته اعلي من {0} جنيه</value>
+  </data>
+  <data name="User already has a password set." xml:space="preserve">
+    <value>تم تعيين كلمة مرور للمستخدم بالفعل.</value>
+  </data>
+  <data name="User already in role '{0}'." xml:space="preserve">
+    <value>المستخدم بالفعل في النوع'{0}'.</value>
+  </data>
+  <data name="User is not in role '{0}'." xml:space="preserve">
+    <value>المستخدم ليس في النوع'{0}'.</value>
+  </data>
+  <data name="User Name '{0}' is already taken." xml:space="preserve">
+    <value>اسم المستخدم '{0}' مستخدم بالفعل.</value>
+  </data>
+  <data name="User name '{0}' is invalid, can only contain letters or digits." xml:space="preserve">
+    <value>اسم المستخدم '{0}' غير صالح ، يمكن أن يحتوي فقط على أحرف أو أرقام.</value>
+  </data>
+  <data name="User With This Phone Not Found" xml:space="preserve">
+    <value>لا يوجد مستخدم بهذا الهاتف</value>
+  </data>
+  <data name="Verification Code : {0}" xml:space="preserve">
+    <value>كود التأكيد : {0}</value>
+  </data>
+  <data name="You Can Not Order Product With Zero Price Only !" xml:space="preserve">
+    <value>لا يمكن انشاء طلب يحتوي منتج واحد مجاني</value>
+  </data>
+  <data name="You Can Order Only One Product With Zero Cost" xml:space="preserve">
+    <value>لا يمكن انشاء طلب يحتوي علي أكثر من منتج  واحد مجاني</value>
+  </data>
+  <data name="Your Cart Is Empty , Please Add Products" xml:space="preserve">
+    <value>السلة الخاصة بك فارغة . من فضلك قم باضافة منتجات الي السلة</value>
+  </data>
+  <data name="Your Order '{0}' has been completed" xml:space="preserve">
+    <value>'{0}' لقد تم الانتهاء من طلبك</value>
+  </data>
+  <data name="Your order '{0}' has been delivered" xml:space="preserve">
+    <value>'{0}' لقد تم البدء في توصيل طلبك</value>
+  </data>
+</root>

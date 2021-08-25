@@ -1,0 +1,50 @@
+﻿@model IEnumerable<OrderStatusesViewModel>
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Add New Order Status</h4>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddStatus">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input name="Order_Id" value="@ViewBag.Order_Id" type="hidden" />
+            <div class="form-group">
+                <label class="control-label">Status</label>
+                <select name="Status_Id" class="form-control" asp-items="@(new SelectList(ViewBag.Statuses, "Id", "Name"))"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Date Time</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody id="tbl">
+        @foreach (var item in Model.OrderBy(status => status.DateTime))
+        {
+            <tr>
+                <td>@item.DateTime.ToString("dd-MM-yyyy HH:mm")</td>
+                <td>@item.Status</td>
+            </tr>
+        }
+
+    </tbody>
+</table>

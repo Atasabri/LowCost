@@ -1,0 +1,35 @@
+﻿@model OrderViewModel
+
+@{
+    ViewData["Title"] = "Assign Driver To Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Assign Driver</h1>
+
+<h4>Assign Driver To Order #@Model.Id</h4>
+@if(!string.IsNullOrEmpty(Model.Driver_Id))
+{
+    <h4 style="color:red">This Order is Assigned To Driver @Model.DriverName</h4>
+}
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AssignDriver">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input name="Order_Id" value="@Model.Id" type="hidden" class="form-control" />
+            <div class="form-group">
+                <label class="control-label">Driver</label>
+                <select name="Driver_Id" class="form-control" asp-items="@(new SelectList(ViewBag.Drivers, "Id", "FullName", Model.Driver_Id))"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>LowCost Control - @ViewBag.Title</title>
+
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/toast.style.css" rel="stylesheet" />
+</head>
+<body>
+    @{
+        bool isAdmin = User.IsInRole(Admin.AdminRoleName);
+     }
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Low Cost Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (isAdmin)
+                    {
+                        <li class="nav-item">
+                            <a asp-controller="Admins" asp-action="Index" class="nav-link">Admins <span class="sr-only"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Editors" asp-action="Index" class="nav-link">Editors <span class="sr-only"></span></a>
+                        </li>
+                    }
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Categories
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" asp-controller="MainCategories" asp-action="Index">Main Categories</a>
+                            <a class="dropdown-item" asp-controller="Categories" asp-action="Index">Categories</a>
+                            <a class="dropdown-item" asp-controller="SubCategories" asp-action="Index">Sub Categories</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Products" asp-action="Index">Products <span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Orders <span class="badge badge-light" id="notification" style="display:none">0</span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" asp-controller="Orders" asp-action="Index">Orders</a>
+                            <a class="dropdown-item" asp-controller="Statuses" asp-action="Index">Order Statuses</a>
+                            <a class="dropdown-item" asp-controller="PromoCodes" asp-action="Index">Promo Codes</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Markets" asp-action="Index" class="nav-link">Markets <span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Brands" asp-action="Index" class="nav-link">Brands <span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Offers" asp-action="Index" class="nav-link">Shops <span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Sliders" asp-action="Index" class="nav-link">Sliders <span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Drivers" asp-action="Index" class="nav-link">Drivers <span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @User.Identity.Name
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">Change Password</a>
+                            @if (isAdmin)
+                            {
+                                <a class="dropdown-item" asp-controller="Settings" asp-action="EditSettings">Settings</a>
+                            }
+                            <a class="dropdown-item" asp-controller="Account" asp-action="Logout">Log Out</a>
+                        </div>
+                    </li>
+                }
+
+            </ul>
+        </div>
+
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Low Cost</p>
+        </footer>
+    </div>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole(Admin.AdminRoleName))
+        {
+            <script src="~/lib/aspnet-signalr/signalr.js"></script>
+            <script src="~/js/realTime.js"></script>
+        }
+    }
+    <script src="~/js/bootstrap.js"></script>
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="~/js/toast.script.js"></script>
+</body>
+</html>

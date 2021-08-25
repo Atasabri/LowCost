@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Mapping\AutoMapperProfile.cs~RF6b50c06.TMP" />
+    <None Remove="Mapping\OrdersMapping.cs~RF2699201d.TMP" />
+    <None Remove="Mapping\ProductsMapping.cs~RF17189036.TMP" />
+    <None Remove="Mapping\SlidersMapping.cs~RF7459ef3.TMP" />
+    <None Remove="Services\Identity\Implementation\Dashboard\DashboardAuthenticationService.cs~RF14da49fd.TMP" />
+    <None Remove="Services\User\Interfaces\IUserService.cs~RF5e23a3d.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LowCost.Repo\LowCost.Repo.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Nexmo.Csharp.Client" Version="5.2.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
+  </ItemGroup>
+
+</Project>

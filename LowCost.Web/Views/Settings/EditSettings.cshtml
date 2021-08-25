@@ -1,0 +1,69 @@
+﻿@model EditSettingsViewModel
+
+@{
+    ViewData["Title"] = "Edit Settings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit Settings</h1>
+
+<h4>Edit Dynamic App Settings</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditSettings">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @for (int i = 0; i < Model.Settings.Count(); i++)
+            {
+        <div class="form-group">
+            <label class="control-label">@Model.Settings[i].Name</label>
+            <input type="hidden" name="editSettingsViewModel.Settings[@(i)].Id" value="@Model.Settings[i].Id" />
+
+            @switch (Model.Settings[i].Type)
+            {
+
+                case TypeCode.Double:
+                    <input type="number" name="editSettingsViewModel.Settings[@(i)].Value" value="@Model.Settings[i].Value" class="form-control" />
+                    break;
+                case TypeCode.Boolean:
+                    if (Model.Settings[i].Value.ToLower() == true.ToString().ToLower())
+                    {
+                        <select class="form-control" name="editSettingsViewModel.Settings[@(i)].Value">
+                            <option value="true" selected>Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <select class="form-control" name="editSettingsViewModel.Settings[@(i)].Value">
+                            <option value="true">Yes</option>
+                            <option value="false" selected>No</option>
+                        </select>
+                    }
+
+                    break;
+                default:
+                    <input name="editSettingsViewModel.Settings[@(i)].Value" value="@Model.Settings[i].Value" class="form-control" />
+                    break;
+            }
+        </div>
+            }
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+@if (ViewBag.Error != null)
+{
+    <span style="color:red">@ViewBag.Error</span>
+}
+@if(ViewBag.Done != null)
+{
+<span style="color:green">@ViewBag.Done</span>
+}
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

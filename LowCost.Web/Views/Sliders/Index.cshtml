@@ -1,0 +1,64 @@
+﻿@model PagedResult<SliderViewModel>
+@{ 
+    int counter = 1;
+    ViewBag.Title = "Sliders";
+    var pagingModel = new DashboardPagination() 
+    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount };
+
+}
+<h2>Sliders</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-add"> New Slider </a>
+</p>
+
+<table class="table" id="tbl">
+    <caption>Page Number (@(Model.PageNumber))</caption>
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Items)
+        {
+            <tr id="@item.Id">
+                <th scope="row">@(counter++)</th>
+                <td>
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id" >Details</a>
+                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn btn-danger" onclick="Delete(@(item.Id));">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<partial name="Partials/_Pagination" model="pagingModel" />
+<script>
+    function Delete(i) {
+
+        var Confirmed = confirm('Are You Sure You Want To Delete This Slider ??');
+
+        if (Confirmed == true) {
+            $.post("@Url.Action("Delete", "Sliders")", {
+
+                id: i
+            },
+                function (data) {
+                    if (data === 0) {
+                        alert("Error in Delete Slider")
+                    }
+                    if (typeof data == 'string') {
+                        alert(data);
+                    }
+            $("#tbl tr#" + data + "").remove();
+        }
+
+          )
+        }
+    }
+
+</script>

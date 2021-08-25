@@ -1,0 +1,110 @@
+﻿@model ProductViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>@Model.Name</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name_AR)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name_AR)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Serial_Number)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Serial_Number)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SubCategoryName)
+        </dt>
+        <dd class="col-sm-10">
+            <a target="_blank" asp-action="Details" asp-controller="SubCategories" asp-route-id="@Model.SubCategory_Id"> @Html.DisplayFor(model => model.SubCategoryName)</a>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BrandName)
+        </dt>
+        <dd class="col-sm-10">
+            <a target="_blank" asp-action="Details" asp-controller="Brands" asp-route-id="@Model.Brand_Id"> @Html.DisplayFor(model => model.BrandName)</a>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OfferName)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.OfferName == null)
+            {
+                <span>No Offer</span>
+            }
+            else
+            {
+                <a target="_blank" asp-action="Details" asp-controller="Offers" asp-route-id="@Model.Offer_Id"> @Html.DisplayFor(model => model.OfferName)</a>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            Is Zero Cost Product
+        </dt>
+        <dd class="col-sm-10">
+            @{
+                bool isZeroCost = Model.Prices.Count == 0 || Model.Prices.Min(pr => pr.Price) == 0;
+            }
+            @if (isZeroCost)
+            {
+                <span>Yes</span>
+            }
+            else
+            {
+                <span>No</span>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            Photo
+        </dt>
+        <dd class="col-sm-10">
+            <img asp-append-version="true" src="/Uploads/Products/@(Model.Id).jpg" alt="@Model.Name" width="600" height="600" />
+        </dd>
+    </dl>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Price</th>
+                <th scope="col">Old Price</th>
+                <th scope="col">Market</th>
+            </tr>
+        </thead>
+        <tbody id="tbl">
+            @foreach (var item in Model.Prices)
+            {
+                <tr>
+                    <td>@item.Price</td>
+                    <td>@item.OldPrice</td>
+                    <td><a asp-action="Details" asp-controller="Markets" asp-route-Id="@item.Market_Id"></a> @item.MarketName</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new {id = Model.Id}) |
+    <a asp-action="Index">Back to List</a>
+</div>

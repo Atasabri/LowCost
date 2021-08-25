@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+    <UserSecretsId>29bca50b-d59e-48a8-a72a-2a6d1ccdad82</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Controllers\APIs\CategoriesController.cs~RF733e337.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LowCost.Business\LowCost.Business.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Uploads\Categories\Banners\" />
+    <Folder Include="wwwroot\Uploads\MainCategories\" />
+    <Folder Include="wwwroot\Uploads\Brands\" />
+    <Folder Include="wwwroot\Uploads\Markets\" />
+    <Folder Include="wwwroot\Uploads\Drivers\" />
+    <Folder Include="wwwroot\Uploads\Sliders\" />
+    <Folder Include="wwwroot\Uploads\SubCategories\" />
+    <Folder Include="wwwroot\Uploads\Offers\" />
+    <Folder Include="wwwroot\Uploads\Products\" />
+    <Folder Include="wwwroot\Uploads\Users\" />
+  </ItemGroup>
+
+
+</Project>
