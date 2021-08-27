@@ -1,6 +1,0 @@
-{
-  "ConnectionStrings": {
-    //"DB": "server=ATASABRI\\SQLEXPRESS;database=LowCost;integrated security=true"
-    "DB": "server=sql5085.site4now.net;database=DB_A578C9_LowCost;user=DB_A578C9_LowCost_admin;password=LowCost123"
-  }
-}
