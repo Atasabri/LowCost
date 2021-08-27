@@ -15,5 +15,12 @@ namespace LowCost.Infrastructure.DTOs.Categories
                 return "/Uploads/SubCategories/" + Id + ".jpg?q=" + DateTime.Now.ToBinary();
             }
         }
+        public string Banner
+        {
+            get
+            {
+                return "/Uploads/SubCategories/Banners/" + Id + ".jpg?q=" + DateTime.Now.ToBinary();
+            }
+        }
     }
 }

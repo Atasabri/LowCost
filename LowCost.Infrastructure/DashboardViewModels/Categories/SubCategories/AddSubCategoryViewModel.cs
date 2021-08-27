@@ -11,6 +11,8 @@ namespace LowCost.Infrastructure.DashboardViewModels.Categories.SubCategories
     {
         [Required]
         public IFormFile Photo { get; set; }
+        [Required]
+        public IFormFile Banner { get; set; }
 
         [Required]
         [Display(Name = "Category")]

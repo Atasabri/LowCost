@@ -33,7 +33,6 @@
     <Folder Include="wwwroot\Uploads\Markets\" />
     <Folder Include="wwwroot\Uploads\Drivers\" />
     <Folder Include="wwwroot\Uploads\Sliders\" />
-    <Folder Include="wwwroot\Uploads\SubCategories\" />
     <Folder Include="wwwroot\Uploads\Offers\" />
     <Folder Include="wwwroot\Uploads\Products\" />
     <Folder Include="wwwroot\Uploads\Users\" />

@@ -42,6 +42,14 @@ namespace LowCost.Business.Services.Categories.Implementation.Dashboard
                     fileName = subCategory.Id.ToString(),
                     folderName = "SubCategories"
                 };
+                // Adding Sub Category Banner
+                var bannerData = new SavingFileData()
+                {
+                    File = addSubCategoryViewModel.Banner,
+                    fileName = subCategory.Id.ToString(),
+                    folderName = "SubCategories/Banners"
+                };
+                await _unitOfWork.FilesRepository.SaveFileAsync(bannerData);
                 await _unitOfWork.FilesRepository.SaveFileAsync(imageData);
                 return createState;
             }
@@ -70,6 +78,13 @@ namespace LowCost.Business.Services.Categories.Implementation.Dashboard
                     folderName = "SubCategories"
                 };
                 await _unitOfWork.FilesRepository.DeleteFileAsync(imagedate);
+                // Delete Sub Category Banner
+                var bannerdate = new FileBaseData()
+                {
+                    fileName = id.ToString(),
+                    folderName = "SubCategories/Banners"
+                };
+                await _unitOfWork.FilesRepository.DeleteFileAsync(bannerdate);
                 return actionState;
             }
             actionState.ErrorMessages.Add("Can Not Delete Sub Category");
@@ -95,6 +110,17 @@ namespace LowCost.Business.Services.Categories.Implementation.Dashboard
                         folderName = "SubCategories"
                     };
                     await _unitOfWork.FilesRepository.SaveFileAsync(imageData);
+                }
+                // Replace Sub Category Banner If Banner Edited
+                if (editSubCategoryViewModel.Banner != null)
+                {
+                    var bannerData = new SavingFileData()
+                    {
+                        File = editSubCategoryViewModel.Banner,
+                        fileName = subCategory.Id.ToString(),
+                        folderName = "SubCategories/Banners"
+                    };
+                    await _unitOfWork.FilesRepository.SaveFileAsync(bannerData);
                 }
                 return actionState;
             }

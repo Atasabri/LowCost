@@ -10,6 +10,7 @@ namespace LowCost.Infrastructure.DashboardViewModels.Categories.SubCategories
     public class EditSubCategoryViewModel : BaseNamedViewModel
     {
         public IFormFile Photo { get; set; }
+        public IFormFile Banner { get; set; }
 
         [Required]
         [Display(Name = "Category")]
