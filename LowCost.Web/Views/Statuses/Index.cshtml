@@ -3,7 +3,7 @@
     int counter = 1;
     ViewBag.Title = "Statuses";
     var pagingModel = new DashboardPagination() 
-    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount };
+    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount, Size = Model.Size };
 
 }
 <h2>Statuses</h2>
@@ -47,18 +47,17 @@
         var Confirmed = confirm('Are You Sure You Want To Delete This Status ??');
 
         if (Confirmed == true) {
+            $(".loader").show();
             $.post("@Url.Action("Delete", "Statuses")", {
 
                 id: i
             },
                 function (data) {
-                    if (data === 0) {
-                        alert("Error in Delete Status")
-                    }
                     if (typeof data == 'string') {
                         alert(data);
                     }
-            $("#tbl tr#" + data + "").remove();
+                    $("#tbl tr#" + data + "").remove();
+                    $(".loader").hide();
         }
 
           )

@@ -22,7 +22,7 @@ namespace LowCost.Infrastructure.Helpers
         public const string LowCostOfferName_Ar = "عروض متجرنا";
 
         // Paging Max Size
-        public const int MaxPageSize = 20;
+        public const int MaxPageSize = 10;
 
         // Max Zero Cost Items in Ordrer
         public const int MaxZeroItemsinOrder = 1;

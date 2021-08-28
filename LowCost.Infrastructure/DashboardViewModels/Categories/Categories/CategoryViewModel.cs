@@ -12,5 +12,7 @@ namespace LowCost.Infrastructure.DashboardViewModels.Categories.Categories
         public string MainCategoryName { get; set; }
         [Display(Name = "Main Category")]
         public int MainCategory_Id { get; set; }
+        [Display(Name = "View In App")]
+        public bool ViewInApp { get; set; }
     }
 }

@@ -9,6 +9,10 @@ namespace LowCost.Domain.Models
 {
     public class Brand : BaseNamedModel
     {
+        [Required]
+        public int OrderKey { get; set; }
+        [Required]
+        public bool ViewInApp { get; set; }
         public virtual ICollection<Product> Products { get; set; }
     }
 }

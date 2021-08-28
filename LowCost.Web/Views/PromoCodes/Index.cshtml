@@ -2,8 +2,8 @@
 @{ 
     int counter = 1;
     ViewBag.Title = "Promo Codes";
-    var pagingModel = new DashboardPagination() 
-    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount };
+    var pagingModel = new DashboardPagination()
+    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount, Size = Model.Size };
 
 }
 <h2>Promo Codes</h2>
@@ -47,18 +47,17 @@
         var Confirmed = confirm('Are You Sure You Want To Delete This Promo Code ??');
 
         if (Confirmed == true) {
+            $(".loader").show();
             $.post("@Url.Action("Delete", "PromoCodes")", {
 
                 id: i
             },
                 function (data) {
-                    if (data === 0) {
-                        alert("Error in Delete Promo Code")
-                    }
                     if (typeof data == 'string') {
                         alert(data);
                     }
-            $("#tbl tr#" + data + "").remove();
+                    $("#tbl tr#" + data + "").remove();
+                    $(".loader").hide();
         }
 
           )

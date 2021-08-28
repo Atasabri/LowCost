@@ -43,12 +43,17 @@
         var Confirmed = confirm('Are You Sure You Want To Delete This Editor ??');
 
         if (Confirmed == true) {
+            $(".loader").show();
             $.post("@Url.Action("Delete", "Admins")", {
 
                 Id: i
             },
                 function (data) {
-            $("#tbl tr#" + data + "").remove();
+                    if (typeof data == 'string') {
+                        alert(data);
+                    }
+                    $("#tbl tr#" + data + "").remove();
+                    $(".loader").hide();
         }
 
           )

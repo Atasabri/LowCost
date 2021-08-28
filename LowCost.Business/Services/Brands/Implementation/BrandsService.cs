@@ -3,6 +3,7 @@ using LowCost.Business.Mapping;
 using LowCost.Business.Services.Brands.Interfaces;
 using LowCost.Domain.Models;
 using LowCost.Infrastructure.DTOs.Brand;
+using LowCost.Infrastructure.Helpers;
 using LowCost.Infrastructure.Pagination;
 using LowCost.Repo.UnitOfWork;
 using System;
@@ -24,7 +25,7 @@ namespace LowCost.Business.Services.Brands.Implementation
         }
         public async Task<PagedResult<BrandDTO>> GetBrandsAsync(PagingParameters pagingParameters)
         {
-            var brands = await _unitofwork.BrandsRepository.GetElementsAsync(brand => true, pagingParameters);
+            var brands = await _unitofwork.BrandsRepository.GetElementsWithOrderAsync(brand => brand.ViewInApp, pagingParameters, brand => brand.OrderKey, OrderingType.Ascending);
 
             var brandsDTOs = brands.ToMappedPagedResult<Brand, BrandDTO>(_mapper);
             return brandsDTOs;

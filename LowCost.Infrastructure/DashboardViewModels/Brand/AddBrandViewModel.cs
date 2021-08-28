@@ -10,6 +10,9 @@ namespace LowCost.Infrastructure.DashboardViewModels.Brand
     public class AddBrandViewModel : NamedViewModel
     {
         [Required]
+        [Display(Name = "View In App")]
+        public bool ViewInApp { get; set; }
+        [Required]
         public IFormFile Photo { get; set; }
     }
 }

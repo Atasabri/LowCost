@@ -11,6 +11,10 @@ namespace LowCost.Domain.Models
     {
         [Required]
         public int MainCategory_Id { get; set; }
+        [Required]
+        public int OrderKey { get; set; }
+        [Required]
+        public bool ViewInApp { get; set; }
 
         [ForeignKey(nameof(MainCategory_Id))]
         public MainCategory MainCategory { get; set; }

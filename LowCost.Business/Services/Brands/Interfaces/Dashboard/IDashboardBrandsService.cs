@@ -45,5 +45,18 @@ namespace LowCost.Business.Services.Brands.Interfaces.Dashboard
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<BrandViewModel>> GetAllBrandsAsync();
+        /// <summary>
+        /// Re Order Brands List Asynchronous
+        /// </summary>
+        /// <param name="orderListItems"></param>
+        /// <returns></returns>
+        Task<ActionState> OrderBrandsListAsync(int[] orderListItems);
+        /// <summary>
+        /// Changing Brand Viewing in App Asynchronous
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="viewInApp"></param>
+        /// <returns></returns>
+        Task<ActionState> ChangeViewInAppAsync(int Id, bool viewInApp);
     }
 }

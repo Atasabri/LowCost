@@ -98,7 +98,7 @@ namespace LowCost.Web.Controllers.Dashboard
             return View(result);
         }
 
-        // POST: Products/Edit/5
+        // POST: Products/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditProductViewModel editProductViewModel)
@@ -131,16 +131,12 @@ namespace LowCost.Web.Controllers.Dashboard
         [HttpPost]
         public async Task<ActionResult> Delete(int id)
         {
-            if (ModelState.IsValid)
+            var result = await _dashboardProductsService.DeleteProductAsync(id);
+            if (result.ExcuteSuccessfully)
             {
-                var result = await _dashboardProductsService.DeleteProductAsync(id);
-                if (result.ExcuteSuccessfully)
-                {
-                    return Json(id);
-                }
-                return Json(result.ErrorMessages.FirstOrDefault());
+                return Json(id);
             }
-            return Json(0);
+            return Json(result.ErrorMessages.FirstOrDefault());
         }
 
         // GET: Products/EditPrice/5

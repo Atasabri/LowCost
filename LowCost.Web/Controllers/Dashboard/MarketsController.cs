@@ -64,7 +64,7 @@ namespace LowCost.Web.Controllers.Dashboard
             return View(result);
         }
 
-        // POST: Markets/Edit/5
+        // POST: Markets/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditMarketViewModel editMarketViewModel)
@@ -87,16 +87,12 @@ namespace LowCost.Web.Controllers.Dashboard
         [HttpPost]
         public async Task<ActionResult> Delete(int id)
         {
-            if (ModelState.IsValid)
+            var result = await _dashboardMarketsService.DeleteMarketAsync(id);
+            if (result.ExcuteSuccessfully)
             {
-                var result = await _dashboardMarketsService.DeleteMarketAsync(id);
-                if (result.ExcuteSuccessfully)
-                {
-                    return Json(id);
-                }
-                return Json(result.ErrorMessages.FirstOrDefault());
+                return Json(id);
             }
-            return Json(0);
+            return Json(result.ErrorMessages.FirstOrDefault());
         }
     }
 }

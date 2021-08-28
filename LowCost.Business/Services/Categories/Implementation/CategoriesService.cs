@@ -34,7 +34,7 @@ namespace LowCost.Business.Services.Categories.Implementation
         public async Task<PagedResult<CategoryDTO>> GetCategoriesUsingMainCategoryIdAsync(int mainCatId, PagingParameters pagingParameters)
         {
             var categories = await _unitofwork.CategoriesRepository
-                .GetElementsAsync(Cat => Cat.MainCategory_Id == mainCatId , pagingParameters);
+                .GetElementsWithOrderAsync(Cat => Cat.MainCategory_Id == mainCatId && Cat.ViewInApp , pagingParameters, cat => cat.OrderKey, OrderingType.Ascending);
 
             var categoriesDTOs = categories.ToMappedPagedResult<Category, CategoryDTO>(_mapper);
 
@@ -44,7 +44,7 @@ namespace LowCost.Business.Services.Categories.Implementation
         public async Task<PagedResult<CategoryDTO>> GetCategoriesAsync(PagingParameters pagingParameters)
         {
             var categories = await _unitofwork.CategoriesRepository
-                .GetElementsWithOrderAsync(Cat => true, pagingParameters, Cat => Cat.Id, OrderingType.Descending);
+                .GetElementsWithOrderAsync(Cat => Cat.ViewInApp, pagingParameters, Cat => Cat.OrderKey, OrderingType.Ascending);
 
             var categoriesDTOs = categories.ToMappedPagedResult<Category, CategoryDTO>(_mapper);
 
@@ -54,8 +54,8 @@ namespace LowCost.Business.Services.Categories.Implementation
         public async Task<PagedResult<CategoryIncludeSubCategoriesDTO>> GetCategoriesIncludeSubCategoriesAsync(int mainCatId, PagingParameters pagingParameters)
         {
             var categories = await _unitofwork.CategoriesRepository
-                .GetElementsWithOrderAsync(Cat => Cat.MainCategory_Id == mainCatId, pagingParameters, Cat => Cat.Id,
-                OrderingType.Descending, nameof(Category.SubCategories));
+                .GetElementsWithOrderAsync(Cat => Cat.MainCategory_Id == mainCatId && Cat.ViewInApp, pagingParameters, Cat => Cat.OrderKey,
+                OrderingType.Ascending, nameof(Category.SubCategories));
 
             var categoriesDTOs = categories.ToMappedPagedResult<Category, CategoryIncludeSubCategoriesDTO>(_mapper);
 

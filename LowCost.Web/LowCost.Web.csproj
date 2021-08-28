@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\css\bootstrap-icons\icons\" />
     <Folder Include="wwwroot\Uploads\Categories\Banners\" />
     <Folder Include="wwwroot\Uploads\MainCategories\" />
     <Folder Include="wwwroot\Uploads\Brands\" />

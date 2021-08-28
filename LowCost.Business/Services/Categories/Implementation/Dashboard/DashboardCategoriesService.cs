@@ -25,6 +25,27 @@ namespace LowCost.Business.Services.Categories.Implementation.Dashboard
             this._unitOfWork = unitOfWork;
             this._mapper = mapper;
         }
+
+        public async Task<ActionState> ChangeViewInAppAsync(int Id, bool viewInApp)
+        {
+            var actionState = new ActionState();
+            // Get Category And Change It's ViewinApp prop
+            var category = await _unitOfWork.CategoriesRepository.FindByIdAsync(Id);
+            if (category != null)
+            {
+                category.ViewInApp = viewInApp;
+                _unitOfWork.CategoriesRepository.Update(category);
+                var result = await _unitOfWork.SaveAsync() > 0;
+                if (result)
+                {
+                    actionState.ExcuteSuccessfully = true;
+                    return actionState;
+                }
+            }
+            actionState.ErrorMessages.Add("Can Not Edit This Category !!");
+            return actionState;
+        }
+
         public async Task<CreateState> CreateCategoryAsync(AddCategoryViewModel addCategoryViewModel)
         {
             var createState = new CreateState();
@@ -149,11 +170,28 @@ namespace LowCost.Business.Services.Categories.Implementation.Dashboard
         public async Task<PagedResult<CategoryViewModel>> GetDashboardCategoriesAsync(PagingParameters pagingParameters)
         {
             var categories = await _unitOfWork.CategoriesRepository.GetElementsWithOrderAsync(cat => true,
-                       pagingParameters, cat => cat.Id, OrderingType.Descending, nameof(Category.MainCategory));
+                       pagingParameters, cat => cat.OrderKey, OrderingType.Ascending, nameof(Category.MainCategory));
 
             var pagedCategoriesViewModel = categories.ToMappedPagedResult<Category, CategoryViewModel>(_mapper);
 
             return pagedCategoriesViewModel;
+        }
+
+        public async Task<ActionState> OrderCategoriesListAsync(int[] orderListItems)
+        {
+            var actionState = new ActionState();
+            for (int i = 0; i < orderListItems.Length; i++)
+            {
+                var category = await _unitOfWork.CategoriesRepository.FindByIdAsync(orderListItems[i]);
+                if(category != null && category.OrderKey != i)
+                {
+                    category.OrderKey = i;
+                    _unitOfWork.CategoriesRepository.Update(category);
+                }
+            }
+            var result = await _unitOfWork.SaveAsync() > 0;
+            actionState.ExcuteSuccessfully = result;
+            return actionState;
         }
     }
 }

@@ -54,10 +54,7 @@ namespace LowCost.Web.Controllers.Dashboard
             {
                 return Json(Id);
             }
-            else
-            {
-                return Json(0);
-            }
+            return Json(0);
         }
     }
 }

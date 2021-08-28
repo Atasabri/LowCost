@@ -3,7 +3,7 @@
     int counter = 1;
     ViewBag.Title = "Products";
     var pagingModel = new DashboardPagination()
-    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount };
+    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount, Size = Model.Size };
 
 }
 <h2>Products</h2>
@@ -12,6 +12,7 @@
     <a asp-action="Create" class="btn btn-add"> New Product </a>
 </p>
 <form class="form-inline my-2 my-lg-0">
+    <input type="hidden" name="size" value="@pagingModel.Size" />
     <input class="form-control" name="searchTerms" type="search" placeholder="Search" aria-label="Search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 </form>
@@ -58,18 +59,17 @@
         var Confirmed = confirm('Are You Sure You Want To Delete This Product ??');
 
         if (Confirmed == true) {
+            $(".loader").show();
             $.post("@Url.Action("Delete", "Products")", {
 
                 id: i
             },
                 function (data) {
-                    if (data === 0) {
-                        alert("Error in Delete Product")
-                    }
                     if (typeof data == 'string') {
                         alert(data);
                     }
-            $("#tbl tr#" + data + "").remove();
+                    $("#tbl tr#" + data + "").remove();
+                    $(".loader").hide();
         }
 
           )

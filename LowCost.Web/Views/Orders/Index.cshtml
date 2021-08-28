@@ -2,12 +2,13 @@
 @{ 
     ViewBag.Title = "Orders";
     var pagingModel = new DashboardPagination() 
-    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount };
+    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount, Size = Model.Size };
 
 }
 <h2>Orders</h2>
 
 <form class="form-inline my-2 my-lg-0">
+    <input type="hidden" name="size" value="@pagingModel.Size" />
     <input class="form-control" name="id" type="search" placeholder="Enter Order Id" aria-label="Search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 </form>
@@ -57,18 +58,17 @@
         var Confirmed = confirm('Are You Sure You Want To Close This Order ??');
 
         if (Confirmed == true) {
+            $(".loader").show();
             $.post("@Url.Action("Close", "Orders")", {
 
                 id: i
             },
                 function (data) {
-                    if (data === 0) {
-                        alert("Error in Close Order")
-                    }
                     if (typeof data == 'string') {
                         alert(data);
                     }
                     $("#close" + data + "").remove();
+                    $(".loader").hide();
         }
 
           )
