@@ -87,16 +87,12 @@ namespace LowCost.Web.Controllers.Dashboard
         [HttpPost]
         public async Task<ActionResult> Delete(int id)
         {
-            if (ModelState.IsValid)
+            var result = await _dashboardPromoCodeService.DeletePromoCodeAsync(id);
+            if (result.ExcuteSuccessfully)
             {
-                var result = await _dashboardPromoCodeService.DeletePromoCodeAsync(id);
-                if (result.ExcuteSuccessfully)
-                {
-                    return Json(id);
-                }
-                return Json(result.ErrorMessages.FirstOrDefault());
+                return Json(id);
             }
-            return Json(0);
+            return Json(result.ErrorMessages.FirstOrDefault());
         }
     }
 }

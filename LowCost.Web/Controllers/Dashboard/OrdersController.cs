@@ -107,16 +107,12 @@ namespace LowCost.Web.Controllers.Dashboard
         [HttpPost]
         public async Task<ActionResult> Close(int id)
         {
-            if (ModelState.IsValid)
+            var result = await _dashboardOrdersService.CloseOrderAsync(id);
+            if (result.ExcuteSuccessfully)
             {
-                var result = await _dashboardOrdersService.CloseOrderAsync(id);
-                if (result.ExcuteSuccessfully)
-                {
-                    return Json(id);
-                }
-                return Json(result.ErrorMessages.FirstOrDefault());
+                return Json(id);
             }
-            return Json(0);
+            return Json(result.ErrorMessages.FirstOrDefault());
         }
     }
 }

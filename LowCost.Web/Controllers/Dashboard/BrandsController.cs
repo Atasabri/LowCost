@@ -57,14 +57,14 @@ namespace LowCost.Web.Controllers.Dashboard
         public async Task<ActionResult> Edit(int id)
         {
             var result = await _dashboardBrandsService.GetBrandDetailsAsync(id);
-            if(result == null)
+            if (result == null)
             {
                 return NotFound();
             }
             return View(result);
         }
 
-        // POST: Brands/Edit/5
+        // POST: Brands/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditBrandViewModel editBrandViewModel)
@@ -87,16 +87,32 @@ namespace LowCost.Web.Controllers.Dashboard
         [HttpPost]
         public async Task<ActionResult> Delete(int id)
         {
-            if (ModelState.IsValid)
+            var result = await _dashboardBrandsService.DeleteBrandAsync(id);
+            if (result.ExcuteSuccessfully)
             {
-                var result = await _dashboardBrandsService.DeleteBrandAsync(id);
-                if (result.ExcuteSuccessfully)
-                {
-                    return Json(id);
-                }
-                return Json(result.ErrorMessages.FirstOrDefault());
+                return Json(id);
             }
-            return Json(0);
+            return Json(result.ErrorMessages.FirstOrDefault());
+        }
+
+        // POST/Brands/Order
+        [HttpPost]
+        public async Task<ActionResult> Order(int[] orderListItems)
+        {
+            var result = await _dashboardBrandsService.OrderBrandsListAsync(orderListItems);
+            return Json(result.ExcuteSuccessfully);
+        }
+
+        // POST: Brands/ChangeViewInApp/5
+        [HttpPost]
+        public async Task<ActionResult> ChangeViewInApp(int id, bool viewInApp)
+        {
+            var result = await _dashboardBrandsService.ChangeViewInAppAsync(id, viewInApp);
+            if (result.ExcuteSuccessfully)
+            {
+                return Json(id);
+            }
+            return Json(result.ErrorMessages.FirstOrDefault());
         }
     }
 }

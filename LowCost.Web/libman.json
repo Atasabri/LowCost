@@ -5,6 +5,18 @@
     {
       "library": "aspnet-signalr@1.1.4",
       "destination": "wwwroot/lib/aspnet-signalr/"
+    },
+    {
+      "library": "bootstrap-icons@1.5.0",
+      "destination": "wwwroot/css/bootstrap-icons/",
+      "files": [
+        "bootstrap-icons.svg",
+        "icons/arrows-move.svg",
+        "font/fonts/bootstrap-icons.woff",
+        "font/bootstrap-icons.css",
+        "font/bootstrap-icons.json",
+        "font/bootstrap-icons.min.css"
+      ]
     }
   ]
 }

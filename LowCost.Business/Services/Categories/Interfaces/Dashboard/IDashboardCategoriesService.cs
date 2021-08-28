@@ -47,5 +47,18 @@ namespace LowCost.Business.Services.Categories.Interfaces.Dashboard
         /// <param name="mainCatId"></param>
         /// <returns></returns>
         Task<IEnumerable<CategoryViewModel>> GetAllCategoriesUsingMainCategoryIdAsync(int mainCatId);
+        /// <summary>
+        /// Re Order Categories List Asynchronous
+        /// </summary>
+        /// <param name="orderListItems"></param>
+        /// <returns></returns>
+        Task<ActionState> OrderCategoriesListAsync(int[]  orderListItems);
+        /// <summary>
+        /// Changing Category Viewing in App Asynchronous
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="viewInApp"></param>
+        /// <returns></returns>
+        Task<ActionState> ChangeViewInAppAsync(int Id, bool viewInApp);
     }
 }

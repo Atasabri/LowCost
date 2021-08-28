@@ -73,7 +73,7 @@ namespace LowCost.Web.Controllers.Dashboard
             return View(result);
         }
 
-        // POST: SubCategories/Edit/5
+        // POST: SubCategories/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditSubCategoryViewModel editSubCategoryViewModel)
@@ -97,16 +97,12 @@ namespace LowCost.Web.Controllers.Dashboard
         [HttpPost]
         public async Task<ActionResult> Delete(int id)
         {
-            if (ModelState.IsValid)
+            var result = await _dashboardSubCategoriesService.DeleteSubCategoryAsync(id);
+            if (result.ExcuteSuccessfully)
             {
-                var result = await _dashboardSubCategoriesService.DeleteSubCategoryAsync(id);
-                if (result.ExcuteSuccessfully)
-                {
-                    return Json(id);
-                }
-                return Json(result.ErrorMessages.FirstOrDefault());
+                return Json(id);
             }
-            return Json(0);
+            return Json(result.ErrorMessages.FirstOrDefault());
         }
 
         // GET: SubCategories?catId=1

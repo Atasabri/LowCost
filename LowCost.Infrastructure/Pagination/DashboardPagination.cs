@@ -8,5 +8,6 @@ namespace LowCost.Infrastructure.Pagination
     {
         public int PageNumber { get; set; }
         public int PagesCount { get; set; }
+        public int Size{ get; set; }
     }
 }

@@ -24,6 +24,27 @@ namespace LowCost.Business.Services.Brands.Implementation.Dashboard
             this._unitOfWork = unitOfWork;
             this._mapper = mapper;
         }
+
+        public async Task<ActionState> ChangeViewInAppAsync(int Id, bool viewInApp)
+        {
+            var actionState = new ActionState();
+            // Get Brand And Change It's ViewinApp prop
+            var brand = await _unitOfWork.BrandsRepository.FindByIdAsync(Id);
+            if(brand != null)
+            {
+                brand.ViewInApp = viewInApp;
+                _unitOfWork.BrandsRepository.Update(brand);
+                var result = await _unitOfWork.SaveAsync() > 0;
+                if(result)
+                {
+                    actionState.ExcuteSuccessfully = true;
+                    return actionState;
+                }
+            }
+            actionState.ErrorMessages.Add("Can Not Edit This Brand !!");
+            return actionState;
+        }
+
         public async Task<CreateState> CreateBrandAsync(AddBrandViewModel addBrandViewModel)
         {
             var createState = new CreateState();
@@ -122,11 +143,28 @@ namespace LowCost.Business.Services.Brands.Implementation.Dashboard
         public async Task<PagedResult<BrandViewModel>> GetDashboardBrandsAsync(PagingParameters pagingParameters)
         {
             var brands = await _unitOfWork.BrandsRepository.GetElementsWithOrderAsync(brand => true,
-                       pagingParameters, brand => brand.Id, OrderingType.Descending);
+                       pagingParameters, brand => brand.OrderKey, OrderingType.Ascending);
 
             var brandsViewModel = brands.ToMappedPagedResult<Brand, BrandViewModel>(_mapper);
 
             return brandsViewModel;
+        }
+
+        public async Task<ActionState> OrderBrandsListAsync(int[] orderListItems)
+        {
+            var actionState = new ActionState();
+            for (int i = 0; i < orderListItems.Length; i++)
+            {
+                var brand = await _unitOfWork.BrandsRepository.FindByIdAsync(orderListItems[i]);
+                if (brand != null && brand.OrderKey != i)
+                {
+                    brand.OrderKey = i;
+                    _unitOfWork.BrandsRepository.Update(brand);
+                }
+            }
+            var result = await _unitOfWork.SaveAsync() > 0;
+            actionState.ExcuteSuccessfully = result;
+            return actionState;
         }
     }
 }

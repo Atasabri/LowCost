@@ -1,6 +1,7 @@
 ﻿using LowCost.Business.Services.Categories.Interfaces.Dashboard;
 using LowCost.Infrastructure.BaseService;
 using LowCost.Infrastructure.DashboardViewModels.Categories.Categories;
+using LowCost.Infrastructure.Helpers;
 using LowCost.Infrastructure.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -72,7 +73,7 @@ namespace LowCost.Web.Controllers.Dashboard
             return View(result);
         }
 
-        // POST: Categories/Edit/5
+        // POST: Categories/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditCategoryViewModel editCategoryViewModel)
@@ -96,16 +97,12 @@ namespace LowCost.Web.Controllers.Dashboard
         [HttpPost]
         public async Task<ActionResult> Delete(int id)
         {
-            if (ModelState.IsValid)
+            var result = await _dashboardCategoriesService.DeleteCategoryAsync(id);
+            if (result.ExcuteSuccessfully)
             {
-                var result = await _dashboardCategoriesService.DeleteCategoryAsync(id);
-                if (result.ExcuteSuccessfully)
-                {
-                    return Json(id);
-                }
-                return Json(result.ErrorMessages.FirstOrDefault());
+                return Json(id);
             }
-            return Json(0);
+            return Json(result.ErrorMessages.FirstOrDefault());
         }
 
         // GET: Categories?mainCatId=1
@@ -113,6 +110,26 @@ namespace LowCost.Web.Controllers.Dashboard
         {
             var result = await _dashboardCategoriesService.GetAllCategoriesUsingMainCategoryIdAsync(mainCatId);
             return Json(result);
+        }
+
+        // POST/Categories/Order
+        [HttpPost]
+        public async Task<ActionResult> Order(int[] orderListItems)
+        {
+            var result = await _dashboardCategoriesService.OrderCategoriesListAsync(orderListItems);
+            return Json(result.ExcuteSuccessfully);
+        }
+
+        // POST: Categories/ChangeViewInApp
+        [HttpPost]
+        public async Task<ActionResult> ChangeViewInApp(int id, bool viewInApp)
+        {
+            var result = await _dashboardCategoriesService.ChangeViewInAppAsync(id, viewInApp);
+            if (result.ExcuteSuccessfully)
+            {
+                return Json(id);
+            }
+            return Json(result.ErrorMessages.FirstOrDefault());
         }
     }
 }

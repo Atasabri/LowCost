@@ -1,17 +1,20 @@
 ﻿@model PagedResult<BrandViewModel>
-@{ 
-    int counter = 1;
+@{
     ViewBag.Title = "Brands";
-    var pagingModel = new DashboardPagination() 
-    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount };
+    var pagingModel = new DashboardPagination()
+    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount, Size = Model.Size };
 
 }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
 <h2>Brands</h2>
 
 <p>
-    <a asp-action="Create" class="btn btn-add" > New Brand </a>
+    <a asp-action="Create" class="btn btn-add"> New Brand </a>
 </p>
-
+<div id="ordering" class="form-group" style="display:none">
+    <input type="button" value="Submit Ordering" onclick="Order();" class="btn btn-primary" />
+</div>
 <table class="table" id="tbl">
     <caption>Page Number (@(Model.PageNumber))</caption>
     <thead>
@@ -19,21 +22,33 @@
             <th scope="col">#</th>
             <th scope="col">Name</th>
             <th scope="col">Name (Arabic)</th>
+            <th scope="col">Viewing In App</th>
             <th scope="col">Actions</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="row_drag">
 
         @foreach (var item in Model.Items)
         {
             <tr id="@item.Id">
-                <th scope="row">@(counter++)</th>
+                <th scope="row"><i class="bi bi-arrows-move"></i></th>
                 <td>@item.Name</td>
                 <td>@item.Name_AR</td>
+                <td id="viewinapp@(item.Id)">
+                    @if (item.ViewInApp)
+                    {
+                        <a class="btn btn-add" onclick="ViewInApp(@(item.Id), false);">Remove From App</a>
+
+                    }
+                    else
+                    {
+                        <a class="btn btn-add" onclick="ViewInApp(@(item.Id), true);">View In App</a>
+                    }
+                </td>
                 <td>
-                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id" >Details</a>
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
                     <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a class="btn btn-danger" onclick="Delete(@(item.Id));">Delete</a>
+                    <a class="btn btn-danger" onclick="Delete(@(item.Id));">Delete</a>                  
                 </td>
             </tr>
         }
@@ -47,22 +62,69 @@
         var Confirmed = confirm('Are You Sure You Want To Delete This Brand ??');
 
         if (Confirmed == true) {
+            $(".loader").show();
             $.post("@Url.Action("Delete", "Brands")", {
 
                 id: i
             },
                 function (data) {
-                    if (data === 0) {
-                        alert("Error in Delete Brand")
-                    }
                     if (typeof data == 'string') {
                         alert(data);
                     }
-            $("#tbl tr#" + data + "").remove();
+                    $("#viewinapp" + data + "").html("<i class='bi bi-eye-slash-fill'></i>");
+                    $(".loader").hide();
         }
 
           )
         }
     }
+    function ViewInApp(i, view) {
+            $(".loader").show();
+            $.post("@Url.Action("ChangeViewInApp", "Brands")", {
+                id: i,
+                ViewInApp: view
+            },
+                function (data) {
+                    if (typeof data == 'string') {
+                        alert(data);
+                    }
+                    if (view) {
+                        $("#viewinapp" + i + "").html("<a class='btn btn-add' id='viewinapp" + i + "' onclick='ViewInApp(" + i + ", false);'>Remove From App</a>");
+                    } else {
+                        $("#viewinapp" + i + "").html("<a class='btn btn-add' id='viewinapp" + i + "' onclick='ViewInApp(" + i + ", true);'>View In App</a>");
+                    }
+                    $(".loader").hide();
+                }
 
+          )
+    }
+</script>
+
+<script>
+    var selectedRows = [];
+    $(".row_drag").sortable({
+        delay: 100,
+        stop: function (event, ui) {
+            $('.row_drag>tr').each(function () {
+                selectedRows.push($(this).attr("id"));
+            });
+            $('#ordering').show();
+        }
+    });
+
+    function Order() {
+        $(".loader").show();
+        $.post("@Url.Action("Order", "Brands")", {
+            orderListItems: selectedRows
+            },
+            function (result) {
+                if (result) {
+                    $(".loader").hide();
+                    $('#ordering').hide();
+                } else {
+                    alert("Error in Ordering");
+                }
+                 }
+          )
+    }
 </script>

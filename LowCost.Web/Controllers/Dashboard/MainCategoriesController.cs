@@ -64,7 +64,7 @@ namespace LowCost.Web.Controllers.Dashboard
             return View(result);
         }
 
-        // POST: MainCategories/Edit/5
+        // POST: MainCategories/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditMainCategoryViewModel editMainCategoryViewModel)
@@ -87,16 +87,12 @@ namespace LowCost.Web.Controllers.Dashboard
         [HttpPost]
         public async Task<ActionResult> Delete(int id)
         {
-            if (ModelState.IsValid)
+            var result = await _dashboardMainCategoriesService.DeleteMainCategoryAsync(id);
+            if (result.ExcuteSuccessfully)
             {
-                var result = await _dashboardMainCategoriesService.DeleteMainCategoryAsync(id);
-                if (result.ExcuteSuccessfully)
-                {
-                    return Json(id);
-                }
-                return Json(result.ErrorMessages.FirstOrDefault());
+                return Json(id);
             }
-            return Json(0);
+            return Json(result.ErrorMessages.FirstOrDefault());
         }
     }
 }

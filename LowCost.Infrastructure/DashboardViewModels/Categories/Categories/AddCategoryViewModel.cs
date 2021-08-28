@@ -10,6 +10,8 @@ namespace LowCost.Infrastructure.DashboardViewModels.Categories.Categories
     public class AddCategoryViewModel : NamedViewModel
     {
         [Required]
+        public bool ViewInApp { get; set; }
+        [Required]
         public IFormFile Photo { get; set; }
         [Required]
         public IFormFile Banner { get; set; }

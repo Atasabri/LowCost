@@ -2,8 +2,8 @@
 @{ 
     int counter = 1;
     ViewBag.Title = "Main Categories";
-    var pagingModel = new DashboardPagination() 
-    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount };
+    var pagingModel = new DashboardPagination()
+    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount, Size = Model.Size };
 
 }
 <h2>Main Categories</h2>
@@ -47,18 +47,17 @@
         var Confirmed = confirm('Are You Sure You Want To Delete This Main Category ??');
 
         if (Confirmed == true) {
+            $(".loader").show();
             $.post("@Url.Action("Delete", "MainCategories")", {
 
                 id: i
             },
                 function (data) {
-                    if (data === 0) {
-                        alert("Error in Delete Main Category")
-                    }
                     if (typeof data == 'string') {
                         alert(data);
                     }
-            $("#tbl tr#" + data + "").remove();
+                    $("#tbl tr#" + data + "").remove();
+                    $(".loader").hide();
         }
 
           )
