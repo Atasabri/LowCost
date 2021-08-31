@@ -10,5 +10,7 @@ namespace LowCost.Infrastructure.DashboardViewModels.Brand
     {
         [Display(Name = "View In App")]
         public bool ViewInApp { get; set; }
+
+        public int OrderKey { get; set; }
     }
 }

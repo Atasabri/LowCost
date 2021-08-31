@@ -177,15 +177,15 @@ namespace LowCost.Business.Services.Categories.Implementation.Dashboard
             return pagedCategoriesViewModel;
         }
 
-        public async Task<ActionState> OrderCategoriesListAsync(int[] orderListItems)
+        public async Task<ActionState> OrderCategoriesListAsync(Dictionary<int, int> orderListItems)
         {
             var actionState = new ActionState();
-            for (int i = 0; i < orderListItems.Length; i++)
+            foreach (var item in orderListItems)
             {
-                var category = await _unitOfWork.CategoriesRepository.FindByIdAsync(orderListItems[i]);
-                if(category != null && category.OrderKey != i)
+                var category = await _unitOfWork.CategoriesRepository.FindByIdAsync(item.Key);
+                if (category != null && category.OrderKey != item.Value)
                 {
-                    category.OrderKey = i;
+                    category.OrderKey = item.Value;
                     _unitOfWork.CategoriesRepository.Update(category);
                 }
             }

@@ -105,8 +105,11 @@
     $(".row_drag").sortable({
         delay: 100,
         stop: function (event, ui) {
+            selectedRows = [];
+            var startIndex = @(Model.Items.FirstOrDefault()?.OrderKey)
             $('.row_drag>tr').each(function () {
-                selectedRows.push($(this).attr("id"));
+                selectedRows.push({ key: $(this).attr("id"), value: startIndex });
+                startIndex++;
             });
             $('#ordering').show();
         }

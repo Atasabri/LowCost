@@ -46,11 +46,11 @@ namespace LowCost.Business.Services.Brands.Interfaces.Dashboard
         /// <returns></returns>
         Task<IEnumerable<BrandViewModel>> GetAllBrandsAsync();
         /// <summary>
-        /// Re Order Brands List Asynchronous
+        /// Re Order Brands List Using Key&Value Pairs of Id&OrderKey Asynchronous
         /// </summary>
         /// <param name="orderListItems"></param>
         /// <returns></returns>
-        Task<ActionState> OrderBrandsListAsync(int[] orderListItems);
+        Task<ActionState> OrderBrandsListAsync(Dictionary<int, int> orderListItems);
         /// <summary>
         /// Changing Brand Viewing in App Asynchronous
         /// </summary>

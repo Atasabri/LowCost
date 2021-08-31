@@ -14,5 +14,7 @@ namespace LowCost.Infrastructure.DashboardViewModels.Categories.Categories
         public int MainCategory_Id { get; set; }
         [Display(Name = "View In App")]
         public bool ViewInApp { get; set; }
+
+        public int OrderKey { get; set; }
     }
 }

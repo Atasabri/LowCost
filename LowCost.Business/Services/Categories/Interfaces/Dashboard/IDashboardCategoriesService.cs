@@ -48,11 +48,11 @@ namespace LowCost.Business.Services.Categories.Interfaces.Dashboard
         /// <returns></returns>
         Task<IEnumerable<CategoryViewModel>> GetAllCategoriesUsingMainCategoryIdAsync(int mainCatId);
         /// <summary>
-        /// Re Order Categories List Asynchronous
+        /// Re Order Categories List Using Key&Value Pairs of Id&OrderKey Asynchronous
         /// </summary>
         /// <param name="orderListItems"></param>
         /// <returns></returns>
-        Task<ActionState> OrderCategoriesListAsync(int[]  orderListItems);
+        Task<ActionState> OrderCategoriesListAsync(Dictionary<int, int> orderListItems);
         /// <summary>
         /// Changing Category Viewing in App Asynchronous
         /// </summary>

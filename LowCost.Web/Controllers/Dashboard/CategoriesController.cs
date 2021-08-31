@@ -4,6 +4,7 @@ using LowCost.Infrastructure.DashboardViewModels.Categories.Categories;
 using LowCost.Infrastructure.Helpers;
 using LowCost.Infrastructure.Pagination;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -114,7 +115,7 @@ namespace LowCost.Web.Controllers.Dashboard
 
         // POST/Categories/Order
         [HttpPost]
-        public async Task<ActionResult> Order(int[] orderListItems)
+        public async Task<ActionResult> Order(Dictionary<int, int> orderListItems)
         {
             var result = await _dashboardCategoriesService.OrderCategoriesListAsync(orderListItems);
             return Json(result.ExcuteSuccessfully);

@@ -150,15 +150,15 @@ namespace LowCost.Business.Services.Brands.Implementation.Dashboard
             return brandsViewModel;
         }
 
-        public async Task<ActionState> OrderBrandsListAsync(int[] orderListItems)
+        public async Task<ActionState> OrderBrandsListAsync(Dictionary<int, int> orderListItems)
         {
             var actionState = new ActionState();
-            for (int i = 0; i < orderListItems.Length; i++)
+            foreach (var item in orderListItems)
             {
-                var brand = await _unitOfWork.BrandsRepository.FindByIdAsync(orderListItems[i]);
-                if (brand != null && brand.OrderKey != i)
+                var brand = await _unitOfWork.BrandsRepository.FindByIdAsync(item.Key);
+                if (brand != null && brand.OrderKey != item.Value)
                 {
-                    brand.OrderKey = i;
+                    brand.OrderKey = item.Value;
                     _unitOfWork.BrandsRepository.Update(brand);
                 }
             }
