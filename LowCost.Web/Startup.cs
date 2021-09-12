@@ -89,6 +89,8 @@ using LowCost.Business.Services.Zoons.Implementation.Dashboard;
 using LowCost.Business.Services.Zoons.Interfaces.Dashboard;
 using LowCost.Business.Services.Stocks.Implementation.Dashboard;
 using LowCost.Business.Services.Stocks.Interfaces.Dashboard;
+using LowCost.Business.Services.Zoons.Interfaces;
+using LowCost.Business.Services.Zoons.Implementation;
 
 namespace LowCost.Web
 {
@@ -237,6 +239,7 @@ namespace LowCost.Web
             services.AddTransient<IBrandsService, BrandsService>();
             services.AddTransient<IMarketsService, MarketsService>();
             services.AddTransient<ISettingsService, SettingsService>();
+            services.AddTransient<IZoonsService, ZoonsService>();
 
 
             // Dashboard Dependency Injection Register

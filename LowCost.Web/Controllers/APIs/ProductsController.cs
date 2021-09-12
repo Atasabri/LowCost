@@ -15,8 +15,6 @@ using System.Threading.Tasks;
 
 namespace LowCost.Web.Controllers.APIs
 {
-    [Authorize(Roles = Constants.UserRoleName, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [AllowAnonymous]
     public class ProductsController : APIController
     {
         private readonly IProductsService _productsservice;
@@ -94,6 +92,7 @@ namespace LowCost.Web.Controllers.APIs
             return Ok(await _productsservice.GetProductsWithFiltrationAsync(productsFiltration));
         }
 
+        [Authorize(Roles = Constants.UserRoleName, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("FollowProduct/{product_Id}")]
         public async Task<IActionResult> FollowProduct(int product_Id)
         {
@@ -101,6 +100,7 @@ namespace LowCost.Web.Controllers.APIs
             return Ok(result);
         }
 
+        [Authorize(Roles = Constants.UserRoleName, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("UnFollowProduct/{product_Id}")]
         public async Task<IActionResult> UnFollowProduct(int product_Id)
         {

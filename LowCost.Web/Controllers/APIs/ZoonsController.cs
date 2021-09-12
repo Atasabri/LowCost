@@ -20,7 +20,7 @@ namespace LowCost.Web.Controllers.APIs
         }
 
         [HttpGet("GetZoons")]
-        public async Task<IActionResult> GetZoonss([FromQuery] PagingParameters pagingParameters)
+        public async Task<IActionResult> GetZoons([FromQuery] PagingParameters pagingParameters)
         {
             return Ok(await _zoonsService.GetZoonsAsync(pagingParameters));
         }
