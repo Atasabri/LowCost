@@ -1,0 +1,72 @@
+﻿@model PagedResult<ZoonViewModel>
+@{ 
+    int counter = 1;
+    ViewBag.Title = "Zoons";
+    var pagingModel = new DashboardPagination()
+    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount, Size = Model.Size };
+
+}
+<h2>Zoons</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-add"> New Zoon </a>
+</p>
+
+<table class="table" id="tbl">
+    <caption>Page Number (@(Model.PageNumber))</caption>
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Name (Arabic)</th>
+            <th scope="col">Stock Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Items)
+        {
+        <tr id="@item.Id">
+            <th scope="row">@(counter++)</th>
+            <td>@item.Name</td>
+            <td>@item.Name_AR</td>
+            <td>@item.StockName</td>
+            <td>
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                <a class="btn btn-danger" onclick="Delete(@(item.Id));">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<partial name="Partials/_Pagination" model="pagingModel" />
+<script>
+    function Delete(i) {
+
+        var Confirmed = confirm('Are You Sure You Want To Delete This Zoon ??');
+
+        if (Confirmed == true) {
+            $(".loader").show();
+            $.post("@Url.Action("Delete", "Zoons")", {
+
+                id: i
+            },
+                function (data) {
+                    if (typeof data == 'string') {
+                        alert(data);
+                    }
+                    $("#tbl tr#" + data + "").remove();
+                    $(".loader").hide();
+        }
+
+            ).fail(function () {
+                alert("Can Not Delete Item , May Be Have Related Items")
+                $(".loader").hide();
+            })
+        }
+    }
+
+</script>

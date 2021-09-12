@@ -10,6 +10,8 @@ namespace LowCost.Infrastructure.DashboardViewModels.User
         [Required]
         [Display(Name = "Full Name")]
         public string FullName { get; set; }
+        [Display(Name = "Stock")]
+        public int Stock_Id { get; set; }
         [Required]
         [EmailAddress]
         public string Email { get; set; }

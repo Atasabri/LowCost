@@ -11,7 +11,9 @@ namespace LowCost.Infrastructure.DTOs.Products
     public class ProductDTO : BaseDTO
     {
         public string Name { get; set; }
+        public int? Quantity { get; set; }
         public bool IsFav { get; set; }
+        public bool IsFollowing { get; set; }
         public SubCategoryDTO SubCategory { get; set; }
         public BrandDTO Brand { get; set; }
         public IEnumerable<PricesDTO> Prices { get; set; }

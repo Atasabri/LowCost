@@ -23,6 +23,11 @@ namespace LowCost.Repo.Repositories.Interfaces.User
         /// <returns></returns>
         Task<Domain.Models.User> GetCurrentUser();
         /// <summary>
+        /// Get Current Dashboard Admin User As Identity User
+        /// </summary>
+        /// <returns></returns>
+        Task<Domain.Models.User> GetCurrentDashboardAdminUser();
+        /// <summary>
         /// Check If User Loged in 
         /// </summary>
         /// <returns></returns>

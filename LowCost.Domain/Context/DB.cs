@@ -18,12 +18,17 @@ namespace LowCost.Domain.Context
         {
         }
 
+        public DbSet<Stock> Stocks { get; set; }
+        public DbSet<Zoon> Zoons { get; set; }
+        public DbSet<StockProducts> StockProducts { get; set; }
+        public DbSet<OrderSizeDelivery> OrderSizeDelivery { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<MainCategory> MainCategories { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<Offer> Offers { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductFollowingUser> ProductFollowingUsers { get; set; }
         public DbSet<Market> Markets { get; set; }
         public DbSet<PromoCode> PromoCodes { get; set; }
         public DbSet<Order> Orders { get; set; }

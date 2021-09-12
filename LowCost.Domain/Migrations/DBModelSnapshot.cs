@@ -198,6 +198,9 @@ namespace LowCost.Domain.Migrations
                     b.Property<int?>("Order_Id")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Product_Id")
+                        .HasColumnType("int");
+
                     b.Property<string>("User_Id")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -298,6 +301,9 @@ namespace LowCost.Domain.Migrations
                     b.Property<bool>("Started")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Stock_Id")
+                        .HasColumnType("int");
+
                     b.Property<string>("Street")
                         .HasColumnType("nvarchar(max)");
 
@@ -310,9 +316,15 @@ namespace LowCost.Domain.Migrations
                     b.Property<double>("Total")
                         .HasColumnType("float");
 
+                    b.Property<double>("TotalSize")
+                        .HasColumnType("float");
+
                     b.Property<string>("User_Id")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Zoon_Id")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -345,6 +357,9 @@ namespace LowCost.Domain.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<double>("Size")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Market_Id");
@@ -354,6 +369,27 @@ namespace LowCost.Domain.Migrations
                     b.HasIndex("Product_Id");
 
                     b.ToTable("OrderDetails");
+                });
+
+            modelBuilder.Entity("LowCost.Domain.Models.OrderSizeDelivery", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Delivery")
+                        .HasColumnType("float");
+
+                    b.Property<double>("SizeFrom")
+                        .HasColumnType("float");
+
+                    b.Property<double>("SizeTo")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderSizeDelivery");
                 });
 
             modelBuilder.Entity("LowCost.Domain.Models.OrderStatus", b =>
@@ -463,6 +499,9 @@ namespace LowCost.Domain.Migrations
                     b.Property<string>("Serial_Number")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("Size")
+                        .HasColumnType("float");
+
                     b.Property<int>("SubCategory_Id")
                         .HasColumnType("int");
 
@@ -475,6 +514,29 @@ namespace LowCost.Domain.Migrations
                     b.HasIndex("SubCategory_Id");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("LowCost.Domain.Models.ProductFollowingUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Product_Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("User_Id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Product_Id");
+
+                    b.HasIndex("User_Id");
+
+                    b.ToTable("ProductFollowingUsers");
                 });
 
             modelBuilder.Entity("LowCost.Domain.Models.PromoCode", b =>
@@ -602,6 +664,46 @@ namespace LowCost.Domain.Migrations
                     b.ToTable("Statuses");
                 });
 
+            modelBuilder.Entity("LowCost.Domain.Models.Stock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Stocks");
+                });
+
+            modelBuilder.Entity("LowCost.Domain.Models.StockProducts", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Product_Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Stock_Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Product_Id");
+
+                    b.HasIndex("Stock_Id");
+
+                    b.ToTable("StockProducts");
+                });
+
             modelBuilder.Entity("LowCost.Domain.Models.SubCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -642,6 +744,9 @@ namespace LowCost.Domain.Migrations
                     b.Property<int>("CurrentLangauge")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -681,12 +786,18 @@ namespace LowCost.Domain.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Stock_Id")
+                        .HasColumnType("int");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<int?>("Zoon_Id")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -698,25 +809,54 @@ namespace LowCost.Domain.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("Stock_Id");
+
+                    b.HasIndex("Zoon_Id");
+
                     b.ToTable("AspNetUsers");
 
                     b.HasData(
                         new
                         {
-                            Id = "b8c23845-216a-4e62-8d94-a7d6017d17d6",
+                            Id = "3dd9c0a7-4bc9-441e-baa4-e06f46dad9f8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e401a0cc-2a6c-49c6-811e-a9e746b39abc",
+                            ConcurrencyStamp = "ee7b7913-280c-4a0c-909b-45b7b6df485b",
                             CurrentLangauge = 1,
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJzHPfDW+Y1CQLE2NAPc3a538SxrfXCYBWXQ451d+9icgoduQeFcEUQkE+Vc6uFR8A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENqlm4aflwLcl9XD9Y4v6KLEusbCfNzzpKGu0euNs7jTHgkOMh/zKQ+L8KzRTjwQRw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "eb4bfad9-1bc8-4810-8be6-346f2234c55b",
+                            SecurityStamp = "2123df72-507e-44cc-a18e-1d812a588cff",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
+                });
+
+            modelBuilder.Entity("LowCost.Domain.Models.Zoon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name_AR")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Stock_Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Stock_Id");
+
+                    b.ToTable("Zoons");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -748,29 +888,29 @@ namespace LowCost.Domain.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e2e65233-f3fc-44dc-bd7c-80134955c18c",
-                            ConcurrencyStamp = "c1d3263a-97ab-45c7-815e-084067a3d5b3",
+                            Id = "68f35c14-dad4-4a6a-9789-53bbcd649e86",
+                            ConcurrencyStamp = "32a2a386-1ca0-48ac-8030-19937dda5673",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "3c36c10a-5527-473e-a6ae-8122c494564d",
-                            ConcurrencyStamp = "d3d89a39-12ea-457c-9f14-fe5dbb5e5a9c",
+                            Id = "4c5113d3-30a2-4d61-becf-c259af1bc2d3",
+                            ConcurrencyStamp = "6ea92cfc-a2af-4f13-af2a-4bd95af3a4ff",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         },
                         new
                         {
-                            Id = "e3f43502-c00e-45c2-84df-b0b090dc977e",
-                            ConcurrencyStamp = "563cce7c-6417-49f2-baec-e85b5e361b7d",
+                            Id = "5766ef6f-bb4b-4210-bb89-e4aced1dafc0",
+                            ConcurrencyStamp = "f19c6cd1-a871-4f49-9838-5a818f025e93",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "ef14ffdb-c3b3-4173-bd09-c8784656281d",
-                            ConcurrencyStamp = "6315b0d6-6f98-4fa7-9c71-2d7964e60908",
+                            Id = "12d07f41-6f20-4556-91b6-045cea736acd",
+                            ConcurrencyStamp = "dfea61ff-4628-49cb-82ab-c8b65ee59376",
                             Name = "Driver",
                             NormalizedName = "DRIVER"
                         });
@@ -863,8 +1003,8 @@ namespace LowCost.Domain.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "b8c23845-216a-4e62-8d94-a7d6017d17d6",
-                            RoleId = "e2e65233-f3fc-44dc-bd7c-80134955c18c"
+                            UserId = "3dd9c0a7-4bc9-441e-baa4-e06f46dad9f8",
+                            RoleId = "68f35c14-dad4-4a6a-9789-53bbcd649e86"
                         });
                 });
 
@@ -1025,11 +1165,61 @@ namespace LowCost.Domain.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LowCost.Domain.Models.ProductFollowingUser", b =>
+                {
+                    b.HasOne("LowCost.Domain.Models.Product", "Product")
+                        .WithMany("ProductFollowingUsers")
+                        .HasForeignKey("Product_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LowCost.Domain.Models.User", "User")
+                        .WithMany("ProductFollowingUsers")
+                        .HasForeignKey("User_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("LowCost.Domain.Models.StockProducts", b =>
+                {
+                    b.HasOne("LowCost.Domain.Models.Product", "Product")
+                        .WithMany("StockProducts")
+                        .HasForeignKey("Product_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LowCost.Domain.Models.Stock", "Stock")
+                        .WithMany("StockProducts")
+                        .HasForeignKey("Stock_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("LowCost.Domain.Models.SubCategory", b =>
                 {
                     b.HasOne("LowCost.Domain.Models.Category", "Category")
                         .WithMany("SubCategories")
                         .HasForeignKey("Category_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("LowCost.Domain.Models.User", b =>
+                {
+                    b.HasOne("LowCost.Domain.Models.Stock", "Stock")
+                        .WithMany("Users")
+                        .HasForeignKey("Stock_Id");
+
+                    b.HasOne("LowCost.Domain.Models.Zoon", "Zoon")
+                        .WithMany("Users")
+                        .HasForeignKey("Zoon_Id");
+                });
+
+            modelBuilder.Entity("LowCost.Domain.Models.Zoon", b =>
+                {
+                    b.HasOne("LowCost.Domain.Models.Stock", "Stock")
+                        .WithMany("Zoons")
+                        .HasForeignKey("Stock_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

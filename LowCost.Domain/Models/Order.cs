@@ -20,12 +20,16 @@ namespace LowCost.Domain.Models
         public double SubTotal { get; set; }
         public double Discount { get; set; }
         public double Taxs { get; set; }
+        public double TotalSize { get; set; }
         public PaymentWays PaymentWay { get; set; } 
         [Required]
         public double Total { get; set; }
 
         [Required]
         public string User_Id { get; set; }
+
+        public int Zoon_Id { get; set; }
+        public int Stock_Id { get; set; }
 
         public string Driver_Id { get; set; }
 
@@ -50,6 +54,7 @@ namespace LowCost.Domain.Models
 
         [ForeignKey(nameof(Driver_Id))]
         public User Driver { get; set; }
+
 
 
         public virtual ICollection<OrderDetails> OrderDetails { get; set; }

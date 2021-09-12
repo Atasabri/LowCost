@@ -16,6 +16,7 @@
             <th scope="col">#</th>
             <th scope="col">User Name</th>
             <th scope="col">Email</th>
+            <th scope="col">Stock</th>
             <th scope="col">Actions</th>
         </tr>
     </thead>
@@ -23,14 +24,22 @@
 
         @foreach (var item in Model)
         {
-            <tr id="@item.Id">
-                <th scope="row">@(counter++)</th>
-                <td>@item.Username</td>
-                <td>@item.Email</td>
-                <td>
-                    <button onclick="Delete('@(item.Id)');" class="btn btn-danger">Delete</button>
-                </td>
-            </tr>
+        <tr id="@item.Id">
+            <th scope="row">@(counter++)</th>
+            <td>@item.Username</td>
+            <td>@item.Email</td>
+            @if (item.Stock_Id != null)
+            {
+                <td><a asp-action="Details" asp-controller="Stocks" asp-route-id="@item.Stock_Id" target="_blank">View Stock</a></td>
+            }
+            else
+            {
+                <td>Access All Stocks</td>
+            }
+            <td>
+                <button onclick="Delete('@(item.Id)');" class="btn btn-danger">Delete</button>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
@@ -56,7 +65,10 @@
                     $(".loader").hide();
         }
 
-          )
+            ).fail(function () {
+                alert("Can Not Delete Item , May Be Have Related Items")
+                $(".loader").hide();
+            })
         }
     }
 

@@ -24,6 +24,7 @@ namespace LowCost.Infrastructure.DTOs.Orders
         public ICollection<AddOrderDetailsDTO>  OrderDetails { get; set; }
         [JsonIgnore]
         public string User_Id { get; set; }
+        public int? Zoon_Id { get; set; }
         public string PromoCode { get; set; }
     }
 }

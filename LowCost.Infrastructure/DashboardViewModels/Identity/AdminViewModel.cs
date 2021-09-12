@@ -9,5 +9,6 @@ namespace LowCost.Infrastructure.DashboardViewModels.Identity
         public string Id { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
+        public int? Stock_Id { get; set; }
     }
 }

@@ -17,21 +17,22 @@ using LowCost.Resources;
 using LowCost.Infrastructure.NotificationsHelpers;
 using LowCost.Infrastructure.DashboardViewModels.Orders;
 using LowCost.Business.Helpers;
+using LowCost.Business.Helpers.NotificationHelpers;
 
 namespace LowCost.Business.Services.Orders.Implementation
 {
     public class OrdersService : IOrdersService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly NotificationHandler _notificationHandler;
+        private readonly OrderNotificationHandler _orderNotificationHandler;
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<SharedResource> _stringLocalizer;
 
-        public OrdersService(IUnitOfWork unitOfWork, NotificationHandler notificationHandler,
+        public OrdersService(IUnitOfWork unitOfWork, OrderNotificationHandler orderNotificationHandler,
             IMapper mapper, IStringLocalizer<SharedResource> stringLocalizer)
         {
             this._unitOfWork = unitOfWork;
-            this._notificationHandler = notificationHandler;
+            this._orderNotificationHandler = orderNotificationHandler;
             this._mapper = mapper;
             this._stringLocalizer = stringLocalizer;
         }
@@ -39,15 +40,30 @@ namespace LowCost.Business.Services.Orders.Implementation
         {
             var createState = new CreateState();
             // Get Current User Id
-            var userId = await _unitOfWork.UsersRepository.GetCurrentUserId();
-            addOrderDTO.User_Id = userId;
+            var currentUser = await _unitOfWork.UsersRepository.GetCurrentUser();
+            addOrderDTO.User_Id = currentUser.Id;
 
             var order = _mapper.Map<AddOrderDTO, Order>(addOrderDTO);
+            // Check And Add Zoon & Stock to Order
+            int? zoonId = addOrderDTO.Zoon_Id.HasValue ? addOrderDTO.Zoon_Id : currentUser.Zoon_Id;
+            var zoon = await _unitOfWork.ZoonsRepository.FindByIdAsync(zoonId.Value);
+            if (zoon != null)
+            {
+                order.Zoon_Id = zoon.Id;
+                order.Stock_Id = zoon.Stock_Id;
+            }
+            else
+            {
+                createState.ErrorMessages.Add(_stringLocalizer["Can Not Found Zoon !"]);
+                return createState;
+            }         
+
             if (order.OrderDetails.Any())
             {
                 int productsWithZeroCostCount = 0;
                 foreach (var orderDetailsItem in order.OrderDetails)
                 {
+                    // Check If Quantity More Than 0
                     if(orderDetailsItem.Quantity <= 0)
                     {
                         createState.ErrorMessages.Add(orderDetailsItem.Product_Id.ToString());
@@ -58,6 +74,8 @@ namespace LowCost.Business.Services.Orders.Implementation
                         return createState;
 
                     }
+
+                    // Get Price and Adding To Order Details & Order Subtotal
                     var priceItem = await _unitOfWork.PricesRepository.FindElementAsync(price =>
                                 price.Product_Id == orderDetailsItem.Product_Id &&
                                 price.Market_Id == orderDetailsItem.Market_Id);
@@ -74,15 +92,31 @@ namespace LowCost.Business.Services.Orders.Implementation
                     {
                         productsWithZeroCostCount++;
                     }
+                    // Check If User Adding Products With Zero Cost More Than The Max Default Value in One Product
                     if(productsWithZeroCostCount > Constants.MaxZeroItemsinOrder)
                     {
                         createState.ErrorMessages.Add(_stringLocalizer["You Can Order Only One Product With Zero Cost"]);
                         return createState;
                     }
-
                     orderDetailsItem.Price = priceItem.Price;
                     order.SubTotal += orderDetailsItem.Price * orderDetailsItem.Quantity;
+
+                    // Decrease Quantity Of Product
+                    var productQuantityStock = await _unitOfWork.StockProductsRepository
+                        .FindElementAsync(stockQuantity => 
+                        stockQuantity.Product_Id == orderDetailsItem.Product_Id && stockQuantity.Stock_Id == order.Stock_Id);
+                    // Check If Quantity Not Available
+                    if(productQuantityStock == null || orderDetailsItem.Quantity > productQuantityStock.Quantity)
+                    {
+                        createState.ErrorMessages.Add(orderDetailsItem.Product_Id.ToString());
+                        createState.ErrorMessages.Add(_stringLocalizer["Quantity Of Product '{0}' Not Available In Stock", orderDetailsItem.Product_Id]);
+                        return createState;
+                    }
+                    productQuantityStock.Quantity -= orderDetailsItem.Quantity;
+                    _unitOfWork.StockProductsRepository.Update(productQuantityStock);
                 }
+
+                // Check If User Order Zero With Cost And Price Limitation More Than Default
                 if(productsWithZeroCostCount > 0)
                 {
                     double maxLimit;
@@ -107,6 +141,7 @@ namespace LowCost.Business.Services.Orders.Implementation
                 return createState;
             }
 
+            // Check Promo Code & Get Discount If Found
             if(!string.IsNullOrEmpty(addOrderDTO.PromoCode))
             {
                 var promoResult = await CheckPromoCodeAsync(addOrderDTO.PromoCode);
@@ -127,7 +162,7 @@ namespace LowCost.Business.Services.Orders.Implementation
             order.Taxs = hasTaxs ? taxs : Constants.DefaultTaxValue;
             // Calculate Final Order Total Price
             order.Total = (order.SubTotal - order.Discount) + order.Taxs;
-
+            
             await _unitOfWork.OrdersRepository.CreateAsync(order);
 
             var result = await _unitOfWork.SaveAsync() > 0;
@@ -277,7 +312,7 @@ namespace LowCost.Business.Services.Orders.Implementation
             var result = await _unitOfWork.SaveAsync() > 0;
             if(result)
             {
-                await _notificationHandler.NotifyUserOrderAsync(orderId, "Your order '{0}' has been delivered");
+                await _orderNotificationHandler.NotifyUserOrderAsync(orderId, "Your order '{0}' has been delivered");
                 actionState.ExcuteSuccessfully = true;
                 return actionState;
             }
@@ -301,11 +336,38 @@ namespace LowCost.Business.Services.Orders.Implementation
             var result = await _unitOfWork.SaveAsync() > 0;
             if (result)
             {
-                await _notificationHandler.NotifyUserOrderAsync(orderId, "Your Order '{0}' has been completed");
+                await _orderNotificationHandler.NotifyUserOrderAsync(orderId, "Your Order '{0}' has been completed");
                 actionState.ExcuteSuccessfully = true;
                 return actionState;
             }
             actionState.ErrorMessages.Add(_stringLocalizer["Can Not Finish Order"]);
+            return actionState;
+        }
+
+        public async Task<ActionState> CloseOrderAsync(int orderId)
+        {
+            var actionState = new ActionState();
+            string currentUserId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var order = await _unitOfWork.OrdersRepository.FindElementAsync(order => order.Id == orderId && order.User_Id == currentUserId);
+            if (order == null)
+            {
+                actionState.ErrorMessages.Add(_stringLocalizer["Can Not Close Order"]);
+                return actionState;
+            }
+            if(order.Driver_Id != null)
+            {
+                actionState.ErrorMessages.Add(_stringLocalizer["Order Assign to Driver , please Call Driver to Stop Order"]);
+                return actionState;
+            }
+            order.Closed = true;
+            _unitOfWork.OrdersRepository.Update(order);
+            var result = await _unitOfWork.SaveAsync() > 0;
+            if (result)
+            {
+                actionState.ExcuteSuccessfully = true;
+                return actionState;
+            }
+            actionState.ErrorMessages.Add(_stringLocalizer["Can Not Close Order"]);
             return actionState;
         }
     }

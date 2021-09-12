@@ -82,6 +82,13 @@ using LowCost.Business.Services.Settings.Implementation;
 using LowCost.Business.Services.Settings.Interfaces;
 using LowCost.Business.Services.Search.Implementation.Dashboard;
 using LowCost.Business.Services.Search.Interfaces.Dashboard;
+using LowCost.Business.Helpers.NotificationHelpers;
+using LowCost.Business.Services.ProductFollowingUsersService.Interfaces;
+using LowCost.Business.Services.ProductFollowingUsersService.Implementation;
+using LowCost.Business.Services.Zoons.Implementation.Dashboard;
+using LowCost.Business.Services.Zoons.Interfaces.Dashboard;
+using LowCost.Business.Services.Stocks.Implementation.Dashboard;
+using LowCost.Business.Services.Stocks.Interfaces.Dashboard;
 
 namespace LowCost.Web
 {
@@ -213,6 +220,7 @@ namespace LowCost.Web
 
             services.AddTransient<ICategoriesService, CategoriesService>();
             services.AddTransient<IProductsService, ProductsService>();
+            services.AddTransient<IProductFollowingUsersService, ProductFollowingUsersService>();
             services.AddTransient<ISearchService, SearchService>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IDriverAuthenticationService, DriverAuthenticationService>();
@@ -231,7 +239,7 @@ namespace LowCost.Web
             services.AddTransient<ISettingsService, SettingsService>();
 
 
-            // Dashboard Dpendency Injection
+            // Dashboard Dependency Injection Register
             services.AddTransient<IDashboardAuthenticationService, DashboardAuthenticationService>();
             services.AddTransient<IDashboardUserService, DashboardUserService>();
             services.AddTransient<IDashboardDriverService, DashboardDriverService>();
@@ -248,13 +256,17 @@ namespace LowCost.Web
             services.AddTransient<IDashboardOrdersService, DashboardOrdersService>();
             services.AddTransient<IDashboardSettingsService, DashboardSettingsService>();
             services.AddTransient<IDashboardSearchService, DashboardSearchService>();
+            services.AddTransient<IDashboardZoonsService, DashboardZoonsService>(); 
+            services.AddTransient<IDashboardStocksService, DashboardStocksService>();
 
+            // Handlers DI Register
             services.AddTransient<AuthenticationHandler>();
-            services.AddTransient<NotificationHandler>();
+            services.AddTransient<OrderNotificationHandler>();
+            services.AddTransient<ProductNotificationHandler>();
 
             services.AddHttpContextAccessor();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
-            services.AddTransient<DB>();
+            services.AddScoped<DB>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

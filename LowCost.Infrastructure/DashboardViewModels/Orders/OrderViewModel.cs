@@ -20,6 +20,7 @@ namespace LowCost.Infrastructure.DashboardViewModels.Orders
         [Display(Name = "Payment Way")]
         public PaymentWays PaymentWay { get; set; }
         public double Total { get; set; }
+        public int Zoon_Id { get; set; }
 
         public string User_Id { get; set; }
         [Display(Name = "User Name")]

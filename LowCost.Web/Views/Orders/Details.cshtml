@@ -120,6 +120,12 @@
             @Html.DisplayFor(model => model.DriverPhone)
         </dd>
         <dt class="col-sm-2">
+            Zoon
+        </dt>
+        <dd class="col-sm-10">
+            <a asp-action="Details" asp-controller="Zoons" asp-route-id="@Model.Zoon_Id" target="_blank">View Zoon</a>
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Discription)
         </dt>
         <dd class="col-sm-10">
@@ -163,8 +169,14 @@
         </dd>
     </dl>
     <div>
-        @Html.ActionLink("Add Status", "AddStatus", new { id = Model.Id }) |
-        @Html.ActionLink("Assign Driver", "AssignDriver", new { id = Model.Id }) |
+        @if (!Model.Closed)
+        {
+        <div>
+            @Html.ActionLink("Add Status", "AddStatus", new { id = Model.Id }) |
+            @Html.ActionLink("Assign Driver", "AssignDriver", new { id = Model.Id }) |
+        </div>
+        }
+
         <a asp-action="Index">Back to List</a>
     </div>
 

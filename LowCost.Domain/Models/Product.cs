@@ -18,6 +18,8 @@ namespace LowCost.Domain.Models
 
         public int? Offer_Id { get; set; }
 
+        public double Size { get; set; }
+
 
 
         [ForeignKey(nameof(SubCategory_Id))]
@@ -35,5 +37,9 @@ namespace LowCost.Domain.Models
         public virtual ICollection<OrderDetails> OrderDetails { get; set; }
 
         public virtual ICollection<Favorites> Favorites { get; set; }
+
+        public virtual ICollection<ProductFollowingUser> ProductFollowingUsers { get; set; }
+
+        public virtual ICollection<StockProducts> StockProducts { get; set; }
     }
 }

@@ -32,6 +32,7 @@ namespace LowCost.Infrastructure.DashboardViewModels.Products
         }
 
         public List<AddPriceViewModel> AddingPrices { get; set; } = new List<AddPriceViewModel>();
+        public List<ProductStockQuantityViewModel> StockQuantities { get; set; } = new List<ProductStockQuantityViewModel>();
         public int[] DeletingPrices { get; set; } = new int[] { };
 
         public IFormFile Photo { get; set; }

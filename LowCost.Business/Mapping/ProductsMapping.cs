@@ -26,6 +26,9 @@ namespace LowCost.Business.Mapping
             CreateMap<Prices, PricesDTO>()
                     .ForMember(dest => dest.MarketName, opt => opt.MapFrom(src => src.Market.GetType().GetProperty(localizedName).GetValue(src.Market)))
                     .ReverseMap();
+
+            CreateMap<StockProducts, ProductStocksQuantityDTO>()
+                    .ReverseMap();
         }
 
         void DashboardProductsMapping()
@@ -33,15 +36,20 @@ namespace LowCost.Business.Mapping
             CreateMap<Product, ProductViewModel>()
                 .ForMember(dest => dest.SubCategoryName, opt => opt.MapFrom(src => src.SubCategory.Name))
                 .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand.Name))
+                .ForMember(dest => dest.StockQuantities, opt => opt.MapFrom(src => src.StockProducts))
                 .ForMember(dest => dest.OfferName, opt => opt.MapFrom(src => src.Offer_Id.HasValue? src.Offer.Name : null))
                 .ReverseMap();
             CreateMap<Product, ListingProductViewModel>()
                 .ForMember(dest => dest.SubCategoryName, opt => opt.MapFrom(src => src.SubCategory.Name))
                 .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand.Name))
                 .ReverseMap();
-            CreateMap<AddProductViewModel, Product>().ReverseMap();
+            CreateMap<AddProductViewModel, Product>()
+                  .ForMember(dest => dest.StockProducts, opt => opt.MapFrom(src => src.StockQuantities))
+                  .ReverseMap();
             CreateMap<EditProductViewModel, Product>().ReverseMap();
 
+            // Mapping Stock Procuts ViewModels
+            CreateMap<ProductStockQuantityViewModel, StockProducts>().ReverseMap();
             // Mapping Prices View Models
             CreateMap<AddPriceViewModel, Prices>().ReverseMap();
             CreateMap<EditPriceViewModel, Prices>().ReverseMap();

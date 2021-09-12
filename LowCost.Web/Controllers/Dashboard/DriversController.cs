@@ -1,4 +1,6 @@
-﻿using LowCost.Business.Services.User.Interfaces.Dashboard;
+﻿using LowCost.Business.Services.Stocks.Interfaces.Dashboard;
+using LowCost.Business.Services.User.Interfaces.Dashboard;
+using LowCost.Infrastructure.BaseService;
 using LowCost.Infrastructure.DashboardViewModels.User;
 using LowCost.Infrastructure.Helpers;
 using LowCost.Infrastructure.Pagination;
@@ -11,13 +13,14 @@ using System.Threading.Tasks;
 
 namespace LowCost.Web.Controllers.Dashboard
 {
-    [Authorize(Roles = Admin.AdminRoleName)]
-    public class DriversController : Controller
+    public class DriversController : DashboardController
     {
+        private readonly IDashboardStocksService _dashboardStocksService;
         private readonly IDashboardDriverService _dashboardDriverService;
 
-        public DriversController(IDashboardDriverService dashboardDriverService)
+        public DriversController(IDashboardStocksService dashboardStocksService, IDashboardDriverService dashboardDriverService)
         {
+            this._dashboardStocksService = dashboardStocksService;
             this._dashboardDriverService = dashboardDriverService;
         }
         public async Task<IActionResult> Index(PagingParameters pagingparameters)
@@ -26,8 +29,9 @@ namespace LowCost.Web.Controllers.Dashboard
             return View(drivers);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewBag.Stocks = await _dashboardStocksService.GetAllStocksAsync();
             return View();
         }
 
@@ -43,6 +47,7 @@ namespace LowCost.Web.Controllers.Dashboard
                 }
                 ModelState.AddModelError("", result.ErrorMessages.FirstOrDefault());
             }
+            ViewBag.Stocks = await _dashboardStocksService.GetAllStocksAsync();
             return View(addDriverViewModel);
         }
 

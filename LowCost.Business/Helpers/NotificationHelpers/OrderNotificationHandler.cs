@@ -11,14 +11,14 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LowCost.Business.Helpers
+namespace LowCost.Business.Helpers.NotificationHelpers
 {
-    public class NotificationHandler
+    public class OrderNotificationHandler
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStringLocalizer<SharedResource> _stringLocalizer;
 
-        public NotificationHandler(IUnitOfWork unitOfWork, IStringLocalizer<SharedResource> stringLocalizer)
+        public OrderNotificationHandler(IUnitOfWork unitOfWork, IStringLocalizer<SharedResource> stringLocalizer)
         {
             this._unitOfWork = unitOfWork;
             this._stringLocalizer = stringLocalizer;

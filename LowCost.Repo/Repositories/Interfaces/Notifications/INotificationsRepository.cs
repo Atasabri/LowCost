@@ -29,5 +29,11 @@ namespace LowCost.Repo.Repositories.Interfaces.Notifications
         /// <param name="topicNotifyState"></param>
         /// <returns></returns>
         Task<IEnumerable<string>> NotifyTopicAsync(TopicNotifyState topicNotifyState);
+        /// <summary>
+        /// Sending Notification To Mobile Devices Using Topics Asynchronous
+        /// </summary>
+        /// <param name="multiTopicsNotifyState"></param>
+        /// <returns></returns>
+        Task<IEnumerable<string>> NotifyMultiTopicsAsync(MultiTopicsNotifyState multiTopicsNotifyState);
     }
 }

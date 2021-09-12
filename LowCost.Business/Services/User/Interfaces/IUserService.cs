@@ -37,5 +37,11 @@ namespace LowCost.Business.Services.User.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<ActionState> ChangeLoginedUserCurrentLanguageAsync(Languages language);
+        /// <summary>
+        /// Change Current User Zoon Asynchronous
+        /// </summary>
+        /// <param name="zoonId"></param>
+        /// <returns></returns>
+        Task<ActionState> ChangeCurrentUserZoonAsync(int zoonId);
     }
 }

@@ -10,6 +10,7 @@ namespace LowCost.Infrastructure.DTOs.Identity
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Password { get; set; }
+        public int? Zoon_Id { get; set; }
         public string FCM { get; set; }
     }
 }

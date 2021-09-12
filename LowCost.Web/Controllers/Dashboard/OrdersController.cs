@@ -52,6 +52,11 @@ namespace LowCost.Web.Controllers.Dashboard
         // GET: Orders/AddStatus/5
         public async Task<ActionResult> AddStatus(int id)
         {
+            var order = await _dashboardOrdersService.GetOrderDetailsAsync(id);
+            if (order.Closed)
+            {
+                return BadRequest();
+            }
             var statuses = await _dashboardOrdersService.GetOrderStatusesAsync(id);
             ViewBag.Order_Id = id;
             ViewBag.Statuses = await _dashboardOrdersService.GetAllStatusesAsync();
@@ -81,6 +86,10 @@ namespace LowCost.Web.Controllers.Dashboard
         public async Task<ActionResult> AssignDriver(int id)
         {
             var order = await _dashboardOrdersService.GetOrderDetailsAsync(id);
+            if(order.Closed)
+            {
+                return BadRequest();
+            }
             ViewBag.Drivers = await _dashboardDriverService.GetAllDriversAsync();
             return View(order);
         }

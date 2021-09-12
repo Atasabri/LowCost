@@ -72,7 +72,10 @@
                     $(".loader").hide();
         }
 
-          )
+            ).fail(function () {
+                alert("Can Not Delete Item , May Be Have Related Items")
+                $(".loader").hide();
+            })
         }
     }
 

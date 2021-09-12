@@ -95,6 +95,7 @@ namespace LowCost.Business.Services.Identity.Implementation
                         UserName = userName,
                         FullName = externalLoginDTO.FullName,
                         FCM = externalLoginDTO.FCM,
+                        Zoon_Id = externalLoginDTO.Zoon_Id,
                         PhoneNumber = externalLoginDTO.Phone
                     };
                     var createUserResult = await _userManager.CreateAsync(loginUser);
@@ -141,6 +142,7 @@ namespace LowCost.Business.Services.Identity.Implementation
                 UserName = registerDTO.Email,
                 FullName = registerDTO.FullName,
                 FCM = registerDTO.FCM,
+                Zoon_Id = registerDTO.Zoon_Id,
                 PhoneNumber = registerDTO.Phone
             };
             var result = await _userManager.CreateAsync(user, registerDTO.Password);

@@ -10,9 +10,13 @@ namespace LowCost.Infrastructure.DTOs.Products
     public class ListingProductDTO : BaseDTO
     {
         public string Name { get; set; }
+        public int? Quantity { get; set; }
         public bool IsFav { get; set; }
         [JsonIgnore]
         public IEnumerable<PricesDTO> Prices { get; set; }
+        [JsonIgnore]
+        public IEnumerable<ProductStocksQuantityDTO> StockProducts { get; set; }
+
         public PricesDTO LowPriceData
         {
             get
