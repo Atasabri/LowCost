@@ -4,6 +4,7 @@ using LowCost.Business.Services.Markets.Interfaces.Dashboard;
 using LowCost.Business.Services.Offers.Interfaces.Dashboard;
 using LowCost.Business.Services.Products.Interfaces.Dashboard;
 using LowCost.Business.Services.Search.Interfaces.Dashboard;
+using LowCost.Business.Services.Stocks.Interfaces.Dashboard;
 using LowCost.Infrastructure.BaseService;
 using LowCost.Infrastructure.DashboardViewModels.Offers;
 using LowCost.Infrastructure.DashboardViewModels.Products;
@@ -23,14 +24,15 @@ namespace LowCost.Web.Controllers.Dashboard
         private readonly IDashboardMarketsService _dashboardMarketsService;
         private readonly IDashboardSearchService _dashboardSearchService;
         private readonly IDashboardBrandsService _dashboardBrandsService;
-
+        private readonly IDashboardStocksService _dashboardStocksService;
 
         public ProductsController(IDashboardProductsService dashboardProductsService,
             IDashboardOffersService dashboardOffersService,
             IDashboardMainCategoriesService dashboardMainCategoriesService,
             IDashboardMarketsService dashboardMarketsService,
             IDashboardSearchService dashboardSearchService,
-            IDashboardBrandsService dashboardBrandsService)
+            IDashboardBrandsService dashboardBrandsService,
+            IDashboardStocksService dashboardStocksService)
         {
             this._dashboardProductsService = dashboardProductsService;
             this._dashboardOffersService = dashboardOffersService;
@@ -38,6 +40,7 @@ namespace LowCost.Web.Controllers.Dashboard
             this._dashboardMarketsService = dashboardMarketsService;
             this._dashboardSearchService = dashboardSearchService;
             this._dashboardBrandsService = dashboardBrandsService;
+            this._dashboardStocksService = dashboardStocksService;
         }
         // GET: Products
         public async Task<ActionResult> Index(PagingParameters pagingParameters, string searchTerms = null)
@@ -58,6 +61,7 @@ namespace LowCost.Web.Controllers.Dashboard
         public async Task<ActionResult> Details(int id)
         {
             var result = await _dashboardProductsService.GetProductDetailsAsync(id);
+            ViewBag.Stocks = await _dashboardStocksService.GetAllStocksAsync();
             return View(result);
         }
 
@@ -120,11 +124,10 @@ namespace LowCost.Web.Controllers.Dashboard
         private async Task ConfigureViewData()
         {
             ViewBag.MainCategories = await _dashboardMainCategoriesService.GetAllMainCategoriesAsync();
-            var offersList = (await _dashboardOffersService.GetAllOffersAsync()).ToList();
-            offersList.Insert(0, new OfferViewModel { Id = 0, Name = "-- Select Offer --" });
-            ViewBag.Offers = offersList;
+            ViewBag.Offers = await _dashboardOffersService.GetAllOffersAsync();
             ViewBag.Markets = await _dashboardMarketsService.GetAllMarketsAsync();
             ViewBag.Brands = await _dashboardBrandsService.GetAllBrandsAsync();
+            ViewBag.Stocks = await _dashboardStocksService.GetAllStocksAsync();
         }
 
         // POST: Products/Delete/5

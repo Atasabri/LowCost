@@ -9,5 +9,6 @@ namespace LowCost.Infrastructure.DTOs.Notifications
         public string Message { get; set; }
         public DateTime DateTime { get; set; }
         public int? Order_Id { get; set; }
+        public int? Product_Id { get; set; }
     }
 }

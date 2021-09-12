@@ -3,6 +3,7 @@ using LowCost.Business.Services.Orders.Interfaces;
 using LowCost.Business.Services.User.Interfaces;
 using LowCost.Infrastructure.BaseService;
 using LowCost.Infrastructure.DTOs.User;
+using LowCost.Infrastructure.DTOs.User.Driver;
 using LowCost.Infrastructure.Helpers;
 using LowCost.Infrastructure.Pagination;
 using Microsoft.AspNetCore.Mvc;
@@ -30,9 +31,9 @@ namespace LowCost.Web.Controllers.APIs
         }
 
         [HttpPut("EditProfile")]
-        public async Task<IActionResult> EditProfile([FromForm] EditProfileDTO editProfileDTO)
+        public async Task<IActionResult> EditProfile([FromForm] EditDriverProfileDTO editDriverProfileDTO)
         {
-            var result = await _driverService.EditProfileAsync(editProfileDTO);
+            var result = await _driverService.EditProfileAsync(editDriverProfileDTO);
             if (result.ExcuteSuccessfully)
             {
                 return Ok(result);

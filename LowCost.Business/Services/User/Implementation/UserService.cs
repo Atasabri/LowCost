@@ -68,6 +68,9 @@ namespace LowCost.Business.Services.User.Implementation
             user.UserName = editProfileDTO.Email;
             user.Email = editProfileDTO.Email;
             user.PhoneNumber = editProfileDTO.Phone;
+            user.Zoon_Id = editProfileDTO.Zoon_Id;
+            user.DateOfBirth = editProfileDTO.DateOfBirth;
+
             var checkPhoneResult = await _authenticationHandler.CheckPhoneNumberAvailableAsync(user.PhoneNumber, user.Id);
             if (!checkPhoneResult.ExcuteSuccessfully)
             {
@@ -137,6 +140,21 @@ namespace LowCost.Business.Services.User.Implementation
             var user = await _unitOfWork.UsersRepository.GetCurrentUser();
             // Change Password Of Current User
             var result = await _userManager.ChangePasswordAsync(user, changePasswordDTO.OldPassword, changePasswordDTO.NewPassword);
+            if (result.Succeeded)
+            {
+                actionState.ExcuteSuccessfully = true;
+                return actionState;
+            }
+            actionState.ErrorMessages.AddRange(result.Errors.Select(error => error.Description).ToList());
+            return actionState;
+        }
+
+        public async Task<ActionState> ChangeCurrentUserZoonAsync(int zoonId)
+        {
+            var actionState = new ActionState();
+            var user = await _unitOfWork.UsersRepository.GetCurrentUser();
+            user.Zoon_Id = zoonId;
+            var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
                 actionState.ExcuteSuccessfully = true;

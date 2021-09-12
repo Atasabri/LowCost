@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<StockViewModel> Stocks = ViewBag.Stocks as List<StockViewModel>;
 }
 
 <h1>Create</h1>
@@ -50,7 +51,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="Offer_Id" class="control-label"></label>
-                <select asp-for="Offer_Id" asp-items="@(new SelectList(ViewBag.Offers, "Id", "Name"))" class="form-control"></select>
+                <select asp-for="Offer_Id" asp-items="@(new SelectList(ViewBag.Offers, "Id", "Name"))" class="form-control">
+                    <option value="0">-- Select Offer --</option>
+                </select>
                 <span asp-validation-for="Offer_Id" class="text-danger"></span>
             </div>
 
@@ -79,6 +82,16 @@
                 <tbody id="tbl">
                 </tbody>
             </table>
+
+             @for(int i=0; i< Stocks.Count();i++)
+	         {
+                <div class="form-group">
+                    <label class="control-label">@(Stocks[i].Name) Quantity</label>
+                    <input type="hidden" name="StockQuantities[@(i)].Stock_Id" value="@(Stocks[i].Id)" />
+                    <input type="number" name="StockQuantities[@(i)].Quantity" required min="0" value="0" class="form-control" />
+                    <span for="StockQuantities[@(i)].Quantity" class="text-danger"></span>
+                </div>
+	         }
             <div class="form-group">
                 <label asp-for="Photo" class="control-label"></label>
                 <input asp-for="Photo" class="form-control" />

@@ -71,5 +71,16 @@ namespace LowCost.Web.Controllers.APIs
             }
             return BadRequest(result);
         }
+
+        [HttpPut("ChangeCurrentUserZoon/{zoonId}")]
+        public async Task<IActionResult> ChangeCurrentUserZoon(int zoonId)
+        {
+            var result = await _userService.ChangeCurrentUserZoonAsync(zoonId);
+            if (result.ExcuteSuccessfully)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
     }
 }

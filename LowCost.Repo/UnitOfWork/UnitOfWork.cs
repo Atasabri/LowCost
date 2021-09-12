@@ -37,6 +37,16 @@ using LowCost.Repo.Repositories.Interfaces.Settings;
 using LowCost.Repo.Repositories.Implementation.Settings;
 using LowCost.Repo.Repositories.Interfaces.SMSCodes;
 using LowCost.Repo.Repositories.Implementation.SMSCodes;
+using LowCost.Repo.Repositories.Interfaces.ProductFollowingUsers;
+using LowCost.Repo.Repositories.Implementation.ProductFollowingUsers;
+using LowCost.Repo.Repositories.Interfaces.Zoons;
+using LowCost.Repo.Repositories.Interfaces.Stocks;
+using LowCost.Repo.Repositories.Interfaces.StockProducts;
+using LowCost.Repo.Repositories.Interfaces.OrderSizeDelivery;
+using LowCost.Repo.Repositories.Implementation.Zoons;
+using LowCost.Repo.Repositories.Implementation.Stocks;
+using LowCost.Repo.Repositories.Implementation.StockProducts;
+using LowCost.Repo.Repositories.Implementation.OrderSizeDelivery;
 
 namespace LowCost.Repo.UnitOfWork
 {
@@ -51,6 +61,9 @@ namespace LowCost.Repo.UnitOfWork
 
         IBrandsRepository brandsRepository;
         ISlidersRepository slidersRepository;
+        IZoonsRepository zoonsRepository;
+        IStocksRepository stocksRepository;
+        IStockProductsRepository stockProductsRepository;
         ICategoriesRepository categoriesRepository;
         IMainCategoriesRepository mainCategoriesRepository;
         ISubCategoriesRepository subCategoriesRepository;
@@ -63,6 +76,7 @@ namespace LowCost.Repo.UnitOfWork
         IStatusesRepository statusesRepository;
         IPricesRepository pricesRepository;
         IProductsRepository productsRepository;
+        IProductFollowingUsersRepository productFollowingUsersRepository;
         IPromoCodesRepository promoCodesRepository;
         IAddressesRepository addressesRepository;
         IFavoritesRepository favoritesRepository;
@@ -70,6 +84,7 @@ namespace LowCost.Repo.UnitOfWork
         IUsersRepository usersRepository;
         IFilesRepository filesRepository;
         ISettingsRepository settingsRepository;
+        IOrderSizeDeliveryRepository orderSizeDeliveryRepository;
         ISMSCodeRepository smsCodeRepository;
 
 
@@ -94,6 +109,42 @@ namespace LowCost.Repo.UnitOfWork
                     slidersRepository = new SlidersRepository(_context);
                 }
                 return slidersRepository;
+            }
+        }
+
+        public IZoonsRepository ZoonsRepository
+        {
+            get
+            {
+                if (zoonsRepository == null)
+                {
+                    zoonsRepository = new ZoonsRepository(_context);
+                }
+                return zoonsRepository;
+            }
+        }
+
+        public IStocksRepository StocksRepository
+        {
+            get
+            {
+                if (stocksRepository == null)
+                {
+                    stocksRepository = new StocksRepository(_context);
+                }
+                return stocksRepository;
+            }
+        }
+
+        public IStockProductsRepository StockProductsRepository
+        {
+            get
+            {
+                if (stockProductsRepository == null)
+                {
+                    stockProductsRepository = new StockProductsRepository(_context);
+                }
+                return stockProductsRepository;
             }
         }
 
@@ -229,6 +280,18 @@ namespace LowCost.Repo.UnitOfWork
             }
         }
 
+        public IProductFollowingUsersRepository ProductFollowingUsersRepository
+        {
+            get
+            {
+                if (productFollowingUsersRepository == null)
+                {
+                    productFollowingUsersRepository = new ProductFollowingUsersRepository(_context);
+                }
+                return productFollowingUsersRepository;
+            }
+        }
+
         public IProductsRepository ProductsRepository
         {
             get
@@ -322,6 +385,18 @@ namespace LowCost.Repo.UnitOfWork
                     settingsRepository = new SettingsRepository(_context);
                 }
                 return settingsRepository;
+            }
+        }
+
+        public IOrderSizeDeliveryRepository OrderSizeDeliveryRepository
+        {
+            get
+            {
+                if (orderSizeDeliveryRepository == null)
+                {
+                    orderSizeDeliveryRepository = new OrderSizeDeliveryRepository(_context);
+                }
+                return orderSizeDeliveryRepository;
             }
         }
 

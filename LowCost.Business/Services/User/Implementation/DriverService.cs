@@ -48,16 +48,16 @@ namespace LowCost.Business.Services.User.Implementation
             return actionState;
         }
 
-        public async Task<ActionState> EditProfileAsync(EditProfileDTO editProfileDTO)
+        public async Task<ActionState> EditProfileAsync(EditDriverProfileDTO editDriverProfileDTO)
         {
             var actionState = new ActionState();
             // Get Current Logined Driver
             var driver = await _unitOfWork.UsersRepository.GetCurrentUser();
             // Change Driver Data
-            driver.FullName = editProfileDTO.FullName;
-            driver.UserName = editProfileDTO.Email;
-            driver.Email = editProfileDTO.Email;
-            driver.PhoneNumber = editProfileDTO.Phone;
+            driver.FullName = editDriverProfileDTO.FullName;
+            driver.UserName = editDriverProfileDTO.Email;
+            driver.Email = editDriverProfileDTO.Email;
+            driver.PhoneNumber = editDriverProfileDTO.Phone;
             var checkPhoneResult = await _authenticationHandler.CheckPhoneNumberAvailableAsync(driver.PhoneNumber, driver.Id);
             if (!checkPhoneResult.ExcuteSuccessfully)
             {
@@ -69,9 +69,9 @@ namespace LowCost.Business.Services.User.Implementation
             if (result.Succeeded)
             {
                 // Change Image 
-                if (editProfileDTO.Photo != null)
+                if (editDriverProfileDTO.Photo != null)
                 {
-                    var savingImageData = new SavingFileData() { fileName = driver.Id, folderName = "Drivers", File = editProfileDTO.Photo };
+                    var savingImageData = new SavingFileData() { fileName = driver.Id, folderName = "Drivers", File = editDriverProfileDTO.Photo };
                     await _unitOfWork.FilesRepository.SaveFileAsync(savingImageData);
                 }
                 actionState.ExcuteSuccessfully = true;

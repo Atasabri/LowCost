@@ -13,6 +13,7 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -105,6 +106,23 @@ namespace LowCost.Repo.Repositories.Implementation.Notifications
                     data = topicNotifyState.NotificationHiddenData,
                     body = topicNotifyState.Body,
                     title = topicNotifyState.Title,
+                },
+                priority = "high"
+            };
+
+            return await NotifyAsync(payload);
+        }
+
+        public async Task<IEnumerable<string>> NotifyMultiTopicsAsync(MultiTopicsNotifyState multiTopicsNotifyState)
+        {
+            object payload = new
+            {
+                condition = string.Join(" || ", multiTopicsNotifyState.Topics.Select(topic => string.Format("'{0}' in topics", topic)).ToArray()),
+                data = new
+                {
+                    data = multiTopicsNotifyState.NotificationHiddenData,
+                    body = multiTopicsNotifyState.Body,
+                    title = multiTopicsNotifyState.Title,
                 },
                 priority = "high"
             };

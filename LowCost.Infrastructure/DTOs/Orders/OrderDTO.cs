@@ -33,6 +33,7 @@ namespace LowCost.Infrastructure.DTOs.Orders
         public double Longitude { get; set; }
 
         public string UserName { get; set; }
+        public string Zoon_Id { get; set; }
 
         public string DriverName { get; set; }
         public string DriverPhone { get; set; }

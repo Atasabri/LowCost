@@ -17,5 +17,6 @@ namespace LowCost.Infrastructure.DashboardViewModels.Products
         [Display(Name = "Offer")]
         public int? Offer_Id { get; set; }
         public List<PriceViewModel> Prices { get; set; }
+        public List<ProductStockQuantityViewModel> StockQuantities { get; set; } = new List<ProductStockQuantityViewModel>();
     }
 }

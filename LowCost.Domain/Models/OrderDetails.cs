@@ -14,6 +14,9 @@ namespace LowCost.Domain.Models
         [Required]
         public int Quantity { get; set; }
 
+        public double Size { get; set; }
+
+
         public int Product_Id { get; set; }
         public int Order_Id { get; set; }
         public int Market_Id { get; set; }

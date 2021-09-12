@@ -3,6 +3,7 @@ using LowCost.Business.Services.User.Interfaces.Dashboard;
 using LowCost.Infrastructure.DashboardViewModels.Identity;
 using LowCost.Infrastructure.Helpers;
 using LowCost.Infrastructure.Pagination;
+using LowCost.Repo.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -15,18 +16,20 @@ namespace LowCost.Business.Services.User.Implementation.Dashboard
 {
     public class DashboardUserService : IDashboardUserService
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<Domain.Models.User> _userManager;
         private readonly IMapper _mapper;
 
-        public DashboardUserService(UserManager<Domain.Models.User> userManager, IMapper mapper)
+        public DashboardUserService(IUnitOfWork unitOfWork, UserManager<Domain.Models.User> userManager, IMapper mapper)
         {
+            this._unitOfWork = unitOfWork;
             this._userManager = userManager;
             this._mapper = mapper;
         }
 
-        public async Task<IdentityResult> ChangePasswordAsync(ClaimsPrincipal currentUser, ChangePasswordViewModel changePasswordViewModel)
+        public async Task<IdentityResult> ChangePasswordAsync(ChangePasswordViewModel changePasswordViewModel)
         {
-            var user = await _userManager.GetUserAsync(currentUser);
+            var user = await _unitOfWork.UsersRepository.GetCurrentDashboardAdminUser();
             return await _userManager.ChangePasswordAsync(user,
                                                           changePasswordViewModel.CurrentPassword,
                                                           changePasswordViewModel.NewPassword);
@@ -35,7 +38,8 @@ namespace LowCost.Business.Services.User.Implementation.Dashboard
         public async Task<IdentityResult> CreateNewAdminAsync(AddNewAdminViewModel addNewAdminViewModel)
         {
             var user = _mapper.Map<AddNewAdminViewModel, Domain.Models.User>(addNewAdminViewModel);
-
+            // Admin User Can Not Have Stock (Access All Data)
+            user.Stock_Id = null;
             var result = await _userManager.CreateAsync(user, addNewAdminViewModel.Password);
             if(result.Succeeded)
             {
@@ -47,7 +51,7 @@ namespace LowCost.Business.Services.User.Implementation.Dashboard
         public async Task<IdentityResult> CreateNewEditorAsync(AddNewAdminViewModel addNewAdminViewModel)
         {
             var user = _mapper.Map<AddNewAdminViewModel, Domain.Models.User>(addNewAdminViewModel);
-
+            
             var result = await _userManager.CreateAsync(user, addNewAdminViewModel.Password);
             if (result.Succeeded)
             {

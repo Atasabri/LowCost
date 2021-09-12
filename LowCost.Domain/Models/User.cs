@@ -14,6 +14,17 @@ namespace LowCost.Domain.Models
         [Required]
         public Languages CurrentLangauge { get; set; } = Languages.EN;
         public string FullName { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+
+        public int? Zoon_Id { get; set; }
+        public int? Stock_Id { get; set; }
+
+
+        [ForeignKey(nameof(Zoon_Id))]
+        public Zoon Zoon { get; set; }
+
+        [ForeignKey(nameof(Stock_Id))]
+        public Stock Stock { get; set; }
 
 
         public ICollection<Notification> Notifications { get; set; }
@@ -23,5 +34,7 @@ namespace LowCost.Domain.Models
         public ICollection<PaymentMethod> Payments { get; set; }
 
         public ICollection<Favorites> Favorites { get; set; }
+
+        public ICollection<ProductFollowingUser> ProductFollowingUsers { get; set; }
     }
 }

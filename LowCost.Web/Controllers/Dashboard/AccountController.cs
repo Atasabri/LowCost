@@ -60,7 +60,7 @@ namespace LowCost.Web.Controllers.Dashboard
         {
             if (ModelState.IsValid)
             {
-                var result = await _dashboardUserService.ChangePasswordAsync(this.User, changePasswordViewModel);
+                var result = await _dashboardUserService.ChangePasswordAsync(changePasswordViewModel);
                 if (result.Succeeded)
                 {
                     return RedirectToAction(nameof(LogOut));

@@ -1,4 +1,5 @@
 ﻿using LowCost.Domain.Models.BaseModels;
+using LowCost.Infrastructure.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,11 +11,13 @@ namespace LowCost.Domain.Models
     public class Notification : BaseModel
     {
         public string Message { get; set; }
-        public DateTime DateTime { get; set; } = DateTime.UtcNow;
+        public DateTime DateTime { get; set; } = DateTimeProvider.GetEgyptDateTime();
         [Required]
         public string User_Id { get; set; }
 
         public int? Order_Id { get; set; }
+
+        public int? Product_Id { get; set; }
 
 
         [ForeignKey(nameof(User_Id))]

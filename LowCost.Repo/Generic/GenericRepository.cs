@@ -20,6 +20,7 @@ namespace LowCost.Repo.Generic
         {
             _context = context;
             _entities = _context.Set<Entity>();
+            context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         public virtual async Task CreateAsync(Entity entity)

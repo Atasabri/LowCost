@@ -18,8 +18,9 @@ namespace LowCost.Business.Services.Products.Implementation
 {
     public class ProductsService : IProductsService
     {
-        int[] currentUserFavoritesProductsIds = new int[] { };
-        Action<IMappingOperationOptions<IEnumerable<Product>, IEnumerable<ListingProductDTO>>> opts = null;
+        readonly int[] currentUserFavoritesProductsIds = new int[] { };
+        readonly Action<IMappingOperationOptions<IEnumerable<Product>, IEnumerable<ListingProductDTO>>> opts = null;
+        readonly Action<IMappingOperationOptions<Product, ProductDTO>> productDtoOpts = null;
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -31,15 +32,25 @@ namespace LowCost.Business.Services.Products.Implementation
             // Change Current User Favorites Variable & Map Listing ProductDTO IsFav Property if User Logedin 
             if(_unitOfWork.UsersRepository.CheckIfUserLogedin())
             {
-                var userId =  _unitOfWork.UsersRepository.GetCurrentUserId().Result;
+                var user =  _unitOfWork.UsersRepository.GetCurrentUser().Result;
                 currentUserFavoritesProductsIds = _unitOfWork.FavoritesRepository
-                    .GetElementsAsync(fav => fav.User_Id == userId).Result.Select(fav => fav.Product_Id).ToArray();
-
+                    .GetElementsAsync(fav => fav.User_Id == user.Id).Result.Select(fav => fav.Product_Id).ToArray();
+                // Get Current User Stock Id
+                int? stock_Id = user.Zoon_Id.HasValue ? _unitOfWork.ZoonsRepository.FindByIdAsync(user.Zoon_Id.Value).Result?.Stock_Id : null;
+                // Product Listing After Mapping
                 opts = opts => opts.AfterMap((src, dest) => {
                     foreach (var item in dest)
                     {
                         item.IsFav = currentUserFavoritesProductsIds.Contains(item.Id);
+                        item.Quantity = stock_Id.HasValue ? item.StockProducts.FirstOrDefault(stockQuantity => stockQuantity.Stock_Id == stock_Id.Value)?.Quantity : null;
                     }
+                });
+                // Single Product After Mapping
+                productDtoOpts = opts => opts.AfterMap((src, dest) =>
+                {
+                    dest.IsFav = currentUserFavoritesProductsIds.Contains(src.Id);
+                    dest.Quantity = stock_Id.HasValue ? src.StockProducts.FirstOrDefault(stockQuantity => stockQuantity.Stock_Id == stock_Id.Value)?.Quantity : null;
+                    dest.IsFollowing = _unitOfWork.ProductFollowingUsersRepository.FindElementAsync(follower => follower.Product_Id == src.Id) != null;
                 });
             }
         }
@@ -47,13 +58,12 @@ namespace LowCost.Business.Services.Products.Implementation
         {
             var product = await _unitOfWork.ProductsRepository
                    .FindElementAsync(product => product.Id == id,
-                   string.Format("{0}.{1},{2},{3}", nameof(Product.Prices),
+                   string.Format("{0}.{1},{2},{3},{4}", nameof(Product.Prices),
                    nameof(Prices.Market), nameof(SubCategory),
-                   nameof(Product.Brand)));
+                   nameof(Product.Brand), nameof(Product.StockProducts)));
 
-            var productDTO = _mapper.Map<Product, ProductDTO>(product);
-
-            productDTO.IsFav = currentUserFavoritesProductsIds.Contains(id);
+            var productDTO = productDtoOpts == null ? _mapper.Map<Product, ProductDTO>(product) 
+                                : _mapper.Map<Product, ProductDTO>(product, productDtoOpts);
 
             return productDTO;
         }
@@ -64,7 +74,7 @@ namespace LowCost.Business.Services.Products.Implementation
                    .GetElementsWithOrderAsync(product => true
                    , pagingParameters
                    , product => product.Id, OrderingType.Descending
-                   , string.Format("{0}.{1}", nameof(Product.Prices), nameof(Prices.Market)));
+                   , string.Format("{0}.{1},{2}", nameof(Product.Prices), nameof(Prices.Market), nameof(Product.StockProducts)));
 
             var productsDTOs = products.ToMappedPagedResult<Product, ListingProductDTO>(_mapper, opts);
 
@@ -76,7 +86,7 @@ namespace LowCost.Business.Services.Products.Implementation
             var products = await _unitOfWork.ProductsRepository
                    .GetElementsAsync(product => product.Prices.Any(price => price.OldPrice.HasValue)
                    , pagingParameters
-                   , string.Format("{0}.{1}", nameof(Product.Prices), nameof(Prices.Market)));
+                   , string.Format("{0}.{1},{2}", nameof(Product.Prices), nameof(Prices.Market), nameof(Product.StockProducts)));
 
             var productsDTOs = products.ToMappedPagedResult<Product, ListingProductDTO>(_mapper, opts);
 
@@ -90,7 +100,7 @@ namespace LowCost.Business.Services.Products.Implementation
                    , pagingParameters
                    , product => product.OrderDetails.Count
                    , OrderingType.Descending,
-                   string.Format("{0}.{1},{2}", nameof(Product.Prices), nameof(Prices.Market), nameof(OrderDetails)));
+                   string.Format("{0}.{1},{2},{3}", nameof(Product.Prices), nameof(Prices.Market), nameof(OrderDetails), nameof(Product.StockProducts)));
 
             var productsDTOs = products.ToMappedPagedResult<Product, ListingProductDTO>(_mapper, opts);
 
@@ -102,9 +112,10 @@ namespace LowCost.Business.Services.Products.Implementation
             var products = await _unitOfWork.ProductsRepository
                    .GetElementsAsync(product => product.SubCategory.Category_Id == catId
                    , pagingParameters
-                   , string.Format("{0}.{1},{2}", nameof(Product.Prices)
+                   , string.Format("{0}.{1},{2},{3}", nameof(Product.Prices)
                    , nameof(Prices.Market)
-                   , nameof(Product.SubCategory)));
+                   , nameof(Product.SubCategory)
+                   , nameof(Product.StockProducts)));
 
             var productsDTOs = products.ToMappedPagedResult<Product, ListingProductDTO>(_mapper, opts);
 
@@ -115,8 +126,8 @@ namespace LowCost.Business.Services.Products.Implementation
             var products = await _unitOfWork.ProductsRepository
                    .GetElementsAsync(product => product.SubCategory_Id == subCatId
                    , pagingParameters
-                   , string.Format("{0}.{1}", nameof(Product.Prices)
-                   , nameof(Prices.Market)));
+                   , string.Format("{0}.{1},{2}", nameof(Product.Prices)
+                   , nameof(Prices.Market), nameof(Product.StockProducts)));
 
             var productsDTOs = products.ToMappedPagedResult<Product, ListingProductDTO>(_mapper, opts);
 
@@ -128,8 +139,8 @@ namespace LowCost.Business.Services.Products.Implementation
             var products = await _unitOfWork.ProductsRepository
                     .GetElementsAsync(product => product.Brand_Id == brandId
                     , pagingParameters
-                    , string.Format("{0}.{1}", nameof(Product.Prices)
-                    , nameof(Prices.Market)));
+                    , string.Format("{0}.{1},{2}", nameof(Product.Prices)
+                    , nameof(Prices.Market), nameof(Product.StockProducts)));
 
             var productsDTOs = products.ToMappedPagedResult<Product, ListingProductDTO>(_mapper, opts);
 
@@ -144,8 +155,8 @@ namespace LowCost.Business.Services.Products.Implementation
             var products = await _unitOfWork.ProductsRepository.GetElementsAsync(prod =>
                                  prod.SubCategory.Category_Id == product.SubCategory.Category_Id
                                 , pagingParameters
-                                , string.Format("{0}.{1},{2}", nameof(Product.Prices), nameof(Prices.Market)
-                                , nameof(product.SubCategory)));
+                                , string.Format("{0}.{1},{2},{3}", nameof(Product.Prices), nameof(Prices.Market)
+                                , nameof(Product.SubCategory), nameof(Product.StockProducts)));
 
             var productsDTOs = products.ToMappedPagedResult<Product, ListingProductDTO>(_mapper, opts);
 
@@ -167,9 +178,9 @@ namespace LowCost.Business.Services.Products.Implementation
                                 , pagingParameters
                                 , SortBy(productsFiltration.SortBy)
                                 , productsFiltration.SortBy == OrderingBy.HighToLowPrice ? OrderingType.Descending : OrderingType.Ascending,
-                                string.Format("{0}.{1},{2}.{3}", nameof(Product.Prices)
+                                string.Format("{0}.{1},{2}.{3},{4}", nameof(Product.Prices)
                                 , nameof(Prices.Market), nameof(Product.SubCategory),
-                                nameof(Product.SubCategory.Category)));
+                                nameof(Product.SubCategory.Category), nameof(Product.StockProducts)));
 
             var productsDTOs = products.ToMappedPagedResult<Product, ListingProductDTO>(_mapper, opts);
 
@@ -200,8 +211,8 @@ namespace LowCost.Business.Services.Products.Implementation
                           , pagingParameters
                           , product => product.Id
                           , OrderingType.Descending
-                          , string.Format("{0}.{1}", nameof(Product.Prices)
-                          , nameof(Prices.Market)));
+                          , string.Format("{0}.{1},{2}", nameof(Product.Prices)
+                          , nameof(Prices.Market), nameof(Product.StockProducts)));
 
             var productsDTOs = products.ToMappedPagedResult<Product, ListingProductDTO>(_mapper, opts);
 

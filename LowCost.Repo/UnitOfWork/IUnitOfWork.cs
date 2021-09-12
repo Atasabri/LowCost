@@ -5,12 +5,17 @@ using LowCost.Repo.Repositories.Interfaces.Markets;
 using LowCost.Repo.Repositories.Interfaces.Notifications;
 using LowCost.Repo.Repositories.Interfaces.Offers;
 using LowCost.Repo.Repositories.Interfaces.Orders;
+using LowCost.Repo.Repositories.Interfaces.OrderSizeDelivery;
+using LowCost.Repo.Repositories.Interfaces.ProductFollowingUsers;
 using LowCost.Repo.Repositories.Interfaces.Products;
 using LowCost.Repo.Repositories.Interfaces.PromoCodes;
 using LowCost.Repo.Repositories.Interfaces.Settings;
 using LowCost.Repo.Repositories.Interfaces.Sliders;
 using LowCost.Repo.Repositories.Interfaces.SMSCodes;
+using LowCost.Repo.Repositories.Interfaces.StockProducts;
+using LowCost.Repo.Repositories.Interfaces.Stocks;
 using LowCost.Repo.Repositories.Interfaces.User;
+using LowCost.Repo.Repositories.Interfaces.Zoons;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,9 +25,14 @@ namespace LowCost.Repo.UnitOfWork
 {
     public interface IUnitOfWork
     {
+        // Zoons Repositories
+        IZoonsRepository ZoonsRepository { get; }
+        // Stocks Repositories
+        IStocksRepository StocksRepository { get; }
+        IStockProductsRepository StockProductsRepository { get; }
 
         // Brands Repositories
-        IBrandsRepository BrandsRepository{ get; }
+        IBrandsRepository BrandsRepository { get; }
 
         // Sliders Repositories
         ISlidersRepository SlidersRepository { get; }
@@ -53,6 +63,7 @@ namespace LowCost.Repo.UnitOfWork
 
         //Products Repositories
         IPricesRepository PricesRepository { get; }
+        IProductFollowingUsersRepository ProductFollowingUsersRepository { get; }
         IProductsRepository ProductsRepository { get; }
 
         // Promo Codes Repositories
@@ -71,6 +82,7 @@ namespace LowCost.Repo.UnitOfWork
 
         // Settings Repositories
         ISettingsRepository SettingsRepository { get; }
+        IOrderSizeDeliveryRepository OrderSizeDeliveryRepository { get; }
 
         // Verification Repositories
         ISMSCodeRepository SMSCodeRepository { get; }

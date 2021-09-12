@@ -36,10 +36,9 @@ namespace LowCost.Business.Services.User.Interfaces.Dashboard
         /// <summary>
         /// Change Admin Or Editor Password Asynchronous
         /// </summary>
-        /// <param name="user"></param>
         /// <param name="changePasswordViewModel"></param>
         /// <returns></returns>
-        Task<IdentityResult> ChangePasswordAsync(ClaimsPrincipal currentUser, ChangePasswordViewModel changePasswordViewModel);
+        Task<IdentityResult> ChangePasswordAsync(ChangePasswordViewModel changePasswordViewModel);
         /// <summary>
         /// Delete Admin Or Editor Using Id Asynchronous
         /// </summary>

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LowCost.Business.Helpers.NotificationHelpers;
 using LowCost.Business.Mapping;
 using LowCost.Business.Services.Products.Interfaces.Dashboard;
 using LowCost.Domain.Models;
@@ -20,11 +21,13 @@ namespace LowCost.Business.Services.Products.Implementation.Dashboard
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ProductNotificationHandler _productNotificationHandler;
 
-        public DashboardProductsService(IUnitOfWork unitOfWork, IMapper mapper)
+        public DashboardProductsService(IUnitOfWork unitOfWork, IMapper mapper, ProductNotificationHandler productNotificationHandler)
         {
             this._unitOfWork = unitOfWork;
             this._mapper = mapper;
+            this._productNotificationHandler = productNotificationHandler;
         }
         public async Task<CreateState> CreateProductAsync(AddProductViewModel addProductViewModel)
         {
@@ -89,6 +92,29 @@ namespace LowCost.Business.Services.Products.Implementation.Dashboard
                 return actionState;
             }
             var product = _mapper.Map<EditProductViewModel, Product>(editProductViewModel);
+            // Update Product Quantities in Every Stock
+            var productStockQuantities = await _unitOfWork.StockProductsRepository.GetElementsAsync(stockQuantity => stockQuantity.Product_Id == editProductViewModel.Id);
+            List<int> notifyStocks = new List<int>();
+            foreach (var StockQuantity in editProductViewModel.StockQuantities)
+            {
+                var productStockQuantity = productStockQuantities.FirstOrDefault(stockQuantity => stockQuantity.Stock_Id == StockQuantity.Stock_Id);
+                if (productStockQuantity != null)
+                {
+                    if (productStockQuantity.Quantity != StockQuantity.Quantity)
+                    {
+                        productStockQuantity.Quantity = StockQuantity.Quantity;
+                        _unitOfWork.StockProductsRepository.Update(productStockQuantity);
+                        if (productStockQuantity.Quantity == 0)
+                        {
+                            notifyStocks.Add(productStockQuantity.Stock_Id);
+                        }
+                    }
+                }
+                else
+                {
+                   await _unitOfWork.StockProductsRepository.CreateAsync(new StockProducts() {Product_Id = product.Id, Stock_Id = StockQuantity.Stock_Id, Quantity = StockQuantity.Quantity });
+                }
+            }
             _unitOfWork.ProductsRepository.Update(product);
             foreach (int priceId in editProductViewModel.DeletingPrices)
             {
@@ -105,6 +131,10 @@ namespace LowCost.Business.Services.Products.Implementation.Dashboard
             var result = await _unitOfWork.SaveAsync() > 0;
             if (result)
             {
+                if (notifyStocks.Count > 0)
+                {
+                    await _productNotificationHandler.AddingQuantityToStockNotify(product.Id, notifyStocks);
+                }
                 actionState.ExcuteSuccessfully = true;
                 if (editProductViewModel.Photo != null)
                 {
@@ -125,9 +155,9 @@ namespace LowCost.Business.Services.Products.Implementation.Dashboard
         public async Task<ProductViewModel> GetProductDetailsAsync(int Id)
         {
             var product = await _unitOfWork.ProductsRepository.FindElementAsync(product => product.Id == Id,
-                string.Format("{0},{1},{2}.{3},{4}", nameof(Product.SubCategory)
+                string.Format("{0},{1},{2}.{3},{4},{5}", nameof(Product.SubCategory)
                 , nameof(Product.Offer),
-                nameof(Product.Prices), nameof(Prices.Market), nameof(Product.Brand)));
+                nameof(Product.Prices), nameof(Prices.Market), nameof(Product.Brand), nameof(Product.StockProducts)));
 
             var productViewModel = _mapper.Map<Product, ProductViewModel>(product);
 

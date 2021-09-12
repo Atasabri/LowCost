@@ -126,6 +126,9 @@
   <data name="An unknown failure has occurred." xml:space="preserve">
     <value>حدث خطأ ما غير معروف</value>
   </data>
+  <data name="Can Not Close Orde" xml:space="preserve">
+    <value>لا يمكن اغلاق الطلب</value>
+  </data>
   <data name="Can Not Create This Order !" xml:space="preserve">
     <value>لا يمكن انشاء هذا الطلب</value>
   </data>
@@ -143,6 +146,9 @@
   </data>
   <data name="Can Not Found This Promo Code !" xml:space="preserve">
     <value>كود الخصم الذي ادخلت غير صحيح</value>
+  </data>
+  <data name="Can Not Found Zoon !" xml:space="preserve">
+    <value>هذه المنطقة غير موجودة</value>
   </data>
   <data name="Can Not Start Order" xml:space="preserve">
     <value>لا يمكن بدأ الطلب</value>
@@ -192,6 +198,9 @@
   <data name="Order #{0}" xml:space="preserve">
     <value>الطلب #{0}</value>
   </data>
+  <data name="Order Assign to Driver , please Call Driver to Stop Order" xml:space="preserve">
+    <value>الطلب تم تسليم للسائق , من فضلك تواصل مع السائق لايقاف الطلب</value>
+  </data>
   <data name="Order With Id #{0} Assigned To Driver" xml:space="preserve">
     <value>تم تحديد سائق لطلبك #{0}</value>
   </data>
@@ -224,6 +233,15 @@
   </data>
   <data name="Please Add Quantity For Product '{0}' In Market '{1}'" xml:space="preserve">
     <value>من فضلك قم باضافة كمية للمنتج '{0}' الموجود في المتجر '{1}'</value>
+  </data>
+  <data name="Product In Stock" xml:space="preserve">
+    <value>المنتج الذي تتابعه متاح الان </value>
+  </data>
+  <data name="Product You Are Follow Is In Stock Now" xml:space="preserve">
+    <value>المنتج الذي تتابعه متاح الان في المخزن يمكنك الشراء</value>
+  </data>
+  <data name="Quantity Of Product '{0}' Not Available In Out Stock" xml:space="preserve">
+    <value>الكمية المطلوبة من المنتج '{0}' غير متوفرة في مخازننا</value>
   </data>
   <data name="Role name '{0}' is already taken." xml:space="preserve">
     <value>نوع المستخدمين '{0}' مستخدم بالفعل.</value>

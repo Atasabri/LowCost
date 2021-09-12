@@ -1,4 +1,5 @@
-﻿using LowCost.Business.Services.Products.Interfaces;
+﻿using LowCost.Business.Services.ProductFollowingUsersService.Interfaces;
+using LowCost.Business.Services.Products.Interfaces;
 using LowCost.Infrastructure.BaseService;
 using LowCost.Infrastructure.Filtration;
 using LowCost.Infrastructure.Helpers;
@@ -19,10 +20,12 @@ namespace LowCost.Web.Controllers.APIs
     public class ProductsController : APIController
     {
         private readonly IProductsService _productsservice;
+        private readonly IProductFollowingUsersService _productFollowingUsersService;
 
-        public ProductsController(IProductsService productsservice)
+        public ProductsController(IProductsService productsservice, IProductFollowingUsersService productFollowingUsersService)
         {
             this._productsservice = productsservice;
+            this._productFollowingUsersService = productFollowingUsersService;
         }
 
         [HttpGet("GetProducts")]
@@ -89,6 +92,20 @@ namespace LowCost.Web.Controllers.APIs
         public async Task<IActionResult> ProductsUsingFiltration([FromBody] ProductsFiltration productsFiltration)
         {
             return Ok(await _productsservice.GetProductsWithFiltrationAsync(productsFiltration));
+        }
+
+        [HttpPost("FollowProduct/{product_Id}")]
+        public async Task<IActionResult> FollowProduct(int product_Id)
+        {
+            var result = await _productFollowingUsersService.FollowProductAsync(product_Id);
+            return Ok(result);
+        }
+
+        [HttpPost("UnFollowProduct/{product_Id}")]
+        public async Task<IActionResult> UnFollowProduct(int product_Id)
+        {
+            var result = await _productFollowingUsersService.UnFollowProductAsync(product_Id);
+            return Ok(result);
         }
     }
 }

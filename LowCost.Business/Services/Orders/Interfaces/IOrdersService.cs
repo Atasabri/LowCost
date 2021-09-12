@@ -46,7 +46,12 @@ namespace LowCost.Business.Services.Orders.Interfaces
         /// <param name="orderId"></param>
         /// <returns></returns>
         public Task<OrderDTO> GetDriverOrderDetailsAsync(int orderId);
-
+        /// <summary>
+        /// Close Order Before Assign to Driver Asynchronous
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        Task<ActionState> CloseOrderAsync(int orderId);
         /// <summary>
         /// Return Discount Of Promo Code If Found Asynchronous
         /// </summary>

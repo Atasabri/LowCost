@@ -13,9 +13,9 @@ namespace LowCost.Business.Services.User.Interfaces
         /// <summary>
         /// Edit Current Driver Profile Data Asynchronous
         /// </summary>
-        /// <param name="editProfileDTO"></param>
+        /// <param name="editDriverProfileDTO"></param>
         /// <returns></returns>
-        Task<ActionState> EditProfileAsync(EditProfileDTO editProfileDTO);
+        Task<ActionState> EditProfileAsync(EditDriverProfileDTO editDriverProfileDTO);
         /// <summary>
         /// Get Current Driver Profile Data Asynchronous
         /// </summary>

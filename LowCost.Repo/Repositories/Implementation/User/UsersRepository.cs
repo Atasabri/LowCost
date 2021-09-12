@@ -39,5 +39,10 @@ namespace LowCost.Repo.Repositories.Implementation.User
             return _accessor.HttpContext.User.Identity.IsAuthenticated 
                 && _accessor.HttpContext.User.IsInRole(Constants.UserRoleName); 
         }
+
+        public async Task<Domain.Models.User> GetCurrentDashboardAdminUser()
+        {
+            return await _userManager.GetUserAsync(_accessor.HttpContext.User);
+        }
     }
 }
