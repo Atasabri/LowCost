@@ -1,6 +1,6 @@
 ﻿using LowCost.Business.Services.Stocks.Interfaces.Dashboard;
-using LowCost.Business.Services.Zoons.Interfaces.Dashboard;
-using LowCost.Infrastructure.DashboardViewModels.Zoons;
+using LowCost.Business.Services.Zones.Interfaces.Dashboard;
+using LowCost.Infrastructure.DashboardViewModels.Zones;
 using LowCost.Infrastructure.Helpers;
 using LowCost.Infrastructure.Pagination;
 using Microsoft.AspNetCore.Authorization;
@@ -13,45 +13,45 @@ using System.Threading.Tasks;
 namespace LowCost.Web.Controllers.Dashboard
 {
     [Authorize(Roles = Admin.AdminRoleName)]
-    public class ZoonsController : Controller
+    public class ZonesController : Controller
     {
-        private readonly IDashboardZoonsService _dashboardZoonsService;
+        private readonly IDashboardZonesService _dashboardZonesService;
         private readonly IDashboardStocksService _dashboardStocksService;
 
-        public ZoonsController(IDashboardZoonsService dashboardZoonsService, IDashboardStocksService dashboardStocksService)
+        public ZonesController(IDashboardZonesService dashboardZonesService, IDashboardStocksService dashboardStocksService)
         {
-            this._dashboardZoonsService = dashboardZoonsService;
+            this._dashboardZonesService = dashboardZonesService;
             this._dashboardStocksService = dashboardStocksService;
         }
-        // GET: Zoons
+        // GET: Zones
         public async Task<ActionResult> Index(PagingParameters pagingParameters)
         {
-            var result = await _dashboardZoonsService.GetDashboardZoonsAsync(pagingParameters);
+            var result = await _dashboardZonesService.GetDashboardZonesAsync(pagingParameters);
             return View(result);
         }
 
-        // GET: Zoons/Details/5
+        // GET: Zones/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            var result = await _dashboardZoonsService.GetZoonDetailsAsync(id);
+            var result = await _dashboardZonesService.GetZoneDetailsAsync(id);
             return View(result);
         }
 
-        // GET: Zoons/Create
+        // GET: Zones/Create
         public async Task<ActionResult> Create()
         {
             ViewBag.Stocks = await _dashboardStocksService.GetAllStocksAsync();
             return View();
         }
 
-        // POST: Zoons/Create
+        // POST: Zones/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(AddZoonViewModel addZoonViewModel)
+        public async Task<ActionResult> Create(AddZoneViewModel addZoneViewModel)
         {
             if (ModelState.IsValid)
             {
-                var result = await _dashboardZoonsService.CreateZoonAsync(addZoonViewModel);
+                var result = await _dashboardZonesService.CreateZoneAsync(addZoneViewModel);
                 if (result.CreatedSuccessfully)
                 {
                     return RedirectToAction(nameof(Index));
@@ -59,13 +59,13 @@ namespace LowCost.Web.Controllers.Dashboard
                 ModelState.AddModelError("", result.ErrorMessages.FirstOrDefault());
             }
             ViewBag.Stocks = await _dashboardStocksService.GetAllStocksAsync();
-            return View(addZoonViewModel);
+            return View(addZoneViewModel);
         }
 
-        // GET: Zoons/Edit/5
+        // GET: Zones/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var result = await _dashboardZoonsService.GetZoonDetailsAsync(id);
+            var result = await _dashboardZonesService.GetZoneDetailsAsync(id);
             if (result == null)
             {
                 return NotFound();
@@ -74,31 +74,31 @@ namespace LowCost.Web.Controllers.Dashboard
             return View(result);
         }
 
-        // POST: Zoons/Edit
+        // POST: Zones/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(EditZoonViewModel editZoonViewModel)
+        public async Task<ActionResult> Edit(EditZoneViewModel editZoneViewModel)
         {
             if (ModelState.IsValid)
             {
-                var result = await _dashboardZoonsService.EditZoonAsync(editZoonViewModel);
+                var result = await _dashboardZonesService.EditZoneAsync(editZoneViewModel);
                 if (result.ExcuteSuccessfully)
                 {
                     return RedirectToAction(nameof(Index));
                 }
                 ModelState.AddModelError("", result.ErrorMessages.FirstOrDefault());
             }
-            var zoonViewModel = await _dashboardZoonsService.GetZoonDetailsAsync(editZoonViewModel.Id);
+            var zoneViewModel = await _dashboardZonesService.GetZoneDetailsAsync(editZoneViewModel.Id);
             ViewBag.Stocks = await _dashboardStocksService.GetAllStocksAsync();
-            return View(zoonViewModel);
+            return View(zoneViewModel);
         }
 
 
-        // POST: Zoons/Delete/5
+        // POST: Zones/Delete/5
         [HttpPost]
         public async Task<ActionResult> Delete(int id)
         {
-            var result = await _dashboardZoonsService.DeleteZoonAsync(id);
+            var result = await _dashboardZonesService.DeleteZoneAsync(id);
             if (result.ExcuteSuccessfully)
             {
                 return Json(id);

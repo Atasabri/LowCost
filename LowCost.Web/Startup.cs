@@ -85,12 +85,12 @@ using LowCost.Business.Services.Search.Interfaces.Dashboard;
 using LowCost.Business.Helpers.NotificationHelpers;
 using LowCost.Business.Services.ProductFollowingUsersService.Interfaces;
 using LowCost.Business.Services.ProductFollowingUsersService.Implementation;
-using LowCost.Business.Services.Zoons.Implementation.Dashboard;
-using LowCost.Business.Services.Zoons.Interfaces.Dashboard;
+using LowCost.Business.Services.Zones.Implementation.Dashboard;
+using LowCost.Business.Services.Zones.Interfaces.Dashboard;
 using LowCost.Business.Services.Stocks.Implementation.Dashboard;
 using LowCost.Business.Services.Stocks.Interfaces.Dashboard;
-using LowCost.Business.Services.Zoons.Interfaces;
-using LowCost.Business.Services.Zoons.Implementation;
+using LowCost.Business.Services.Zones.Interfaces;
+using LowCost.Business.Services.Zones.Implementation;
 
 namespace LowCost.Web
 {
@@ -239,7 +239,7 @@ namespace LowCost.Web
             services.AddTransient<IBrandsService, BrandsService>();
             services.AddTransient<IMarketsService, MarketsService>();
             services.AddTransient<ISettingsService, SettingsService>();
-            services.AddTransient<IZoonsService, ZoonsService>();
+            services.AddTransient<IZonesService, ZonesService>();
 
 
             // Dashboard Dependency Injection Register
@@ -259,7 +259,7 @@ namespace LowCost.Web
             services.AddTransient<IDashboardOrdersService, DashboardOrdersService>();
             services.AddTransient<IDashboardSettingsService, DashboardSettingsService>();
             services.AddTransient<IDashboardSearchService, DashboardSearchService>();
-            services.AddTransient<IDashboardZoonsService, DashboardZoonsService>(); 
+            services.AddTransient<IDashboardZonesService, DashboardZonesService>(); 
             services.AddTransient<IDashboardStocksService, DashboardStocksService>();
 
             // Handlers DI Register

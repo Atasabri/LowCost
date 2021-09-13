@@ -68,7 +68,7 @@ namespace LowCost.Business.Services.User.Implementation
             user.UserName = editProfileDTO.Email;
             user.Email = editProfileDTO.Email;
             user.PhoneNumber = editProfileDTO.Phone;
-            user.Zoon_Id = editProfileDTO.Zoon_Id;
+            user.Zone_Id = editProfileDTO.Zone_Id;
             user.DateOfBirth = editProfileDTO.DateOfBirth;
 
             var checkPhoneResult = await _authenticationHandler.CheckPhoneNumberAvailableAsync(user.PhoneNumber, user.Id);
@@ -149,11 +149,11 @@ namespace LowCost.Business.Services.User.Implementation
             return actionState;
         }
 
-        public async Task<ActionState> ChangeCurrentUserZoonAsync(int zoonId)
+        public async Task<ActionState> ChangeCurrentUserZoneAsync(int zoneId)
         {
             var actionState = new ActionState();
             var user = await _unitOfWork.UsersRepository.GetCurrentUser();
-            user.Zoon_Id = zoonId;
+            user.Zone_Id = zoneId;
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {

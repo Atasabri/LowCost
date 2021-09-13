@@ -16,12 +16,12 @@ namespace LowCost.Domain.Models
         public string FullName { get; set; }
         public DateTime? DateOfBirth { get; set; }
 
-        public int? Zoon_Id { get; set; }
+        public int? Zone_Id { get; set; }
         public int? Stock_Id { get; set; }
 
 
-        [ForeignKey(nameof(Zoon_Id))]
-        public Zoon Zoon { get; set; }
+        [ForeignKey(nameof(Zone_Id))]
+        public Zone Zone { get; set; }
 
         [ForeignKey(nameof(Stock_Id))]
         public Stock Stock { get; set; }

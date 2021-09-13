@@ -1,15 +1,15 @@
-﻿@model PagedResult<ZoonViewModel>
+﻿@model PagedResult<ZoneViewModel>
 @{ 
     int counter = 1;
-    ViewBag.Title = "Zoons";
+    ViewBag.Title = "Zones";
     var pagingModel = new DashboardPagination()
     { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount, Size = Model.Size };
 
 }
-<h2>Zoons</h2>
+<h2>Zones</h2>
 
 <p>
-    <a asp-action="Create" class="btn btn-add"> New Zoon </a>
+    <a asp-action="Create" class="btn btn-add"> New Zone </a>
 </p>
 
 <table class="table" id="tbl">
@@ -46,11 +46,11 @@
 <script>
     function Delete(i) {
 
-        var Confirmed = confirm('Are You Sure You Want To Delete This Zoon ??');
+        var Confirmed = confirm('Are You Sure You Want To Delete This Zone ??');
 
         if (Confirmed == true) {
             $(".loader").show();
-            $.post("@Url.Action("Delete", "Zoons")", {
+            $.post("@Url.Action("Delete", "Zones")", {
 
                 id: i
             },

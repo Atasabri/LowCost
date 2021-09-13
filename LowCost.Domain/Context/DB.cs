@@ -19,7 +19,7 @@ namespace LowCost.Domain.Context
         }
 
         public DbSet<Stock> Stocks { get; set; }
-        public DbSet<Zoon> Zoons { get; set; }
+        public DbSet<Zone> Zones { get; set; }
         public DbSet<StockProducts> StockProducts { get; set; }
         public DbSet<OrderSizeDelivery> OrderSizeDelivery { get; set; }
         public DbSet<Category> Categories { get; set; }

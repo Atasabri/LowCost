@@ -36,7 +36,7 @@ namespace LowCost.Business.Services.Products.Implementation
                 currentUserFavoritesProductsIds = _unitOfWork.FavoritesRepository
                     .GetElementsAsync(fav => fav.User_Id == user.Id).Result.Select(fav => fav.Product_Id).ToArray();
                 // Get Current User Stock Id
-                int? stock_Id = user.Zoon_Id.HasValue ? _unitOfWork.ZoonsRepository.FindByIdAsync(user.Zoon_Id.Value).Result?.Stock_Id : null;
+                int? stock_Id = user.Zone_Id.HasValue ? _unitOfWork.ZonesRepository.FindByIdAsync(user.Zone_Id.Value).Result?.Stock_Id : null;
                 // Product Listing After Mapping
                 opts = opts => opts.AfterMap((src, dest) => {
                     foreach (var item in dest)
