@@ -39,11 +39,11 @@ using LowCost.Repo.Repositories.Interfaces.SMSCodes;
 using LowCost.Repo.Repositories.Implementation.SMSCodes;
 using LowCost.Repo.Repositories.Interfaces.ProductFollowingUsers;
 using LowCost.Repo.Repositories.Implementation.ProductFollowingUsers;
-using LowCost.Repo.Repositories.Interfaces.Zoons;
+using LowCost.Repo.Repositories.Interfaces.Zones;
 using LowCost.Repo.Repositories.Interfaces.Stocks;
 using LowCost.Repo.Repositories.Interfaces.StockProducts;
 using LowCost.Repo.Repositories.Interfaces.OrderSizeDelivery;
-using LowCost.Repo.Repositories.Implementation.Zoons;
+using LowCost.Repo.Repositories.Implementation.Zones;
 using LowCost.Repo.Repositories.Implementation.Stocks;
 using LowCost.Repo.Repositories.Implementation.StockProducts;
 using LowCost.Repo.Repositories.Implementation.OrderSizeDelivery;
@@ -61,7 +61,7 @@ namespace LowCost.Repo.UnitOfWork
 
         IBrandsRepository brandsRepository;
         ISlidersRepository slidersRepository;
-        IZoonsRepository zoonsRepository;
+        IZonesRepository zonesRepository;
         IStocksRepository stocksRepository;
         IStockProductsRepository stockProductsRepository;
         ICategoriesRepository categoriesRepository;
@@ -112,15 +112,15 @@ namespace LowCost.Repo.UnitOfWork
             }
         }
 
-        public IZoonsRepository ZoonsRepository
+        public IZonesRepository ZonesRepository
         {
             get
             {
-                if (zoonsRepository == null)
+                if (zonesRepository == null)
                 {
-                    zoonsRepository = new ZoonsRepository(_context);
+                    zonesRepository = new ZonesRepository(_context);
                 }
-                return zoonsRepository;
+                return zonesRepository;
             }
         }
 

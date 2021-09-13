@@ -12,7 +12,7 @@ namespace LowCost.Infrastructure.DTOs.User
 
         public string Phone { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public int? Zoon_Id { get; set; }
+        public int? Zone_Id { get; set; }
 
         public IFormFile Photo { get; set; }
 

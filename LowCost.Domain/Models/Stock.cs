@@ -10,7 +10,7 @@ namespace LowCost.Domain.Models
         public string Name { get; set; }
 
 
-        public virtual ICollection<Zoon> Zoons { get; set; }
+        public virtual ICollection<Zone> Zones { get; set; }
 
         public virtual ICollection<StockProducts> StockProducts { get; set; }
 

@@ -28,7 +28,7 @@ namespace LowCost.Domain.Models
         [Required]
         public string User_Id { get; set; }
 
-        public int Zoon_Id { get; set; }
+        public int Zone_Id { get; set; }
         public int Stock_Id { get; set; }
 
         public string Driver_Id { get; set; }

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace LowCost.Domain.Models
 {
-    public class Zoon : BaseNamedModel
+    public class Zone : BaseNamedModel
     {
         public int Stock_Id { get; set; }
 

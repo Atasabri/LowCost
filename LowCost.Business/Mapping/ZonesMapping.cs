@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using LowCost.Domain.Models;
-using LowCost.Infrastructure.DashboardViewModels.Zoons;
-using LowCost.Infrastructure.DTOs.Zoons;
+using LowCost.Infrastructure.DashboardViewModels.Zones;
+using LowCost.Infrastructure.DTOs.Zones;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,20 +10,20 @@ namespace LowCost.Business.Mapping
 {
     public partial class AutoMapperProfile : Profile
     {
-        void ZoonsMapping()
+        void ZonesMapping()
         {
-            CreateMap<Zoon, ZoonDTO>()
+            CreateMap<Zone, ZoneDTO>()
                     .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetType().GetProperty(localizedName).GetValue(src)))
                     .ReverseMap();
         }
 
-        void DashboardZoonsMapping()
+        void DashboardZonesMapping()
         {
-            CreateMap<Zoon, ZoonViewModel>()
+            CreateMap<Zone, ZoneViewModel>()
                .ForMember(dest => dest.StockName, opt => opt.MapFrom(src => src.Stock.Name))
                .ReverseMap();
-            CreateMap<AddZoonViewModel, Zoon>().ReverseMap();
-            CreateMap<EditZoonViewModel, Zoon>().ReverseMap();
+            CreateMap<AddZoneViewModel, Zone>().ReverseMap();
+            CreateMap<EditZoneViewModel, Zone>().ReverseMap();
         }
     }
 }

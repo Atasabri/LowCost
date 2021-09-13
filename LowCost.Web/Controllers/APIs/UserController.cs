@@ -72,10 +72,10 @@ namespace LowCost.Web.Controllers.APIs
             return BadRequest(result);
         }
 
-        [HttpPut("ChangeCurrentUserZoon/{zoonId}")]
-        public async Task<IActionResult> ChangeCurrentUserZoon(int zoonId)
+        [HttpPut("ChangeCurrentUserZone/{zoneId}")]
+        public async Task<IActionResult> ChangeCurrentUserZone(int zoneId)
         {
-            var result = await _userService.ChangeCurrentUserZoonAsync(zoonId);
+            var result = await _userService.ChangeCurrentUserZoneAsync(zoneId);
             if (result.ExcuteSuccessfully)
             {
                 return Ok(result);

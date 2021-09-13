@@ -15,7 +15,7 @@ using LowCost.Repo.Repositories.Interfaces.SMSCodes;
 using LowCost.Repo.Repositories.Interfaces.StockProducts;
 using LowCost.Repo.Repositories.Interfaces.Stocks;
 using LowCost.Repo.Repositories.Interfaces.User;
-using LowCost.Repo.Repositories.Interfaces.Zoons;
+using LowCost.Repo.Repositories.Interfaces.Zones;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,8 +25,8 @@ namespace LowCost.Repo.UnitOfWork
 {
     public interface IUnitOfWork
     {
-        // Zoons Repositories
-        IZoonsRepository ZoonsRepository { get; }
+        // Zones Repositories
+        IZonesRepository ZonesRepository { get; }
         // Stocks Repositories
         IStocksRepository StocksRepository { get; }
         IStockProductsRepository StockProductsRepository { get; }

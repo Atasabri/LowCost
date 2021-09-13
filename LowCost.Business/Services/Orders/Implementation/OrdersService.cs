@@ -44,17 +44,17 @@ namespace LowCost.Business.Services.Orders.Implementation
             addOrderDTO.User_Id = currentUser.Id;
 
             var order = _mapper.Map<AddOrderDTO, Order>(addOrderDTO);
-            // Check And Add Zoon & Stock to Order
-            int? zoonId = addOrderDTO.Zoon_Id.HasValue ? addOrderDTO.Zoon_Id : currentUser.Zoon_Id;
-            var zoon = await _unitOfWork.ZoonsRepository.FindByIdAsync(zoonId.Value);
-            if (zoon != null)
+            // Check And Add Zone & Stock to Order
+            int? zoneId = addOrderDTO.Zone_Id.HasValue ? addOrderDTO.Zone_Id : currentUser.Zone_Id;
+            var zone = await _unitOfWork.ZonesRepository.FindByIdAsync(zoneId.Value);
+            if (zone != null)
             {
-                order.Zoon_Id = zoon.Id;
-                order.Stock_Id = zoon.Stock_Id;
+                order.Zone_Id = zone.Id;
+                order.Stock_Id = zone.Stock_Id;
             }
             else
             {
-                createState.ErrorMessages.Add(_stringLocalizer["Can Not Found Zoon !"]);
+                createState.ErrorMessages.Add(_stringLocalizer["Can Not Found Zone !"]);
                 return createState;
             }         
 

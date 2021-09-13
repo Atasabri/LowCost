@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace LowCost.Infrastructure.DashboardViewModels.Zoons
+namespace LowCost.Infrastructure.DashboardViewModels.Zones
 {
-    public class EditZoonViewModel : BaseNamedViewModel
+    public class AddZoneViewModel : NamedViewModel
     {
         [Required]
         [Display(Name = "Stock")]
