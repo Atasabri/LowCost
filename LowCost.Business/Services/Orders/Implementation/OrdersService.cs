@@ -25,14 +25,17 @@ namespace LowCost.Business.Services.Orders.Implementation
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly OrderNotificationHandler _orderNotificationHandler;
+        private readonly WebNotificationHandler _webNotificationHandler;
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<SharedResource> _stringLocalizer;
 
         public OrdersService(IUnitOfWork unitOfWork, OrderNotificationHandler orderNotificationHandler,
+            WebNotificationHandler webNotificationHandler,
             IMapper mapper, IStringLocalizer<SharedResource> stringLocalizer)
         {
             this._unitOfWork = unitOfWork;
             this._orderNotificationHandler = orderNotificationHandler;
+            this._webNotificationHandler = webNotificationHandler;
             this._mapper = mapper;
             this._stringLocalizer = stringLocalizer;
         }
@@ -172,7 +175,8 @@ namespace LowCost.Business.Services.Orders.Implementation
                 // Sending Notification To Admin Control Panel
                 var orderViewModel = _mapper.Map<Order, ListingOrderViewModel>(order);
                 var webNotificationState = new WebNotificationState("AddOrder", orderViewModel);
-                await _unitOfWork.NotificationsRepository.WebNotifyToAllAsync(webNotificationState);
+                webNotificationState.Groups = new string[] { order.Stock_Id.ToString(), Constants.AccessAllDashboardStocksDataGroupName };
+                await _webNotificationHandler.WebNotifyDashboardGroupsAsync(webNotificationState);
                 createState.Id = order.Id;
             }
             else

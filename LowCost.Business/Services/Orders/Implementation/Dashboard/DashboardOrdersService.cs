@@ -119,6 +119,9 @@ namespace LowCost.Business.Services.Orders.Implementation.Dashboard
                 nameof(Order.User), nameof(Order.Driver)));
 
             var orderViewModel = _mapper.Map<Order, OrderViewModel>(order);
+            // Get Order Zone
+            var zone = await _unitOfWork.ZonesRepository.FindByIdAsync(order.Zone_Id);
+            orderViewModel.ZoneName = zone != null ? zone.Name : "Zone Not Found";
             return orderViewModel;
         }
 

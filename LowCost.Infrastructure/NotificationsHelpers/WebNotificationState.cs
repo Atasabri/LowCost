@@ -14,5 +14,6 @@ namespace LowCost.Infrastructure.NotificationsHelpers
         public string MethodName { get; set; }
         public object Data { get; set; }
         public string[] Users { get; set; } = new string[] { };
+        public string[] Groups { get; set; } = new string[] { };
     }
 }

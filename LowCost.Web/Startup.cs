@@ -70,7 +70,7 @@ using LowCost.Business.Services.Products.Implementation.Dashboard;
 using LowCost.Business.Services.Products.Interfaces.Dashboard;
 using LowCost.Business.Services.Orders.Interfaces.Dashboard;
 using LowCost.Business.Services.Orders.Implementation.Dashboard;
-using LowCost.Infrastructure.Hubs;
+using LowCost.Business.Hubs;
 using LowCost.Business.Services.Verification.Interfaces;
 using LowCost.Business.Services.Verification.Implementation;
 using LowCost.Infrastructure.AppSettings;
@@ -266,6 +266,7 @@ namespace LowCost.Web
             services.AddTransient<AuthenticationHandler>();
             services.AddTransient<OrderNotificationHandler>();
             services.AddTransient<ProductNotificationHandler>();
+            services.AddTransient<WebNotificationHandler>();
 
             services.AddHttpContextAccessor();
             services.AddTransient<IUnitOfWork, UnitOfWork>();

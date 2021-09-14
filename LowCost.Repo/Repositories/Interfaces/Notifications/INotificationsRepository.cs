@@ -12,12 +12,6 @@ namespace LowCost.Repo.Repositories.Interfaces.Notifications
     public interface INotificationsRepository : IGenericRepository<Notification>
     {
         /// <summary>
-        /// Sending Notification To All Open Connections Asynchronous
-        /// </summary>
-        /// <param name="webNotificationState"></param>
-        /// <returns></returns>
-        Task WebNotifyToAllAsync(WebNotificationState webNotificationState);
-        /// <summary>
         /// Sending Notification To Mobile Device Using Device FCM Asynchronous
         /// </summary>
         /// <param name="deviceNotifyState"></param>
