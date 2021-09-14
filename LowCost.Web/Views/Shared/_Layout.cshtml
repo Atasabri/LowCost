@@ -106,7 +106,7 @@
 
     @if (User.Identity.IsAuthenticated)
     {
-        if (User.IsInRole(Admin.AdminRoleName))
+        if (User.IsInRole(Admin.AdminRoleName) || User.IsInRole(Admin.EditorRoleName))
         {
             <script src="~/lib/aspnet-signalr/signalr.js"></script>
             <script src="~/js/realTime.js"></script>

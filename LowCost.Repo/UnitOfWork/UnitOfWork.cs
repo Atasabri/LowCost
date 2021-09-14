@@ -30,7 +30,6 @@ using LowCost.Repo.Repositories.Interfaces.Files;
 using LowCost.Repo.Repositories.Implementation.Files;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR;
-using LowCost.Infrastructure.Hubs;
 using Microsoft.Extensions.Options;
 using LowCost.Infrastructure.AppSettings;
 using LowCost.Repo.Repositories.Interfaces.Settings;
@@ -56,7 +55,6 @@ namespace LowCost.Repo.UnitOfWork
         private readonly IHttpContextAccessor _accessor;
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly IHubContext<RealTimeHub> _hubContext;
         private readonly AppSettings _appSettings;
 
         IBrandsRepository brandsRepository;
@@ -214,7 +212,7 @@ namespace LowCost.Repo.UnitOfWork
             {
                 if (notificationsRepository == null)
                 {
-                    notificationsRepository = new NotificationsRepository(_context, _appSettings, _hubContext);
+                    notificationsRepository = new NotificationsRepository(_context, _appSettings);
                 }
                 return notificationsRepository;
             }
@@ -416,14 +414,12 @@ namespace LowCost.Repo.UnitOfWork
         public UnitOfWork(DB context, IHttpContextAccessor accessor,
             UserManager<User> userManager,
             IHostingEnvironment hostingEnvironment,
-            IHubContext<RealTimeHub> hubContext,
             IOptions<AppSettings> appSettings)
         {
             _context = context;
             this._accessor = accessor;
             this._userManager = userManager;
             this._hostingEnvironment = hostingEnvironment;
-            this._hubContext = hubContext;
             this._appSettings = appSettings.Value;
         }
 

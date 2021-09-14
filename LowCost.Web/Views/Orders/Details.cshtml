@@ -120,10 +120,10 @@
             @Html.DisplayFor(model => model.DriverPhone)
         </dd>
         <dt class="col-sm-2">
-            Zone
+            @Html.DisplayNameFor(model => model.ZoneName)
         </dt>
         <dd class="col-sm-10">
-            <a asp-action="Details" asp-controller="Zones" asp-route-id="@Model.Zone_Id" target="_blank">View Zone</a>
+            @Html.DisplayFor(model => model.ZoneName)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Discription)
@@ -180,7 +180,7 @@
         <a asp-action="Index">Back to List</a>
     </div>
 
-    <h2>Orders Deatils</h2>
+    <h2>Orders Details</h2>
     <table class="table">
         <thead>
             <tr>

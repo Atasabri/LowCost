@@ -11,6 +11,8 @@ namespace LowCost.Infrastructure.Helpers
         public const string Audiance = "https://localhost:64837/";
         public const string Secret = "ByYM000OLlMQG6VVVp1OH7Xzyr7gHuw1qvUC5dcGt3SNM";
 
+        // SignalR Hub
+        public const string AccessAllDashboardStocksDataGroupName = "AccessAllDashboardStocksDataGroup";
         // User Role
         public const string UserRoleName = "User";
         // Driver Role

@@ -1,7 +1,6 @@
 ﻿using LowCost.Domain.Context;
 using LowCost.Domain.Models;
 using LowCost.Infrastructure.AppSettings;
-using LowCost.Infrastructure.Hubs;
 using LowCost.Infrastructure.NotificationsHelpers;
 using LowCost.Infrastructure.NotificationsHelpers.MobileNotificationModels;
 using LowCost.Repo.Generic;
@@ -23,20 +22,11 @@ namespace LowCost.Repo.Repositories.Implementation.Notifications
 {
     public class NotificationsRepository : GenericRepository<Notification>, INotificationsRepository
     {
-        private readonly IHubContext<RealTimeHub> _hubContext;
         private readonly AppSettings _appSettings;
-        public NotificationsRepository(DB context, AppSettings appSettings, IHubContext<RealTimeHub> hubContext)
+        public NotificationsRepository(DB context, AppSettings appSettings)
             : base(context)
         {
-            this._hubContext = hubContext;
             this._appSettings = appSettings;
-        }
-
-        public async Task WebNotifyToAllAsync(WebNotificationState webNotificationState)
-        {
-            await _hubContext.Clients.All.SendAsync(webNotificationState.MethodName,
-                JsonConvert.SerializeObject(webNotificationState.Data,
-                new IsoDateTimeConverter() { DateTimeFormat = "dd-MM-yyyy HH:mm" }));
         }
 
         private async Task<IEnumerable<string>> NotifyAsync(object payload)
