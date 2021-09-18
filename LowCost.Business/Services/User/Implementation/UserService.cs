@@ -15,6 +15,7 @@ using LowCost.Infrastructure.Manage_Files;
 using Microsoft.Extensions.Localization;
 using LowCost.Resources;
 using LowCost.Business.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace LowCost.Business.Services.User.Implementation
 {
@@ -96,11 +97,22 @@ namespace LowCost.Business.Services.User.Implementation
 
         public async Task<ProfileDTO> ProfileAsync()
         {
-            // Get Current Logined User
-            var user = await _unitOfWork.UsersRepository.GetCurrentUser();
+            // Get Current Logined User 
+            var userId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var user = _userManager.Users.Include(nameof(Domain.Models.User.Zone)).FirstOrDefault(user => user.Id == userId);
 
             // User Mapping
             var profile = _mapper.Map<Domain.Models.User, ProfileDTO>(user);
+
+            // Get User Zone
+            if(profile.Zone_Id.HasValue)
+            {
+                var zone = await _unitOfWork.ZonesRepository.FindByIdAsync(profile.Zone_Id.Value);
+                if(zone != null)
+                {
+                    profile.ZoneName = zone.Name;
+                }
+            }
             // Get External Login Data
             var logins = await _userManager.GetLoginsAsync(user);
             if(logins.Any())

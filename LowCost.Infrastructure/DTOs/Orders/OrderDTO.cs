@@ -35,6 +35,7 @@ namespace LowCost.Infrastructure.DTOs.Orders
         public string UserName { get; set; }
         public string Zone_Id { get; set; }
 
+        public string Driver_Id { get; set; }
         public string DriverName { get; set; }
         public string DriverPhone { get; set; }
 
