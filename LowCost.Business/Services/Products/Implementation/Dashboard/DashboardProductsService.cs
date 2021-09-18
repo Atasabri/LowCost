@@ -168,7 +168,11 @@ namespace LowCost.Business.Services.Products.Implementation.Dashboard
         {
             var products = await _unitOfWork.ProductsRepository.GetElementsWithOrderAsync(Product => true,
                        pagingParameters, Product => Product.Id, OrderingType.Descending,
-                        string.Format("{0},{1}", nameof(Product.SubCategory), nameof(Product.Brand)));
+                        string.Format("{0},{1},{2}.{3}",
+                        nameof(Product.SubCategory)
+                        , nameof(Product.Brand)
+                        , nameof(Product.Prices)
+                        , nameof(Prices.Market)));
 
             var productsViewModel = products.ToMappedPagedResult<Product, ListingProductViewModel>(_mapper);
 
@@ -190,6 +194,23 @@ namespace LowCost.Business.Services.Products.Implementation.Dashboard
             _unitOfWork.PricesRepository.Update(price);
             var result = await _unitOfWork.SaveAsync() > 0;
             if(result)
+            {
+                actionState.ExcuteSuccessfully = true;
+                return actionState;
+            }
+            actionState.ErrorMessages.Add("Error In Edit Price");
+            return actionState;
+        }
+
+        public async Task<ActionState> EditProductPriceUsingPriceIdAsync(EditProductPriceUsingPriceIdModel editProductPriceUsingPriceIdModel)
+        {
+            var actionState = new ActionState();
+            var productPrice = await _unitOfWork.PricesRepository.FindByIdAsync(editProductPriceUsingPriceIdModel.Id);
+            productPrice.OldPrice = editProductPriceUsingPriceIdModel.OldPrice;
+            productPrice.Price = editProductPriceUsingPriceIdModel.Price;
+            _unitOfWork.PricesRepository.Update(productPrice);
+            var result = await _unitOfWork.SaveAsync() > 0;
+            if (result)
             {
                 actionState.ExcuteSuccessfully = true;
                 return actionState;

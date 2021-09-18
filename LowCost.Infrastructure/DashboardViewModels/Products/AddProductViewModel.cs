@@ -20,6 +20,9 @@ namespace LowCost.Infrastructure.DashboardViewModels.Products
         [Display(Name = "Serial Number")]
         public string Serial_Number { get; set; }
 
+        [Required]
+        public double Size { get; set; }
+
         private int? offerid;
         [Display(Name = "Offer")]
         public int? Offer_Id

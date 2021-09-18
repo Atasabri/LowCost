@@ -22,9 +22,9 @@ namespace LowCost.Business.Services.Settings.Implementation
             return Convert.ToBoolean(value);
         }
 
-        public async Task<double> GetTaxsAsync()
+        public async Task<double> GetDeliveryAsync()
         {
-            string value = await _unitOfWork.SettingsRepository.GetSettingValueUsingKeyAsync(Constants.TaxKey);
+            string value = await _unitOfWork.SettingsRepository.GetSettingValueUsingKeyAsync(Constants.DeliveryKey);
             return Convert.ToDouble(value);
         }
     }

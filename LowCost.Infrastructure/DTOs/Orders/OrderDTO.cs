@@ -13,7 +13,7 @@ namespace LowCost.Infrastructure.DTOs.Orders
         public bool Paid { get; set; }
         public double SubTotal { get; set; }
         public double Discount { get; set; }
-        public double Taxs { get; set; }
+        public double Delivery { get; set; }
         public PaymentWays PaymentWay { get; set; }
         public double Total { get; set; }
 

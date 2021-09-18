@@ -8,10 +8,10 @@ namespace LowCost.Business.Services.Settings.Interfaces
     public interface ISettingsService
     {
         /// <summary>
-        /// Get Taxs From Settings Asynchronous
+        /// Get Delivery From Settings Asynchronous
         /// </summary>
         /// <returns></returns>
-        Task<double> GetTaxsAsync();
+        Task<double> GetDeliveryAsync();
         /// <summary>
         /// Check Visa is Available Or Not Asynchronous
         /// </summary>

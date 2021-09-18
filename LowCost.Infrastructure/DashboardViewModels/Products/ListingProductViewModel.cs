@@ -1,4 +1,5 @@
 ﻿using LowCost.Infrastructure.DashboardViewModels.BaseViewModels;
+using LowCost.Infrastructure.DashboardViewModels.Products.Prices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,5 +18,7 @@ namespace LowCost.Infrastructure.DashboardViewModels.Products
         public string BrandName { get; set; }
         [Display(Name = "Brand")]
         public int Brand_Id { get; set; }
+
+        public List<PriceViewModel> Prices { get; set; }
     }
 }

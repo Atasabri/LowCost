@@ -91,6 +91,8 @@ using LowCost.Business.Services.Stocks.Implementation.Dashboard;
 using LowCost.Business.Services.Stocks.Interfaces.Dashboard;
 using LowCost.Business.Services.Zones.Interfaces;
 using LowCost.Business.Services.Zones.Implementation;
+using LowCost.Business.Services.OrderSizeDelivery.Interfaces.Dashboard;
+using LowCost.Business.Services.OrderSizeDelivery.Implementation.Dashboard;
 
 namespace LowCost.Web
 {
@@ -261,6 +263,7 @@ namespace LowCost.Web
             services.AddTransient<IDashboardSearchService, DashboardSearchService>();
             services.AddTransient<IDashboardZonesService, DashboardZonesService>(); 
             services.AddTransient<IDashboardStocksService, DashboardStocksService>();
+            services.AddTransient<IDashboardOrderSizeDeliveryService, DashboardOrderSizeDeliveryService>();
 
             // Handlers DI Register
             services.AddTransient<AuthenticationHandler>();

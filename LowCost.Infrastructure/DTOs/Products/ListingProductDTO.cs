@@ -11,6 +11,7 @@ namespace LowCost.Infrastructure.DTOs.Products
     {
         public string Name { get; set; }
         public int? Quantity { get; set; }
+        public double Size { get; set; }
         public bool IsFav { get; set; }
         [JsonIgnore]
         public IEnumerable<PricesDTO> Prices { get; set; }

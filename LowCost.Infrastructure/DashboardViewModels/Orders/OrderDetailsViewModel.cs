@@ -9,6 +9,7 @@ namespace LowCost.Infrastructure.DashboardViewModels.Orders
     {
         public double Price { get; set; }
         public int Quantity { get; set; }
+        public double Size { get; set; }
 
         public int Product_Id { get; set; }
         public int Market_Id { get; set; }

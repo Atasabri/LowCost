@@ -19,7 +19,7 @@ namespace LowCost.Domain.Models
         [Required]
         public double SubTotal { get; set; }
         public double Discount { get; set; }
-        public double Taxs { get; set; }
+        public double Delivery { get; set; }
         public double TotalSize { get; set; }
         public PaymentWays PaymentWay { get; set; } 
         [Required]

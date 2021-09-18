@@ -53,5 +53,11 @@ namespace LowCost.Business.Services.Products.Interfaces.Dashboard
         /// <param name="editPriceViewModel"></param>
         /// <returns></returns>
         Task<ActionState> EditPriceAsync(EditPriceViewModel editPriceViewModel);
+        /// <summary>
+        /// Edit Product Price Using Price Id Asynchronous
+        /// </summary>
+        /// <param name="editProductPriceUsingPriceIdModel"></param>
+        /// <returns></returns>
+        Task<ActionState> EditProductPriceUsingPriceIdAsync(EditProductPriceUsingPriceIdModel editProductPriceUsingPriceIdModel);
     }
 }

@@ -13,10 +13,10 @@ namespace LowCost.Infrastructure.DashboardViewModels.Products
         public string OfferName { get; set; }
         [Display(Name = "Serial Number")]
         public string Serial_Number { get; set; }
+        public double Size { get; set; }
 
         [Display(Name = "Offer")]
         public int? Offer_Id { get; set; }
-        public List<PriceViewModel> Prices { get; set; }
         public List<ProductStockQuantityViewModel> StockQuantities { get; set; } = new List<ProductStockQuantityViewModel>();
     }
 }

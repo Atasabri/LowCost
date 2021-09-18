@@ -20,14 +20,9 @@ namespace LowCost.Repo.Repositories.Implementation.Products
         {
         }
 
-        public Task<IEnumerable<Product>> GetProductsRecommendedAsync(PagingParameters pagingParameters)
+        public async Task<double> GetProductsSizeAsync(int[] products)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Product>> GetProductsWithFiltrationAsync(PagingParameters pagingParameters)
-        {
-            throw new NotImplementedException();
+            return await _entities.Where(product => products.Contains(product.Id)).SumAsync(product => product.Size);
         }
     }
 }
