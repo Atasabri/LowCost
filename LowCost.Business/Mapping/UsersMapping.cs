@@ -19,6 +19,7 @@ namespace LowCost.Business.Mapping
         {
             CreateMap<User, ProfileDTO>()
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.PhoneNumber))
+                .ForMember(dest => dest.ZoneName, opt => opt.MapFrom(src => src.Zone.GetType().GetProperty(localizedName).GetValue(src.Zone)))
                 .ReverseMap();
 
             CreateMap<User, DriverProfileDTO>()

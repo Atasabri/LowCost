@@ -76,5 +76,11 @@ namespace LowCost.Business.Services.Orders.Interfaces
         /// <param name="orderId"></param>
         /// <returns></returns>
         Task<ActionState> FinishOrderAsync(int orderId);
+        /// <summary>
+        /// Get Order Delivery Depend on All Products Size Asynchronous
+        /// </summary>
+        /// <param name="products"></param>
+        /// <returns></returns>
+        Task<double> GetOrderDeliveryAsync(int[] products);
     }
 }

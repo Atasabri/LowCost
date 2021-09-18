@@ -81,7 +81,7 @@ namespace LowCost.Business.Services.Orders.Implementation
                     // Get Price and Adding To Order Details & Order Subtotal
                     var priceItem = await _unitOfWork.PricesRepository.FindElementAsync(price =>
                                 price.Product_Id == orderDetailsItem.Product_Id &&
-                                price.Market_Id == orderDetailsItem.Market_Id);
+                                price.Market_Id == orderDetailsItem.Market_Id, nameof(Product));
                     if(priceItem == null)
                     {
                         createState.ErrorMessages.Add(orderDetailsItem.Product_Id.ToString());
@@ -102,6 +102,7 @@ namespace LowCost.Business.Services.Orders.Implementation
                         return createState;
                     }
                     orderDetailsItem.Price = priceItem.Price;
+                    orderDetailsItem.Size = priceItem.Product.Size * orderDetailsItem.Quantity;
                     order.SubTotal += orderDetailsItem.Price * orderDetailsItem.Quantity;
 
                     // Decrease Quantity Of Product
@@ -159,12 +160,13 @@ namespace LowCost.Business.Services.Orders.Implementation
                 }
             }
 
-            // Get Taxs Value From DataBase and Assign to Order
-            double taxs;
-            bool hasTaxs = double.TryParse(await _unitOfWork.SettingsRepository.GetSettingValueUsingKeyAsync(Constants.TaxKey), out taxs);
-            order.Taxs = hasTaxs ? taxs : Constants.DefaultTaxValue;
+            order.TotalSize = order.OrderDetails.Sum(orderDetails => orderDetails.Size);
+
+            // Get Order Delivery Depend on Order Size
+            order.Delivery = await GetDeliveryBySizeAsync(order.TotalSize);
+
             // Calculate Final Order Total Price
-            order.Total = (order.SubTotal - order.Discount) + order.Taxs;
+            order.Total = (order.SubTotal - order.Discount) + order.Delivery;
             
             await _unitOfWork.OrdersRepository.CreateAsync(order);
 
@@ -203,6 +205,23 @@ namespace LowCost.Business.Services.Orders.Implementation
             return promoCodeDTO;
         }
 
+        private async Task<double> GetDeliveryBySizeAsync(double size)
+        {
+            // Get Delivery Value From DataBase and Assign to Order
+            var orderSizeDelivery = await _unitOfWork.OrderSizeDeliveryRepository.FindElementAsync(orderSizeDelivery =>
+            size >= orderSizeDelivery.SizeFrom && size <= orderSizeDelivery.SizeTo);
+            if (orderSizeDelivery != null)
+            {
+                return orderSizeDelivery.Delivery;
+            }
+            else
+            {
+                // Return Default Delivery 
+                double delivery;
+                bool hasDelivery = double.TryParse(await _unitOfWork.SettingsRepository.GetSettingValueUsingKeyAsync(Constants.DeliveryKey), out delivery);
+                return hasDelivery ? delivery : Constants.DefaultDeliveryValue;
+            }
+        }
         public async Task<PagedResult<ListingOrderDTO>> GetDriverOrdersAsync(PagingParameters pagingParameters)
         {
             // Get Current Driver Id
@@ -373,6 +392,12 @@ namespace LowCost.Business.Services.Orders.Implementation
             }
             actionState.ErrorMessages.Add(_stringLocalizer["Can Not Close Order"]);
             return actionState;
+        }
+
+        public async Task<double> GetOrderDeliveryAsync(int[] products)
+        {
+            var productsTotalSize = await _unitOfWork.ProductsRepository.GetProductsSizeAsync(products);
+            return await GetDeliveryBySizeAsync(productsTotalSize);
         }
     }
 }

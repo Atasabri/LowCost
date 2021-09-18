@@ -29,10 +29,10 @@ namespace LowCost.Infrastructure.Helpers
         // Max Zero Cost Items in Ordrer
         public const int MaxZeroItemsinOrder = 1;
 
-        // Tax Key Name & Value
-        public const string TaxKeyName = "Tax";
-        public const string TaxKey = "Tax";
-        public const double DefaultTaxValue = 5;
+        // Delivery Key Name & Value
+        public const string DeliveryKeyName = "Delivery";
+        public const string DeliveryKey = "Delivery";
+        public const double DefaultDeliveryValue = 5;
         // Visa Available Key Name & Value
         public const string VisaAvailableKeyName = "Visa Available";
         public const string VisaAvailable = "VisaAvailable";

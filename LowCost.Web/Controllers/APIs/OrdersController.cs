@@ -65,5 +65,11 @@ namespace LowCost.Web.Controllers.APIs
         {
             return Ok(await _ordersService.CloseOrderAsync(orderId));
         }
+
+        [HttpPost("CheckOrderDelivery")]
+        public async Task<IActionResult> CheckOrderDelivery([FromBody] int[] products)
+        {
+            return Ok(await _ordersService.GetOrderDeliveryAsync(products));
+        }
     }
 }

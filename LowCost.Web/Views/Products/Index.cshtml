@@ -24,7 +24,7 @@
             <th scope="col">Name</th>
             <th scope="col">Name (Arabic)</th>
             <th scope="col">Sub Category Name</th>
-            <th scope="col">Brand Name</th>
+            <th scope="col">Prices</th>
             <th scope="col">Actions</th>
         </tr>
     </thead>
@@ -39,8 +39,31 @@
             <td>
                 <a target="_blank" asp-action="Details" asp-controller="SubCategories" asp-route-id="@item.SubCategory_Id"> @item.SubCategoryName</a>
             </td>
-            <td>
+            @*<td>
                 <a target="_blank" asp-action="Details" asp-controller="Brands" asp-route-id="@item.Brand_Id"> @item.BrandName</a>
+            </td>*@
+            <td>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Market Name</th>
+                            <th>Old Price</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var price in item.Prices)
+                        {
+                        <tr>
+
+                            <td>@price.MarketName</td>
+                            <td id="oldPrice_@price.Id">@price.OldPrice</td>
+                            <td id="price_@price.Id">@price.Price</td>
+                            <td id="priceAction_@price.Id"><i onclick="EditPrice(@(price.Id));" class="bi bi-pencil-square"></i></td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
             </td>
             <td>
                 <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
@@ -79,4 +102,58 @@
         }
     }
 
+    function EditPrice(priceId)
+    {
+        var oldPrice = $("#oldPrice_" + priceId);
+        var price = $("#price_" + priceId);
+
+        oldPriceValue = parseInt(oldPrice.html());
+        priceValue = parseInt(price.html());
+
+        oldPrice.html(`<input type="number" id="oldPriceNew${priceId}" style="width:60px" value="${oldPriceValue}" />`);
+        price.html(`<input type="number" id="priceNew${priceId}" style="width:60px" value="${priceValue}" />`);
+
+        $("#priceAction_" + priceId).html(`<i onclick="SavePrice(${priceId});" class="bi bi-check-lg"></i>`);
+    }
+
+    function SavePrice(priceId) {
+        var oldPriceNew = $("#oldPriceNew" + priceId).val();
+        var priceNew = $("#priceNew" + priceId).val();
+        if (oldPriceNew < 0) {
+            alert("Please Add Valid Old Price !");
+            return
+        }
+        if (priceNew < 0) {
+            alert("Please Add Valid Price !");
+            return
+        }
+
+        $(".loader").show();
+        $.post("@Url.Action("EditProductPrice", "Products")", {
+
+                Id: priceId,
+                OldPrice: oldPriceNew,
+                Price: priceNew
+            },
+                function (data) {
+                    if (typeof data == 'string') {
+                        alert(data);
+                        return;
+                    }
+                    $(".loader").hide();
+              }
+
+            ).fail(function () {
+                alert("Can Not Edit Price")
+                $(".loader").hide();
+                return;
+            })
+
+
+        var oldPrice = $("#oldPrice_" + priceId);
+        var price = $("#price_" + priceId);
+        oldPrice.html(oldPriceNew);
+        price.html(priceNew);
+        $("#priceAction_" + priceId).html(`<i onclick="EditPrice(${priceId});" class="bi bi-pencil-square"></i>`);
+    }
 </script>

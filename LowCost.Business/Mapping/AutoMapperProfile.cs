@@ -47,6 +47,7 @@ namespace LowCost.Business.Mapping
             DashboardSettingsMapping();
             DashboardStocksMapping();
             DashboardZonesMapping();
+            DashboardOrderSizeDeliveryMapping();
         }
     }
 }

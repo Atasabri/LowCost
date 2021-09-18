@@ -14,6 +14,7 @@ namespace LowCost.Infrastructure.DTOs.Orders
         public double Longitude { get; set; }
         public bool Finished { get; set; }
         public bool Closed { get; set; }
+        public string Driver_Id { get; set; }
 
         [JsonIgnore]
         public List<OrderStatusDTO> OrderStatuses { get; set; }

@@ -170,5 +170,16 @@ namespace LowCost.Web.Controllers.Dashboard
             }
             return RedirectToAction(nameof(EditPrice), new { id = editPriceViewModel.Id });
         }
+
+        [HttpPost]
+        public async Task<ActionResult> EditProductPrice(EditProductPriceUsingPriceIdModel editProductPriceUsingPriceIdModel)
+        {
+            var result = await _dashboardProductsService.EditProductPriceUsingPriceIdAsync(editProductPriceUsingPriceIdModel);
+            if (result.ExcuteSuccessfully)
+            {
+                return Json(editProductPriceUsingPriceIdModel.Id);
+            }
+            return Json(result.ErrorMessages.FirstOrDefault());
+        }
     }
 }

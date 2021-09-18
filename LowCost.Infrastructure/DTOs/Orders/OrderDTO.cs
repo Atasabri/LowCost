@@ -13,7 +13,7 @@ namespace LowCost.Infrastructure.DTOs.Orders
         public bool Paid { get; set; }
         public double SubTotal { get; set; }
         public double Discount { get; set; }
-        public double Taxs { get; set; }
+        public double Delivery { get; set; }
         public PaymentWays PaymentWay { get; set; }
         public double Total { get; set; }
 
@@ -35,6 +35,7 @@ namespace LowCost.Infrastructure.DTOs.Orders
         public string UserName { get; set; }
         public string Zone_Id { get; set; }
 
+        public string Driver_Id { get; set; }
         public string DriverName { get; set; }
         public string DriverPhone { get; set; }
 

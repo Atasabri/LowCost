@@ -17,10 +17,10 @@ namespace LowCost.Web.Controllers.APIs
             this._settingsService = settingsService;
         }
 
-        [HttpGet("GetTaxs")]
-        public async Task<IActionResult> GetTaxs()
+        [HttpGet("GetDelivery")]
+        public async Task<IActionResult> GetDelivery()
         {
-            return Ok(await _settingsService.GetTaxsAsync());
+            return Ok(await _settingsService.GetDeliveryAsync());
         }
 
         [HttpGet("CheckVisaAvailable")]
