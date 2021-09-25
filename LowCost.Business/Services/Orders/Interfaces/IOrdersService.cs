@@ -77,10 +77,10 @@ namespace LowCost.Business.Services.Orders.Interfaces
         /// <returns></returns>
         Task<ActionState> FinishOrderAsync(int orderId);
         /// <summary>
-        /// Get Order Delivery Depend on All Products Size Asynchronous
+        /// Get Order Delivery Depend on All Products Size & Price With No Delivery Asynchronous
         /// </summary>
-        /// <param name="products"></param>
+        /// <param name="orderDetails"></param>
         /// <returns></returns>
-        Task<double> GetOrderDeliveryAsync(int[] products);
+        Task<double> GetOrderDeliveryAsync(List<AddOrderDetailsDTO> orderDetails);
     }
 }

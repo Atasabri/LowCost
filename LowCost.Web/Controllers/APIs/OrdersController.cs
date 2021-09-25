@@ -67,9 +67,9 @@ namespace LowCost.Web.Controllers.APIs
         }
 
         [HttpPost("CheckOrderDelivery")]
-        public async Task<IActionResult> CheckOrderDelivery([FromBody] int[] products)
+        public async Task<IActionResult> CheckOrderDelivery([FromBody] List<AddOrderDetailsDTO> orderDetails)
         {
-            return Ok(await _ordersService.GetOrderDeliveryAsync(products));
+            return Ok(await _ordersService.GetOrderDeliveryAsync(orderDetails));
         }
     }
 }
