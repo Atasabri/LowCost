@@ -112,6 +112,15 @@ namespace LowCost.Domain.Context
                 Value = Constants.DefaultLimitPriceForUseZeroWithCost.ToString(),
                 Type = Type.GetTypeCode(Constants.DefaultLimitPriceForUseZeroWithCost.GetType())
             });
+            // Adding Price With No Delivery to App Settings
+            builder.Entity<Settings>().HasData(new Settings()
+            {
+                Id = 4,
+                Name = Constants.PriceWithNoDeliveryKeyName,
+                Key = Constants.PriceWithNoDeliveryKey,
+                Value = Constants.DefaultPriceWithNoDelivery.ToString(),
+                Type = Type.GetTypeCode(Constants.DefaultPriceWithNoDelivery.GetType())
+            });
         }
     }
 }

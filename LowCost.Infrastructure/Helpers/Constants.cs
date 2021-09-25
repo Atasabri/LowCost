@@ -41,5 +41,9 @@ namespace LowCost.Infrastructure.Helpers
         public const string LimitPriceForUseZeroWithCostName = "Limit Price For Use Zero With Cost";
         public const string LimitPriceForUseZeroWithCost = "LimitPriceForUseZeroWithCost";
         public const double DefaultLimitPriceForUseZeroWithCost = 300;
+        // Price With No Delivery
+        public const string PriceWithNoDeliveryKeyName = "Price With No Delivery";
+        public const string PriceWithNoDeliveryKey = "PriceWithNoDelivery";
+        public const double DefaultPriceWithNoDelivery = 500;
     }
 }

@@ -160,13 +160,12 @@ namespace LowCost.Business.Services.Orders.Implementation
                 }
             }
 
-            order.TotalSize = order.OrderDetails.Sum(orderDetails => orderDetails.Size);
-
             // Get Order Delivery Depend on Order Size
+            order.TotalSize = order.OrderDetails.Sum(orderDetails => orderDetails.Size);
             order.Delivery = await GetDeliveryBySizeAsync(order.TotalSize);
 
-            // Calculate Final Order Total Price
-            order.Total = (order.SubTotal - order.Discount) + order.Delivery;
+            // Calculate Final Order Total Price & Check if Order has No Delivery
+            await CheckOrderHasNoDeliveryAndCalculateOrderFinalTotalPriceAsync(order);
             
             await _unitOfWork.OrdersRepository.CreateAsync(order);
 
@@ -222,6 +221,27 @@ namespace LowCost.Business.Services.Orders.Implementation
                 return hasDelivery ? delivery : Constants.DefaultDeliveryValue;
             }
         }
+
+        private async Task CheckOrderHasNoDeliveryAndCalculateOrderFinalTotalPriceAsync(Order order)
+        {
+            double priceWithNoDeliveryValue = await GetPriceWithNoDeliveryAsync();
+            double totalWithoutDelivery = order.SubTotal - order.Discount;
+            if (totalWithoutDelivery >= priceWithNoDeliveryValue)
+            {
+                order.Delivery = 0;
+            }
+            order.Total = totalWithoutDelivery + order.Delivery;
+        }
+
+        private async Task<double> GetPriceWithNoDeliveryAsync()
+        {
+            double priceWithNoDelivery;
+            bool hasPriceWithNoDelivery = double.TryParse(await _unitOfWork.SettingsRepository.GetSettingValueUsingKeyAsync(Constants.PriceWithNoDeliveryKey), out priceWithNoDelivery);
+            double priceWithNoDeliveryValue = hasPriceWithNoDelivery ? priceWithNoDelivery : Constants.DefaultPriceWithNoDelivery;
+
+            return priceWithNoDeliveryValue;
+        }
+
         public async Task<PagedResult<ListingOrderDTO>> GetDriverOrdersAsync(PagingParameters pagingParameters)
         {
             // Get Current Driver Id
@@ -394,9 +414,32 @@ namespace LowCost.Business.Services.Orders.Implementation
             return actionState;
         }
 
-        public async Task<double> GetOrderDeliveryAsync(int[] products)
+        public async Task<double> GetOrderDeliveryAsync(List<AddOrderDetailsDTO> orderDetails)
         {
-            var productsTotalSize = await _unitOfWork.ProductsRepository.GetProductsSizeAsync(products);
+            double totalPrice = 0;
+            List<int> products = new List<int>();
+            foreach (var orderDetail in orderDetails)
+            {
+                var price = await _unitOfWork.PricesRepository.FindElementAsync(price =>
+                price.Product_Id == orderDetail.Product_Id && price.Market_Id == orderDetail.Market_Id);
+
+                if(price != null)
+                {
+                    totalPrice += price.Price * orderDetail.Quantity;
+                }
+                else
+                {
+                    throw new Exception(string.Format("There is No Item With Product Id {0} and Market Id {1}", orderDetail.Product_Id, orderDetail.Market_Id));
+                }
+                products.Add(orderDetail.Product_Id);
+            }
+            double priceWithNoDeliveryValue = await GetPriceWithNoDeliveryAsync();
+
+            if(totalPrice >= priceWithNoDeliveryValue)
+            {
+                return 0;
+            }
+            var productsTotalSize = await _unitOfWork.ProductsRepository.GetProductsSizeAsync(products.ToArray());
             return await GetDeliveryBySizeAsync(productsTotalSize);
         }
     }
