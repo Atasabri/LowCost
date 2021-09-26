@@ -14,6 +14,7 @@ namespace LowCost.Infrastructure.DTOs.User
         public string Photo { get; set; }
         public int? Zone_Id { get; set; }
         public string ZoneName { get; set; }
+        public double Balance { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string ExternalLoginId { get; set; }
         public string Provider { get; set; }

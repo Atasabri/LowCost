@@ -63,7 +63,7 @@ namespace LowCost.Business.Services.User.Implementation
         {
             var actionState = new ActionState();
             // Get Current Logined User
-            var user = await _unitOfWork.UsersRepository.GetCurrentUser();
+            var user = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
             // Change User Data
             user.FullName = editProfileDTO.FullName;
             user.UserName = editProfileDTO.Email;
@@ -98,7 +98,7 @@ namespace LowCost.Business.Services.User.Implementation
         public async Task<ProfileDTO> ProfileAsync()
         {
             // Get Current Logined User 
-            var userId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var userId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             var user = _userManager.Users.Include(nameof(Domain.Models.User.Zone)).FirstOrDefault(user => user.Id == userId);
 
             // User Mapping
@@ -133,7 +133,7 @@ namespace LowCost.Business.Services.User.Implementation
         public async Task<ActionState> ChangeLoginedUserCurrentLanguageAsync(Languages language)
         {
             var actionState = new ActionState();
-            var user = await _unitOfWork.UsersRepository.GetCurrentUser();
+            var user = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
             user.CurrentLangauge = language;
             var result = await _userManager.UpdateAsync(user);
             if(result.Succeeded)
@@ -149,7 +149,7 @@ namespace LowCost.Business.Services.User.Implementation
         {
             var actionState = new ActionState();
             // Get Current Logined User
-            var user = await _unitOfWork.UsersRepository.GetCurrentUser();
+            var user = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
             // Change Password Of Current User
             var result = await _userManager.ChangePasswordAsync(user, changePasswordDTO.OldPassword, changePasswordDTO.NewPassword);
             if (result.Succeeded)
@@ -164,7 +164,7 @@ namespace LowCost.Business.Services.User.Implementation
         public async Task<ActionState> ChangeCurrentUserZoneAsync(int zoneId)
         {
             var actionState = new ActionState();
-            var user = await _unitOfWork.UsersRepository.GetCurrentUser();
+            var user = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
             user.Zone_Id = zoneId;
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)

@@ -1,0 +1,47 @@
+﻿@model PagedResult<ListingUserViewModel>
+@{
+    int counter = 1;
+    ViewBag.Title = "Users";
+    var pagingModel = new DashboardPagination()
+    { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount, Size = Model.Size };
+
+}
+<h2>Users</h2>
+
+<form class="form-inline my-2 my-lg-0">
+    <input type="hidden" name="size" value="@pagingModel.Size" />
+    <input class="form-control" name="searchTerms" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+</form>
+
+<table class="table" id="tbl">
+    <caption>Page Number (@(Model.PageNumber))</caption>
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">User Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Full Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Items)
+        {
+            <tr id="@item.Id">
+                <th scope="row">@(counter++)</th>
+                <td>@item.UserName</td>
+                <td>@item.Email</td>
+                <td>@item.Phone</td>
+                <td>@item.FullName</td>
+                <td>
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<partial name="Partials/_Pagination" model="pagingModel" />

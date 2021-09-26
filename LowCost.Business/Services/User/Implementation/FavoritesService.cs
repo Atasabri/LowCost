@@ -32,7 +32,7 @@ namespace LowCost.Business.Services.User.Implementation
         {
             var actionState = new ActionState();
             // Get Current Logined User
-            var userId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var userId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             // Check If Product Added to Favorites Before
             var favorite = await _unitOfWork.FavoritesRepository.FindElementAsync(fav => fav.Product_Id == addProductToFavoritesDTO.Product_Id && fav.User_Id == userId);
             if(favorite == null)
@@ -65,7 +65,7 @@ namespace LowCost.Business.Services.User.Implementation
         public async Task<PagedResult<ListingProductDTO>> GetUserFavoritesAsync(PagingParameters pagingParameters)
         {
             // Get Current Logined User
-            var userId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var userId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             // Get Current User Favorite Products
             var favorites = await _unitOfWork.FavoritesRepository.GetElementsWithOrderAsync(fav => fav.User_Id == userId,
                 pagingParameters, fav => fav.Id, OrderingType.Descending, 

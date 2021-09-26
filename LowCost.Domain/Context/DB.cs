@@ -61,7 +61,14 @@ namespace LowCost.Domain.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
+            builder.Entity<User>(user =>
+            {
+                // Each User can have many entries in the UserRole join table
+                user.HasMany(e => e.UserRoles)
+                    .WithOne()
+                    .HasForeignKey(ur => ur.UserId)
+                    .IsRequired();
+            });
             // Seed Data
             SeedData.Seed(builder);
         }

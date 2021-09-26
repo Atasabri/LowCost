@@ -29,7 +29,7 @@ namespace LowCost.Business.Services.User.Implementation.Dashboard
             this._userManager = userManager;
             this._mapper = mapper;
             this._authenticationHandler = authenticationHandler;
-            currentAdmin =  _unitOfWork.UsersRepository.GetCurrentDashboardAdminUser().Result;
+            currentAdmin =  _unitOfWork.CurrentUserRepository.GetCurrentDashboardAdminUser().Result;
         }
         public async Task<ActionState> CreateDriverAsync(AddDriverViewModel addDriverViewModel)
         {

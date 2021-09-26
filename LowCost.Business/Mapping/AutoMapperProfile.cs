@@ -34,7 +34,7 @@ namespace LowCost.Business.Mapping
             ZonesMapping();
 
             // Dashboard Mapping
-            DashboardUsersMapping();
+            DashboardAdminsMapping();
             DashboardCategoriesMapping();
             DashboardBrandsMapping();
             DashboardMarketsMapping();
@@ -48,6 +48,7 @@ namespace LowCost.Business.Mapping
             DashboardStocksMapping();
             DashboardZonesMapping();
             DashboardOrderSizeDeliveryMapping();
+            DashboardUsersMapping();
         }
     }
 }

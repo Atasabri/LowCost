@@ -43,7 +43,7 @@ namespace LowCost.Business.Services.Orders.Implementation
         {
             var createState = new CreateState();
             // Get Current User Id
-            var currentUser = await _unitOfWork.UsersRepository.GetCurrentUser();
+            var currentUser = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
             addOrderDTO.User_Id = currentUser.Id;
 
             var order = _mapper.Map<AddOrderDTO, Order>(addOrderDTO);
@@ -245,7 +245,7 @@ namespace LowCost.Business.Services.Orders.Implementation
         public async Task<PagedResult<ListingOrderDTO>> GetDriverOrdersAsync(PagingParameters pagingParameters)
         {
             // Get Current Driver Id
-            var driverId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var driverId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
 
             var orders = await _unitOfWork.OrdersRepository.GetElementsWithOrderAsync(order => order.Driver_Id == driverId && !order.Finished && !order.Closed,
                                   pagingParameters, order => order.DateTime,
@@ -259,7 +259,7 @@ namespace LowCost.Business.Services.Orders.Implementation
         public async Task<PagedResult<ListingOrderDTO>> GetDriverFinishedOrdersAsync(PagingParameters pagingParameters)
         {
             // Get Current Driver Id
-            var driverId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var driverId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
 
             var orders = await _unitOfWork.OrdersRepository.GetElementsWithOrderAsync(order => order.Driver_Id == driverId && (order.Finished || order.Closed),
                                   pagingParameters, order => order.DateTime,
@@ -273,7 +273,7 @@ namespace LowCost.Business.Services.Orders.Implementation
         public async Task<OrderDTO> GetOrderDetailsAsync(int orderId)
         {            
             // Get Current User Id
-            var userId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var userId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             // Get Order
             var order = await _unitOfWork.OrdersRepository.FindElementAsync(order => order.Id == orderId &&
                               order.User_Id == userId,
@@ -293,7 +293,7 @@ namespace LowCost.Business.Services.Orders.Implementation
         public async Task<OrderDTO> GetDriverOrderDetailsAsync(int orderId)
         {
             // Get Current Driver Id
-            var driverId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var driverId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             // Get Order
             var order = await _unitOfWork.OrdersRepository.FindElementAsync(order => order.Id == orderId &&
                               order.Driver_Id == driverId,
@@ -314,7 +314,7 @@ namespace LowCost.Business.Services.Orders.Implementation
         public async Task<PagedResult<ListingOrderDTO>> GetOrdersAsync(PagingParameters pagingParameters)
         {
             // Get Current User Id
-            var userId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var userId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
 
             var orders = await _unitOfWork.OrdersRepository.GetElementsWithOrderAsync(order => order.User_Id == userId,
                                   pagingParameters, order => order.DateTime,
@@ -342,7 +342,7 @@ namespace LowCost.Business.Services.Orders.Implementation
         public async Task<ActionState> StartOrderAsync(int orderId)
         {
             var actionState = new ActionState();
-            string currentDriverId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            string currentDriverId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             var order = await _unitOfWork.OrdersRepository.FindElementAsync(order => order.Id == orderId && order.Driver_Id == currentDriverId);
             if (order == null)
             {
@@ -366,7 +366,7 @@ namespace LowCost.Business.Services.Orders.Implementation
         public async Task<ActionState> FinishOrderAsync(int orderId)
         {
             var actionState = new ActionState();
-            string currentDriverId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            string currentDriverId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             var order = await _unitOfWork.OrdersRepository.FindElementAsync(order => order.Id == orderId && order.Driver_Id == currentDriverId);
             if (order == null)
             {
@@ -390,7 +390,7 @@ namespace LowCost.Business.Services.Orders.Implementation
         public async Task<ActionState> CloseOrderAsync(int orderId)
         {
             var actionState = new ActionState();
-            string currentUserId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            string currentUserId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             var order = await _unitOfWork.OrdersRepository.FindElementAsync(order => order.Id == orderId && order.User_Id == currentUserId);
             if (order == null)
             {
