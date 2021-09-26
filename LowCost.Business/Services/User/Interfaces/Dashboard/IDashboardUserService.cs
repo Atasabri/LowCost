@@ -1,9 +1,8 @@
-﻿using LowCost.Infrastructure.DashboardViewModels.Identity;
+﻿using LowCost.Infrastructure.DashboardViewModels.User.DashboardUsersViewModels;
+using LowCost.Infrastructure.Helpers;
 using LowCost.Infrastructure.Pagination;
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,38 +11,35 @@ namespace LowCost.Business.Services.User.Interfaces.Dashboard
     public interface IDashboardUserService
     {
         /// <summary>
-        /// Adding New User With Role Admin Asynchronous
+        /// Get Users (Asynchronous & Paging)
         /// </summary>
-        /// <param name="addNewAdminViewModel"></param>
+        /// <param name="pagingParameters"></param>
         /// <returns></returns>
-        Task<IdentityResult> CreateNewAdminAsync(AddNewAdminViewModel addNewAdminViewModel);
+        Task<PagedResult<ListingUserViewModel>> GetUsersAsync(PagingParameters pagingParameters);
         /// <summary>
-        /// Get Listing Admins Asynchronous
+        /// Search In Users (Asynchronous & Paging)
         /// </summary>
+        /// <param name="searchTerms"></param>
+        /// <param name="pagingParameters"></param>
         /// <returns></returns>
-        Task<IEnumerable<AdminViewModel>> GetAdminsAsync();
+        Task<PagedResult<ListingUserViewModel>> SearchUsersAsync(string searchTerms, PagingParameters pagingParameters);
         /// <summary>
-        /// Adding New User With Role Editor Asynchronous
+        /// Get User By Id Asynchronous
         /// </summary>
-        /// <param name="addNewAdminViewModel"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        Task<IdentityResult> CreateNewEditorAsync(AddNewAdminViewModel addNewAdminViewModel);
+        Task<UserViewModel> GetUserDetailsAsync(string id);
         /// <summary>
-        /// Get Listing Editors Asynchronous
+        /// Get User Balance Details By User Id Asynchronous
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        Task<IEnumerable<AdminViewModel>> GetEditorsAsync();
+        Task<UserBalanceDetailsViewModel> GetUserBalanceDetailsAsync(string id);
         /// <summary>
-        /// Change Admin Or Editor Password Asynchronous
+        /// Edit User Balance Asynchronous
         /// </summary>
-        /// <param name="changePasswordViewModel"></param>
+        /// <param name="editBalanceViewModel"></param>
         /// <returns></returns>
-        Task<IdentityResult> ChangePasswordAsync(ChangePasswordViewModel changePasswordViewModel);
-        /// <summary>
-        /// Delete Admin Or Editor Using Id Asynchronous
-        /// </summary>
-        /// <param name="Id"></param>
-        /// <returns></returns>
-        Task<IdentityResult> DeleteAsync(string Id);
+        Task<ActionState> EditUserBalanceAsync(EditBalanceViewModel editBalanceViewModel);
     }
 }

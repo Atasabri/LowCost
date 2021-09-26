@@ -17,17 +17,17 @@ namespace LowCost.Web.Controllers.Dashboard
     [Authorize(Roles = Admin.AdminRoleName)]
     public class EditorsController : Controller
     {
-        private readonly IDashboardUserService _dashboardUserService;
+        private readonly IDashboardAdminService _dashboardAdminService;
         private readonly IDashboardStocksService _dashboardStocksService;
 
-        public EditorsController(IDashboardUserService dashboardUserService, IDashboardStocksService dashboardStocksService)
+        public EditorsController(IDashboardAdminService dashboardUserService, IDashboardStocksService dashboardStocksService)
         {
-            this._dashboardUserService = dashboardUserService;
+            this._dashboardAdminService = dashboardUserService;
             this._dashboardStocksService = dashboardStocksService;
         }
         public async Task<IActionResult> Index()
         {
-            var editors = await _dashboardUserService.GetEditorsAsync();
+            var editors = await _dashboardAdminService.GetEditorsAsync();
             return View(editors);
         }
         public async Task<IActionResult> AddNewEditor()
@@ -41,7 +41,7 @@ namespace LowCost.Web.Controllers.Dashboard
         {
             if (ModelState.IsValid)
             {
-                var result = await _dashboardUserService.CreateNewEditorAsync(addNewAdminViewModel);
+                var result = await _dashboardAdminService.CreateNewEditorAsync(addNewAdminViewModel);
                 if (result.Succeeded)
                 {
                     return RedirectToAction(nameof(Index));

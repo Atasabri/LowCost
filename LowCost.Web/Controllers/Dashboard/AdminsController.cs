@@ -17,15 +17,15 @@ namespace LowCost.Web.Controllers.Dashboard
     [Authorize(Roles = Admin.AdminRoleName)]
     public class AdminsController : Controller
     {
-        private readonly IDashboardUserService _dashboardUserService;
+        private readonly IDashboardAdminService _dashboardAdminService;
 
-        public AdminsController(IDashboardUserService dashboardUserService)
+        public AdminsController(IDashboardAdminService dashboardUserService)
         {
-            this._dashboardUserService = dashboardUserService;
+            this._dashboardAdminService = dashboardUserService;
         }
         public async Task<IActionResult> Index()
         {
-            var admins = await _dashboardUserService.GetAdminsAsync();
+            var admins = await _dashboardAdminService.GetAdminsAsync();
             return View(admins);
         }
 
@@ -39,7 +39,7 @@ namespace LowCost.Web.Controllers.Dashboard
         {
             if(ModelState.IsValid)
             {
-                var result = await _dashboardUserService.CreateNewAdminAsync(addNewAdminViewModel);
+                var result = await _dashboardAdminService.CreateNewAdminAsync(addNewAdminViewModel);
                 if(result.Succeeded)
                 {
                     return RedirectToAction(nameof(Index));
@@ -52,7 +52,7 @@ namespace LowCost.Web.Controllers.Dashboard
         [HttpPost]
         public async Task<JsonResult> Delete(string Id)
         {
-            var result = await _dashboardUserService.DeleteAsync(Id);
+            var result = await _dashboardAdminService.DeleteAsync(Id);
             if(result.Succeeded)
             {
                 return Json(Id);

@@ -2,6 +2,7 @@
 using LowCost.Domain.Models;
 using LowCost.Infrastructure.DashboardViewModels.Identity;
 using LowCost.Infrastructure.DashboardViewModels.User;
+using LowCost.Infrastructure.DashboardViewModels.User.DashboardUsersViewModels;
 using LowCost.Infrastructure.DTOs.Products;
 using LowCost.Infrastructure.DTOs.User;
 using LowCost.Infrastructure.DTOs.User.Address;
@@ -41,11 +42,26 @@ namespace LowCost.Business.Mapping
             CreateMap<AddPaymentMethodDTO, PaymentMethod>().ReverseMap();
             CreateMap<PaymentMethod, PaymentMethodDTO>().ReverseMap();
         }
-        void DashboardUsersMapping()
+        void DashboardAdminsMapping()
         {
             CreateMap<AddNewAdminViewModel, User>()
                 .ReverseMap();
             CreateMap<AdminViewModel, User>()
+                .ReverseMap();
+        }
+
+        void DashboardUsersMapping()
+        {
+            CreateMap<User, UserViewModel>()
+                .ForMember(dest => dest.ZoneName, opt => opt.MapFrom(src => src.Zone.Name))
+                .ReverseMap();
+            CreateMap<ListingUserViewModel, User>()
+                .ReverseMap();
+            CreateMap<AddressViewModel, Address>()
+                .ReverseMap();
+
+            CreateMap<User, UserBalanceDetailsViewModel>()
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
                 .ReverseMap();
         }
     }

@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace LowCost.Repo.Repositories.Interfaces.User
 {
-    public interface IUsersRepository
+    public interface ICurrentUserRepository
     {
         /// <summary>
-        /// Get Cuurent User Id 
+        /// Get Current User Id 
         /// </summary>
         /// <returns></returns>
         Task<string> GetCurrentUserId();
         /// <summary>
-        /// Get Cuurent User Name
+        /// Get Current User Name
         /// </summary>
         /// <returns></returns>
         Task<string> GetCurrentUserName();

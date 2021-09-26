@@ -11,12 +11,12 @@ using LowCost.Infrastructure.Helpers;
 
 namespace LowCost.Repo.Repositories.Implementation.User
 {
-    public class UsersRepository : IUsersRepository
+    public class CurrentUserRepository : ICurrentUserRepository
     {
         private readonly IHttpContextAccessor _accessor;
         private readonly UserManager<Domain.Models.User> _userManager;
 
-        public UsersRepository(IHttpContextAccessor accessor, UserManager<Domain.Models.User> userManager)
+        public CurrentUserRepository(IHttpContextAccessor accessor, UserManager<Domain.Models.User> userManager)
         {
             this._accessor = accessor;
             this._userManager = userManager;

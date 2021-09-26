@@ -35,7 +35,7 @@ namespace LowCost.Business.Services.Orders.Implementation.Dashboard
             this._mapper = mapper;
             this._orderNotificationHandler = orderNotificationHandler;
             this._userManager = userManager;
-            currentAdmin = _unitOfWork.UsersRepository.GetCurrentDashboardAdminUser().Result;
+            currentAdmin = _unitOfWork.CurrentUserRepository.GetCurrentDashboardAdminUser().Result;
         }
         public async Task<CreateState> AddOrderStatusAsync(AddOrderStatusViewModel addStatusViewModel)
         {
@@ -110,7 +110,7 @@ namespace LowCost.Business.Services.Orders.Implementation.Dashboard
 
         public async Task<OrderViewModel> GetOrderDetailsAsync(int id)
         {
-            var currentAdmin = await _unitOfWork.UsersRepository.GetCurrentDashboardAdminUser();
+            var currentAdmin = await _unitOfWork.CurrentUserRepository.GetCurrentDashboardAdminUser();
             var order = await _unitOfWork.OrdersRepository.FindElementAsync(order => order.Id == id && (currentAdmin.Stock_Id == null || order.Stock_Id == currentAdmin.Stock_Id),
                 string.Format("{0}.{1},{2}.{3},{4}.{5},{6},{7}",
                 nameof(Order.OrderDetails), nameof(OrderDetails.Product),
@@ -127,7 +127,7 @@ namespace LowCost.Business.Services.Orders.Implementation.Dashboard
 
         public async Task<PagedResult<ListingOrderViewModel>> GetOrdersAsync(PagingParameters pagingParameters)
         {
-            var currentAdmin = await _unitOfWork.UsersRepository.GetCurrentDashboardAdminUser();
+            var currentAdmin = await _unitOfWork.CurrentUserRepository.GetCurrentDashboardAdminUser();
             var orders = await _unitOfWork.OrdersRepository.GetElementsWithOrderAsync(order => currentAdmin.Stock_Id == null || order.Stock_Id == currentAdmin.Stock_Id, pagingParameters,
                 order => order.DateTime, OrderingType.Descending);
 

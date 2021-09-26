@@ -16,6 +16,7 @@ namespace LowCost.Domain.Models
         public string FullName { get; set; }
         public DateTime? DateOfBirth { get; set; }
 
+        public double Balance { get; set; }
         public int? Zone_Id { get; set; }
         public int? Stock_Id { get; set; }
 
@@ -36,5 +37,7 @@ namespace LowCost.Domain.Models
         public ICollection<Favorites> Favorites { get; set; }
 
         public ICollection<ProductFollowingUser> ProductFollowingUsers { get; set; }
+
+        public ICollection<IdentityUserRole<string>> UserRoles { get; set; }
     }
 }

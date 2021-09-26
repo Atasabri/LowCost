@@ -36,7 +36,7 @@ namespace LowCost.Business.Services.User.Implementation
         {
             var actionState = new ActionState();
             // Get Current Logined Driver
-            var driver = await _unitOfWork.UsersRepository.GetCurrentUser();
+            var driver = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
             // Change Password Of Current Driver
             var result = await _userManager.ChangePasswordAsync(driver, changePasswordDTO.OldPassword, changePasswordDTO.NewPassword);
             if(result.Succeeded)
@@ -52,7 +52,7 @@ namespace LowCost.Business.Services.User.Implementation
         {
             var actionState = new ActionState();
             // Get Current Logined Driver
-            var driver = await _unitOfWork.UsersRepository.GetCurrentUser();
+            var driver = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
             // Change Driver Data
             driver.FullName = editDriverProfileDTO.FullName;
             driver.UserName = editDriverProfileDTO.Email;
@@ -84,7 +84,7 @@ namespace LowCost.Business.Services.User.Implementation
         public async Task<DriverProfileDTO> ProfileAsync()
         {
             // Get Current Logined Driver
-            var driver = await _unitOfWork.UsersRepository.GetCurrentUser();
+            var driver = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
 
             // Driver Mapping
             var profile = _mapper.Map<Domain.Models.User, DriverProfileDTO>(driver);

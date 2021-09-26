@@ -246,8 +246,9 @@ namespace LowCost.Web
 
             // Dashboard Dependency Injection Register
             services.AddTransient<IDashboardAuthenticationService, DashboardAuthenticationService>();
-            services.AddTransient<IDashboardUserService, DashboardUserService>();
+            services.AddTransient<IDashboardAdminService, DashboardAdminService>();
             services.AddTransient<IDashboardDriverService, DashboardDriverService>();
+            services.AddTransient<IDashboardUserService, DashboardUserService>();
             services.AddTransient<IDashboardMainCategoriesService, DashboardMainCategoriesService>();
             services.AddTransient<IDashboardCategoriesService, DashboardCategoriesService>();
             services.AddTransient<IDashboardSubCategoriesService, DashboardSubCategoriesService>();

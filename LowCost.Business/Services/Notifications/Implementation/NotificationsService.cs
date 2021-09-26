@@ -25,7 +25,7 @@ namespace LowCost.Business.Services.Notifications.Implementation
         }
         public async Task<PagedResult<NotificationDTO>> GetUserNotificationsAsync(PagingParameters pagingParameters)
         {
-            var userId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var userId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             
             var notifications = await _unitOfWork.NotificationsRepository.GetElementsWithOrderAsync(notification => notification.User_Id == userId,
                 pagingParameters,

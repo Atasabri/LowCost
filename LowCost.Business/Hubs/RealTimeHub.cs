@@ -21,7 +21,7 @@ namespace LowCost.Business.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            var user = await _unitOfWork.UsersRepository.GetCurrentDashboardAdminUser();
+            var user = await _unitOfWork.CurrentUserRepository.GetCurrentDashboardAdminUser();
             if(user.Stock_Id == null)
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, Constants.AccessAllDashboardStocksDataGroupName);

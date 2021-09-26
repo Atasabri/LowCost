@@ -15,9 +15,9 @@ namespace LowCost.Web.Controllers.Dashboard
     public class AccountController : Controller
     {
         private readonly IDashboardAuthenticationService _dashboardAuthenticationService;
-        private readonly IDashboardUserService _dashboardUserService;
+        private readonly IDashboardAdminService _dashboardUserService;
 
-        public AccountController(IDashboardAuthenticationService dashboardAuthenticationService, IDashboardUserService dashboardUserService)
+        public AccountController(IDashboardAuthenticationService dashboardAuthenticationService, IDashboardAdminService dashboardUserService)
         {
             this._dashboardAuthenticationService = dashboardAuthenticationService;
             this._dashboardUserService = dashboardUserService;

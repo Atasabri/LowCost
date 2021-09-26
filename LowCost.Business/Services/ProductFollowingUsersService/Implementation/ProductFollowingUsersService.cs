@@ -23,7 +23,7 @@ namespace LowCost.Business.Services.ProductFollowingUsersService.Implementation
         {
             var actionState = new ActionState();
             // Get Current User Id
-            var currentUserid = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var currentUserid = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             // Adding User To Product Following Users
             var following = new ProductFollowingUser
             {
@@ -43,7 +43,7 @@ namespace LowCost.Business.Services.ProductFollowingUsersService.Implementation
         {
             var actionState = new ActionState();
             // Get Current User Id
-            var currentUserid = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var currentUserid = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             // Deleting User From Product Following Users
             var following = await _unitOfWork.ProductFollowingUsersRepository
                                  .FindElementAsync(follower => follower.Product_Id == product_Id && follower.User_Id == currentUserid);

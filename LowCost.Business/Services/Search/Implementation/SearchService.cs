@@ -26,9 +26,9 @@ namespace LowCost.Business.Services.Search.Implementation
             this._unitOfWork = unitOfWork;
             this._mapper = mapper;
             // Change Current User Favorites Variable & Map Listing ProductDTO IsFav Property if User Logedin 
-            if (_unitOfWork.UsersRepository.CheckIfUserLogedin())
+            if (_unitOfWork.CurrentUserRepository.CheckIfUserLogedin())
             {
-                var userId = _unitOfWork.UsersRepository.GetCurrentUserId().Result;
+                var userId = _unitOfWork.CurrentUserRepository.GetCurrentUserId().Result;
                 currentUserFavoritesProductsIds = _unitOfWork.FavoritesRepository
                     .GetElementsAsync(fav => fav.User_Id == userId).Result.Select(fav => fav.Product_Id).ToArray();
 

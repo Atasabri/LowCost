@@ -79,7 +79,7 @@ namespace LowCost.Repo.UnitOfWork
         IAddressesRepository addressesRepository;
         IFavoritesRepository favoritesRepository;
         IPaymentMethodsRepository paymentMethodsRepository;
-        IUsersRepository usersRepository;
+        ICurrentUserRepository currentUserRepository;
         IFilesRepository filesRepository;
         ISettingsRepository settingsRepository;
         IOrderSizeDeliveryRepository orderSizeDeliveryRepository;
@@ -350,15 +350,15 @@ namespace LowCost.Repo.UnitOfWork
             }
         }
 
-        public IUsersRepository UsersRepository
+        public ICurrentUserRepository CurrentUserRepository
         {
             get
             {
-                if (usersRepository == null)
+                if (currentUserRepository == null)
                 {
-                    usersRepository = new UsersRepository(_accessor, _userManager);
+                    currentUserRepository = new CurrentUserRepository(_accessor, _userManager);
                 }
-                return usersRepository;
+                return currentUserRepository;
             }
         }
 

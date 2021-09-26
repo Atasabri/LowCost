@@ -31,7 +31,7 @@ namespace LowCost.Business.Services.User.Implementation
         {
             var createState = new CreateState();
             // Get Current Logined User
-            var userId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var userId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             addPaymentMethodDTO.User_Id = userId;
             // Payment Method DTO Mapping
             var paymentMethod = _mapper.Map<AddPaymentMethodDTO, PaymentMethod>(addPaymentMethodDTO);
@@ -54,7 +54,7 @@ namespace LowCost.Business.Services.User.Implementation
         public async Task<PagedResult<PaymentMethodDTO>> GetUserPaymentMethodsAsync(PagingParameters pagingParameters)
         {
             // Get Current Logined User
-            var userId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var userId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             // Get Current User Payment Methods
             var paymentMethods = await _unitOfWork.PaymentMethodsRepository.GetElementsWithOrderAsync(paymentMethod => paymentMethod.User_Id == userId,
                 pagingParameters, paymentMethod => paymentMethod.Id, OrderingType.Descending);
@@ -68,7 +68,7 @@ namespace LowCost.Business.Services.User.Implementation
         {
             var actionState = new ActionState();
             // Get Current Logined User
-            var userId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var userId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             // Get Payment Method Using Payment Method Id
             var paymentMethod = await _unitOfWork.PaymentMethodsRepository.FindElementAsync(paymentMethod => 
                                       paymentMethod.Id == deletePaymentMethodDTO.Id &&

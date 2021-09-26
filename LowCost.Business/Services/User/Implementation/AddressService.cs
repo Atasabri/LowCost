@@ -32,7 +32,7 @@ namespace LowCost.Business.Services.User.Implementation
         {
             var createState = new CreateState();
             // Get Current Logined User
-            var userId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var userId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             addAddressDTO.User_Id = userId;
             // Address DTO Mapping
             var address = _mapper.Map<AddAddressDTO, Address>(addAddressDTO);
@@ -55,7 +55,7 @@ namespace LowCost.Business.Services.User.Implementation
         public async Task<PagedResult<AddressDTO>> GetUserAddressesAsync(PagingParameters pagingParameters)
         {
             // Get Current Logined User
-            var userId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var userId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             // Get Current User Addresses
             var addresses = await _unitOfWork.AddressesRepository.GetElementsWithOrderAsync(address => address.User_Id == userId,
                 pagingParameters, address => address.Id, OrderingType.Descending);
@@ -69,7 +69,7 @@ namespace LowCost.Business.Services.User.Implementation
         {
             var actionState = new ActionState();
             // Get Current Logined User
-            var userId = await _unitOfWork.UsersRepository.GetCurrentUserId();
+            var userId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
             // Get Address Using Address Id
             var address = await _unitOfWork.AddressesRepository.FindElementAsync(address => 
                                 address.Id == deleteAddressDTO.Address_Id &&
