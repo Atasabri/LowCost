@@ -10,6 +10,8 @@ namespace LowCost.Infrastructure.DashboardViewModels.Products.Prices
         [Required]
         public double Price { get; set; }
         public double? OldPrice { get; set; }
+        [Display(Name = "Max Quantity Per Order")]
+        public int? MaxQuantityPerOrder { get; set; }
         [Required]
         public int Market_Id { get; set; }
     }

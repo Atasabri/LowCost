@@ -12,6 +12,7 @@ namespace LowCost.Domain.Models
         [Required]
         public double Price { get; set; }
         public double? OldPrice { get; set; }
+        public int? MaxQuantityPerOrder { get; set; }
         [Required]
         public int Product_Id { get; set; }
         [Required]

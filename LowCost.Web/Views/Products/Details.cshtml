@@ -103,6 +103,7 @@
             <tr>
                 <th scope="col">Price</th>
                 <th scope="col">Old Price</th>
+                <th scope="col">Max Quantity Per Order</th>
                 <th scope="col">Market</th>
             </tr>
         </thead>
@@ -112,6 +113,7 @@
                 <tr>
                     <td>@item.Price</td>
                     <td>@item.OldPrice</td>
+                    <td>@item.MaxQuantityPerOrder</td>
                     <td><a asp-action="Details" asp-controller="Markets" asp-route-Id="@item.Market_Id" target="_blank">@item.MarketName</a></td>
                 </tr>
             }

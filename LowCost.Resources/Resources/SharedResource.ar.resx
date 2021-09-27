@@ -285,6 +285,9 @@
   <data name="You Can Not Order Product With Zero Price Only !" xml:space="preserve">
     <value>لا يمكن انشاء طلب يحتوي منتج واحد مجاني</value>
   </data>
+  <data name="You Can Order Just {0} from This Offer in Product Id '{1}' and Market Id '{2}'" xml:space="preserve">
+    <value>يمكن طلب عدد {0}  من هذا العرض في المنتج {1} في المتجر {2}</value>
+  </data>
   <data name="You Can Order Only One Product With Zero Cost" xml:space="preserve">
     <value>لا يمكن انشاء طلب يحتوي علي أكثر من منتج  واحد مجاني</value>
   </data>
