@@ -35,6 +35,17 @@ namespace LowCost.Web.Controllers.APIs
             return BadRequest(result);
         }
 
+        [HttpPost("OrderPreview")]
+        public async Task<IActionResult> OrderPreview([FromBody] AddOrderDTO addOrderDTO)
+        {
+            var result = await _ordersService.GenerateOrderAsync(addOrderDTO);
+            if (result.OrderGeneratedSuccessfully)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
         [HttpGet("GetOrders")]
         public async Task<IActionResult> GetOrders([FromQuery] PagingParameters pagingParameters)
         {

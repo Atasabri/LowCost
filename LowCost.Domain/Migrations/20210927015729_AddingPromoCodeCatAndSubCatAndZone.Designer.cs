@@ -4,14 +4,16 @@ using LowCost.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LowCost.Domain.Migrations
 {
     [DbContext(typeof(DB))]
-    partial class DBModelSnapshot : ModelSnapshot
+    [Migration("20210927015729_AddingPromoCodeCatAndSubCatAndZone")]
+    partial class AddingPromoCodeCatAndSubCatAndZone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -556,9 +558,6 @@ namespace LowCost.Domain.Migrations
                     b.Property<double>("DiscountPercent")
                         .HasColumnType("float");
 
-                    b.Property<bool>("FreeDelivery")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("SubCategory_Id")
                         .HasColumnType("int");
 
@@ -847,18 +846,18 @@ namespace LowCost.Domain.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "571696f3-7077-45f7-88e3-6695a1792ba5",
+                            Id = "a51922ac-de34-4272-8f45-d446fda3ecde",
                             AccessFailedCount = 0,
                             Balance = 0.0,
-                            ConcurrencyStamp = "ecfcdf98-a571-4bc7-9dc0-b7331cf86a21",
+                            ConcurrencyStamp = "b8e53923-429b-41f7-97e2-798f7eea0497",
                             CurrentLangauge = 1,
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIns+gx0YYlhbPjnmNfLgh2IFbyjmbW7dHvKk1BMRh0//BOnEdalo6FcTEmtIvGUuA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFWGxFto58jzZ8/oCWGyIZ2pvk5aqgAwFVAtz/IT0KWuIVpcxLWePSnyeN5StNuYVA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d68de8fc-5495-4046-8ec1-0a014493091a",
+                            SecurityStamp = "616030a9-781e-4d67-bc58-4b8a9c6b58c4",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -918,29 +917,29 @@ namespace LowCost.Domain.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "65681a32-a07f-4179-9c69-fc8d544e7af1",
-                            ConcurrencyStamp = "4c9ae4af-8763-4134-9487-1a82258d3471",
+                            Id = "a38435da-ba99-4631-a218-c3638eae4102",
+                            ConcurrencyStamp = "4fc5008f-645a-4a16-898b-edf72684dbee",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "54963e64-2a4a-4cea-827f-f619c87cf7dc",
-                            ConcurrencyStamp = "5afb7a7d-247d-4a11-a949-5fa743b088c8",
+                            Id = "61116502-615d-47ed-825b-f9c8cb803871",
+                            ConcurrencyStamp = "af6b2722-4c7d-4721-9a5a-0ace30b9dd79",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         },
                         new
                         {
-                            Id = "4c4ffaad-856d-4f58-8bcc-297063295e60",
-                            ConcurrencyStamp = "e0d72907-a64e-4e24-88e6-e1576e19efad",
+                            Id = "663ffcd5-6c07-45c3-be6a-966820dac07a",
+                            ConcurrencyStamp = "7329680b-fd0c-42a1-b342-c06a5a80704e",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "539de8ee-abb8-4fac-a02c-0e36ad9aeebd",
-                            ConcurrencyStamp = "6c99f9ef-4e55-44e8-a4ca-6b4537a4e532",
+                            Id = "7e717afb-0a82-4d4d-a01b-91a3cde3b906",
+                            ConcurrencyStamp = "b38e3747-295a-4fe1-b46b-a12994e0f19f",
                             Name = "Driver",
                             NormalizedName = "DRIVER"
                         });
@@ -1033,8 +1032,8 @@ namespace LowCost.Domain.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "571696f3-7077-45f7-88e3-6695a1792ba5",
-                            RoleId = "65681a32-a07f-4179-9c69-fc8d544e7af1"
+                            UserId = "a51922ac-de34-4272-8f45-d446fda3ecde",
+                            RoleId = "a38435da-ba99-4631-a218-c3638eae4102"
                         });
                 });
 

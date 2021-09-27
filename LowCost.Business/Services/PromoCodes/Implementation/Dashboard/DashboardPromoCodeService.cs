@@ -77,7 +77,11 @@ namespace LowCost.Business.Services.PromoCodes.Implementation.Dashboard
 
         public async Task<PromoCodeViewModel> GetPromoCodeDetailsAsync(int Id)
         {
-            var promoCode = await _unitOfWork.PromoCodesRepository.FindByIdAsync(Id);
+            var promoCode = await _unitOfWork.PromoCodesRepository.FindElementAsync(code => code.Id == Id, 
+                          string.Format("{0},{1},{2}"
+                          , nameof(PromoCode.Category)
+                          , nameof(PromoCode.SubCategory)
+                          ,nameof(PromoCode.Zone)));
 
             var promoCodeViewModel = _mapper.Map<PromoCode, PromoCodeViewModel>(promoCode);
 

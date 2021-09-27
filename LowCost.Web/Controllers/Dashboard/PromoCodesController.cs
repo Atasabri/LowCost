@@ -1,4 +1,6 @@
-﻿using LowCost.Business.Services.PromoCodes.Interfaces.Dashboard;
+﻿using LowCost.Business.Services.Categories.Interfaces.Dashboard;
+using LowCost.Business.Services.PromoCodes.Interfaces.Dashboard;
+using LowCost.Business.Services.Zones.Interfaces.Dashboard;
 using LowCost.Infrastructure.BaseService;
 using LowCost.Infrastructure.DashboardViewModels.PromoCodes;
 using LowCost.Infrastructure.Pagination;
@@ -10,10 +12,22 @@ namespace LowCost.Web.Controllers.Dashboard
 {
     public class PromoCodesController : DashboardController
     {
+        private readonly IDashboardMainCategoriesService _dashboardMainCategoriesService;
+        private readonly IDashboardSubCategoriesService _dashboardSubCategoriesService;
+        private readonly IDashboardCategoriesService _dashboardCategoriesService;
+        private readonly IDashboardZonesService _dashboardZonesService;
         private readonly IDashboardPromoCodeService _dashboardPromoCodeService;
 
-        public PromoCodesController(IDashboardPromoCodeService dashboardPromoCodeService)
+        public PromoCodesController(IDashboardMainCategoriesService dashboardMainCategoriesService,
+            IDashboardSubCategoriesService dashboardSubCategoriesService,
+            IDashboardCategoriesService dashboardCategoriesService, 
+            IDashboardZonesService dashboardZonesService, 
+            IDashboardPromoCodeService dashboardPromoCodeService)
         {
+            this._dashboardMainCategoriesService = dashboardMainCategoriesService;
+            this._dashboardSubCategoriesService = dashboardSubCategoriesService;
+            this._dashboardCategoriesService = dashboardCategoriesService;
+            this._dashboardZonesService = dashboardZonesService;
             this._dashboardPromoCodeService = dashboardPromoCodeService;
         }
         // GET: PromoCodes
@@ -31,8 +45,9 @@ namespace LowCost.Web.Controllers.Dashboard
         }
 
         // GET: PromoCodes/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
+            await ConfigureViewData();
             return View();
         }
 
@@ -50,6 +65,7 @@ namespace LowCost.Web.Controllers.Dashboard
                 }
                 ModelState.AddModelError("", result.ErrorMessages.FirstOrDefault());
             }
+            await ConfigureViewData();
             return View(addPromoCodeViewModel);
         }
 
@@ -61,6 +77,7 @@ namespace LowCost.Web.Controllers.Dashboard
             {
                 return NotFound();
             }
+            await ConfigureViewData();
             return View(result);
         }
 
@@ -79,10 +96,15 @@ namespace LowCost.Web.Controllers.Dashboard
                 ModelState.AddModelError("", result.ErrorMessages.FirstOrDefault());
             }
             var promoCodeViewModel = await _dashboardPromoCodeService.GetPromoCodeDetailsAsync(editPromoCodeViewModel.Id);
+            await ConfigureViewData();
             return View(promoCodeViewModel);
         }
 
-
+        private async Task ConfigureViewData()
+        {
+            ViewBag.Zones = await _dashboardZonesService.GetDashboardAllZonesAsync();
+            ViewBag.MainCategories = await _dashboardMainCategoriesService.GetAllMainCategoriesAsync();
+        }
         // POST: PromoCodes/Delete/5
         [HttpPost]
         public async Task<ActionResult> Delete(int id)

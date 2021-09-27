@@ -35,6 +35,11 @@ namespace LowCost.Business.Services.Zones.Interfaces.Dashboard
         /// <returns></returns>
         Task<PagedResult<ZoneViewModel>> GetDashboardZonesAsync(PagingParameters pagingParameters);
         /// <summary>
+        /// Get All Zones Asynchronous
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<ZoneViewModel>> GetDashboardAllZonesAsync();
+        /// <summary>
         /// Get Zone Details Asynchronous
         /// </summary>
         /// <param name="Id"></param>

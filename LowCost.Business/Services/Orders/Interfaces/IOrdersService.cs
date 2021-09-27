@@ -1,4 +1,5 @@
-﻿using LowCost.Infrastructure.DTOs.Orders;
+﻿using LowCost.Domain.Models;
+using LowCost.Infrastructure.DTOs.Orders;
 using LowCost.Infrastructure.Helpers;
 using LowCost.Infrastructure.Pagination;
 using System;
@@ -16,6 +17,12 @@ namespace LowCost.Business.Services.Orders.Interfaces
         /// <param name="addOrderDTO"></param>
         /// <returns></returns>
         Task<CreateState> AddOrderAsync(AddOrderDTO addOrderDTO);
+        /// <summary>
+        /// Generate Order Without Adding It Asynchronous
+        /// </summary>
+        /// <param name="addOrderDTO"></param>
+        /// <returns></returns>
+        Task<GenerateOrderState> GenerateOrderAsync(AddOrderDTO addOrderDTO);
         /// <summary>
         /// Get Current Logined User Orders (Asynchronous & Paging)
         /// </summary>
@@ -82,5 +89,14 @@ namespace LowCost.Business.Services.Orders.Interfaces
         /// <param name="orderDetails"></param>
         /// <returns></returns>
         Task<double> GetOrderDeliveryAsync(List<AddOrderDetailsDTO> orderDetails);
+    }
+
+
+    public class GenerateOrderState
+    {
+        public bool OrderGeneratedSuccessfully { get; set; }
+        public List<string> ErrorMessages { get; set; } = new List<string>();
+
+        public Order Order { get; set; }
     }
 }

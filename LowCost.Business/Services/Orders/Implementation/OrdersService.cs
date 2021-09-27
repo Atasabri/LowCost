@@ -42,131 +42,16 @@ namespace LowCost.Business.Services.Orders.Implementation
         public async Task<CreateState> AddOrderAsync(AddOrderDTO addOrderDTO)
         {
             var createState = new CreateState();
-            // Get Current User Id
-            var currentUser = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
-            addOrderDTO.User_Id = currentUser.Id;
+            var generateOrderResult = await GenerateOrderAsync(addOrderDTO);
 
-            var order = _mapper.Map<AddOrderDTO, Order>(addOrderDTO);
-            // Check And Add Zone & Stock to Order
-            int? zoneId = addOrderDTO.Zone_Id.HasValue ? addOrderDTO.Zone_Id : currentUser.Zone_Id;
-            var zone = await _unitOfWork.ZonesRepository.FindByIdAsync(zoneId.Value);
-            if (zone != null)
+            if(!generateOrderResult.OrderGeneratedSuccessfully)
             {
-                order.Zone_Id = zone.Id;
-                order.Stock_Id = zone.Stock_Id;
-            }
-            else
-            {
-                createState.ErrorMessages.Add(_stringLocalizer["Can Not Found Zone !"]);
-                return createState;
-            }         
-
-            if (order.OrderDetails.Any())
-            {
-                int productsWithZeroCostCount = 0;
-                foreach (var orderDetailsItem in order.OrderDetails)
-                {
-                    // Check If Quantity More Than 0
-                    if(orderDetailsItem.Quantity <= 0)
-                    {
-                        createState.ErrorMessages.Add(orderDetailsItem.Product_Id.ToString());
-                        createState.ErrorMessages.Add(orderDetailsItem.Market_Id.ToString());
-                        createState.ErrorMessages
-                            .Add(_stringLocalizer["Please Add Quantity For Product '{0}' In Market '{1}'",
-                            orderDetailsItem.Product_Id, orderDetailsItem.Market_Id]);
-                        return createState;
-
-                    }
-
-                    // Get Price and Adding To Order Details & Order Subtotal
-                    var priceItem = await _unitOfWork.PricesRepository.FindElementAsync(price =>
-                                price.Product_Id == orderDetailsItem.Product_Id &&
-                                price.Market_Id == orderDetailsItem.Market_Id, nameof(Product));
-                    if(priceItem == null)
-                    {
-                        createState.ErrorMessages.Add(orderDetailsItem.Product_Id.ToString());
-                        createState.ErrorMessages.Add(orderDetailsItem.Market_Id.ToString());
-                        createState.ErrorMessages
-                            .Add(_stringLocalizer["There Is No Price With Product Id '{0}' and Market Id '{1}'",
-                            orderDetailsItem.Product_Id, orderDetailsItem.Market_Id]);
-                        return createState;
-                    }
-                    if(priceItem.Price == 0)
-                    {
-                        productsWithZeroCostCount++;
-                    }
-                    // Check If User Adding Products With Zero Cost More Than The Max Default Value in One Product
-                    if(productsWithZeroCostCount > Constants.MaxZeroItemsinOrder)
-                    {
-                        createState.ErrorMessages.Add(_stringLocalizer["You Can Order Only One Product With Zero Cost"]);
-                        return createState;
-                    }
-                    orderDetailsItem.Price = priceItem.Price;
-                    orderDetailsItem.Size = priceItem.Product.Size * orderDetailsItem.Quantity;
-                    order.SubTotal += orderDetailsItem.Price * orderDetailsItem.Quantity;
-
-                    // Decrease Quantity Of Product
-                    var productQuantityStock = await _unitOfWork.StockProductsRepository
-                        .FindElementAsync(stockQuantity => 
-                        stockQuantity.Product_Id == orderDetailsItem.Product_Id && stockQuantity.Stock_Id == order.Stock_Id);
-                    // Check If Quantity Not Available
-                    if(productQuantityStock == null || orderDetailsItem.Quantity > productQuantityStock.Quantity)
-                    {
-                        createState.ErrorMessages.Add(orderDetailsItem.Product_Id.ToString());
-                        createState.ErrorMessages.Add(_stringLocalizer["Quantity Of Product '{0}' Not Available In Stock", orderDetailsItem.Product_Id]);
-                        return createState;
-                    }
-                    productQuantityStock.Quantity -= orderDetailsItem.Quantity;
-                    _unitOfWork.StockProductsRepository.Update(productQuantityStock);
-                }
-
-                // Check If User Order Zero With Cost And Price Limitation More Than Default
-                if(productsWithZeroCostCount > 0)
-                {
-                    double maxLimit;
-                    bool hasMaxLimitForZeroWithCost = double.TryParse(await _unitOfWork.SettingsRepository.GetSettingValueUsingKeyAsync(Constants.LimitPriceForUseZeroWithCost), out maxLimit);
-                    double maxLimitForZeroWithCost = hasMaxLimitForZeroWithCost ? maxLimit : Constants.DefaultLimitPriceForUseZeroWithCost;
-                    if (order.SubTotal < maxLimitForZeroWithCost)
-                    {
-                        createState.ErrorMessages.Add(_stringLocalizer["To Order Zero With Cost Items You Must Order More Than {0} LE", maxLimitForZeroWithCost]);
-                        return createState;
-                    }
-                }
-            }
-            else
-            {
-                createState.ErrorMessages.Add(_stringLocalizer["Your Cart Is Empty , Please Add Products"]);
+                createState.ErrorMessages = generateOrderResult.ErrorMessages;
                 return createState;
             }
 
-            if(order.SubTotal == 0)
-            {
-                createState.ErrorMessages.Add(_stringLocalizer["You Can Not Order Product With Zero Price Only !"]);
-                return createState;
-            }
+            Order order = generateOrderResult.Order;
 
-            // Check Promo Code & Get Discount If Found
-            if(!string.IsNullOrEmpty(addOrderDTO.PromoCode))
-            {
-                var promoResult = await CheckPromoCodeAsync(addOrderDTO.PromoCode);
-                if (promoResult.PromoCodeFound)
-                {
-                    order.Discount = (promoResult.DiscountPercent / 100) * order.SubTotal;
-                }
-                else
-                {
-                    createState.ErrorMessages.Add(_stringLocalizer["Can Not Found This Promo Code !"]);
-                    return createState;
-                }
-            }
-
-            // Get Order Delivery Depend on Order Size
-            order.TotalSize = order.OrderDetails.Sum(orderDetails => orderDetails.Size);
-            order.Delivery = await GetDeliveryBySizeAsync(order.TotalSize);
-
-            // Calculate Final Order Total Price & Check if Order has No Delivery
-            await CheckOrderHasNoDeliveryAndCalculateOrderFinalTotalPriceAsync(order);
-            
             await _unitOfWork.OrdersRepository.CreateAsync(order);
 
             var result = await _unitOfWork.SaveAsync() > 0;
@@ -199,27 +84,26 @@ namespace LowCost.Business.Services.Orders.Implementation
                 {
                     promoCodeDTO.PromoCodeFound = true;
                     promoCodeDTO.DiscountPercent = promoCodeItem.DiscountPercent;
+                    promoCodeDTO.Category_Id = promoCodeItem.Category_Id;
+                    promoCodeDTO.SubCategory_Id = promoCodeItem.SubCategory_Id;
+                    promoCodeDTO.Zone_Id = promoCodeItem.Zone_Id;
+                    promoCodeDTO.FreeDelivery = promoCodeItem.FreeDelivery;
                 }
             }
             return promoCodeDTO;
         }
 
-        private async Task<double> GetDeliveryBySizeAsync(double size)
+        private async Task CalculateOrderDeliveryAsync(Order order, PromoCodeDTO promoCode)
         {
-            // Get Delivery Value From DataBase and Assign to Order
-            var orderSizeDelivery = await _unitOfWork.OrderSizeDeliveryRepository.FindElementAsync(orderSizeDelivery =>
-            size >= orderSizeDelivery.SizeFrom && size <= orderSizeDelivery.SizeTo);
-            if (orderSizeDelivery != null)
+            if(promoCode != null && promoCode.FreeDelivery)
             {
-                return orderSizeDelivery.Delivery;
+                order.Delivery = 0;
             }
             else
             {
-                // Return Default Delivery 
-                double delivery;
-                bool hasDelivery = double.TryParse(await _unitOfWork.SettingsRepository.GetSettingValueUsingKeyAsync(Constants.DeliveryKey), out delivery);
-                return hasDelivery ? delivery : Constants.DefaultDeliveryValue;
-            }
+                order.TotalSize = order.OrderDetails.Sum(orderDetails => orderDetails.Size);
+                order.Delivery = await GetDeliveryBySizeAsync(order.TotalSize);
+            }      
         }
 
         private async Task CheckOrderHasNoDeliveryAndCalculateOrderFinalTotalPriceAsync(Order order)
@@ -233,14 +117,201 @@ namespace LowCost.Business.Services.Orders.Implementation
             order.Total = totalWithoutDelivery + order.Delivery;
         }
 
-        private async Task<double> GetPriceWithNoDeliveryAsync()
+        private async Task<ActionState> AddingOrderZoneAndStockAsync(Order order, int zoneId)
         {
-            double priceWithNoDelivery;
-            bool hasPriceWithNoDelivery = double.TryParse(await _unitOfWork.SettingsRepository.GetSettingValueUsingKeyAsync(Constants.PriceWithNoDeliveryKey), out priceWithNoDelivery);
-            double priceWithNoDeliveryValue = hasPriceWithNoDelivery ? priceWithNoDelivery : Constants.DefaultPriceWithNoDelivery;
+            var actionState = new ActionState();
+            var zone = await _unitOfWork.ZonesRepository.FindByIdAsync(zoneId);
+            if (zone != null)
+            {
+                order.Zone_Id = zone.Id;
+                order.Stock_Id = zone.Stock_Id;
 
-            return priceWithNoDeliveryValue;
+                actionState.ExcuteSuccessfully = true;
+                return actionState;
+            }
+            actionState.ErrorMessages.Add(_stringLocalizer["Can Not Found Zone !"]);
+            return actionState;
         }
+
+        private async Task<PromoCodeDTO> GetOrderPromoCodeAsync(int orderZoneId, string promoCode)
+        {
+            var promoResult = await CheckPromoCodeAsync(promoCode);
+            if (promoResult.PromoCodeFound)
+            {
+                if (!promoResult.Zone_Id.HasValue || (promoResult.Zone_Id.HasValue && promoResult.Zone_Id.Value == orderZoneId))
+                {
+                    return promoResult;
+                }
+                //order.Discount = (promoResult.DiscountPercent / 100) * order.SubTotal;
+            }
+            return null;
+        }
+
+        private async Task<ActionState> CheckOrderWithZeroCostItemsTotalLimitationAsync(double orderTotal)
+        {
+            var actionState = new ActionState();
+            double maxLimit;
+            bool hasMaxLimitForZeroWithCost = double.TryParse(await _unitOfWork.SettingsRepository.GetSettingValueUsingKeyAsync(Constants.LimitPriceForUseZeroWithCost), out maxLimit);
+            double maxLimitForZeroWithCost = hasMaxLimitForZeroWithCost ? maxLimit : Constants.DefaultLimitPriceForUseZeroWithCost;
+            if (orderTotal >= maxLimitForZeroWithCost)
+            {
+                actionState.ExcuteSuccessfully = true;
+                return actionState;
+            }
+            actionState.ErrorMessages.Add(_stringLocalizer["To Order Zero With Cost Items You Must Order More Than {0} LE", maxLimitForZeroWithCost]);
+            return actionState;
+        }
+
+        private async Task<ActionState> AssignOrderDetailsAsync(Order order, PromoCodeDTO promoCode)
+        {
+            var actionState = new ActionState();
+
+            int productsWithZeroCostCount = 0;
+            foreach (var orderDetailsItem in order.OrderDetails)
+            {
+                // Check If Quantity More Than 0
+                if (orderDetailsItem.Quantity <= 0)
+                {
+                    actionState.ErrorMessages.Add(orderDetailsItem.Product_Id.ToString());
+                    actionState.ErrorMessages.Add(orderDetailsItem.Market_Id.ToString());
+                    actionState.ErrorMessages
+                        .Add(_stringLocalizer["Please Add Quantity For Product '{0}' In Market '{1}'",
+                        orderDetailsItem.Product_Id, orderDetailsItem.Market_Id]);
+                    return actionState;
+
+                }
+
+                // Get Price and Adding To Order Details & Order Subtotal
+                var priceItem = await _unitOfWork.PricesRepository.FindElementAsync(price =>
+                            price.Product_Id == orderDetailsItem.Product_Id &&
+                            price.Market_Id == orderDetailsItem.Market_Id, string.Format("{0}.{1}", nameof(Product), nameof(Product.SubCategory)));
+                if (priceItem == null)
+                {
+                    actionState.ErrorMessages.Add(orderDetailsItem.Product_Id.ToString());
+                    actionState.ErrorMessages.Add(orderDetailsItem.Market_Id.ToString());
+                    actionState.ErrorMessages
+                        .Add(_stringLocalizer["There Is No Price With Product Id '{0}' and Market Id '{1}'",
+                        orderDetailsItem.Product_Id, orderDetailsItem.Market_Id]);
+                    return actionState;
+                }
+                if (priceItem.Price == 0)
+                {
+                    productsWithZeroCostCount++;
+                }
+                // Check If User Adding Products With Zero Cost More Than The Max Default Value in One Product
+                if (productsWithZeroCostCount > Constants.MaxZeroItemsinOrder)
+                {
+                    actionState.ErrorMessages.Add(_stringLocalizer["You Can Order Only One Product With Zero Cost"]);
+                    return actionState;
+                }
+                orderDetailsItem.Price = priceItem.Price;
+                orderDetailsItem.Size = priceItem.Product.Size * orderDetailsItem.Quantity;
+
+                double orderDetailsTotal = orderDetailsItem.Price * orderDetailsItem.Quantity;
+                if (promoCode != null)
+                {
+                    if ((!promoCode.Category_Id.HasValue && !promoCode.SubCategory_Id.HasValue)
+                            || (!promoCode.SubCategory_Id.HasValue && promoCode.Category_Id.HasValue && promoCode.Category_Id.Value == priceItem.Product.SubCategory.Category_Id)
+                            || (promoCode.SubCategory_Id.HasValue && promoCode.SubCategory_Id.Value == priceItem.Product.SubCategory_Id))
+                    {
+                        order.Discount += (promoCode.DiscountPercent / 100) * orderDetailsTotal;
+                    }
+                }
+                order.SubTotal += orderDetailsTotal;
+
+                // Decrease Quantity Of Product
+                var productQuantityStock = await _unitOfWork.StockProductsRepository
+                    .FindElementAsync(stockQuantity =>
+                    stockQuantity.Product_Id == orderDetailsItem.Product_Id && stockQuantity.Stock_Id == order.Stock_Id);
+                // Check If Quantity Not Available
+                if (productQuantityStock == null || orderDetailsItem.Quantity > productQuantityStock.Quantity)
+                {
+                    actionState.ErrorMessages.Add(orderDetailsItem.Product_Id.ToString());
+                    actionState.ErrorMessages.Add(_stringLocalizer["Quantity Of Product '{0}' Not Available In Stock", orderDetailsItem.Product_Id]);
+                    return actionState;
+                }
+                productQuantityStock.Quantity -= orderDetailsItem.Quantity;
+                _unitOfWork.StockProductsRepository.Update(productQuantityStock);
+            }
+            // Check If User Order Zero With Cost And Price Limitation More Than Default
+            if (productsWithZeroCostCount > 0)
+            {
+                var orderWithZeroCostItemsTotalLimitationResult = await CheckOrderWithZeroCostItemsTotalLimitationAsync(order.SubTotal);
+                if (!orderWithZeroCostItemsTotalLimitationResult.ExcuteSuccessfully)
+                {
+                    actionState.ErrorMessages = orderWithZeroCostItemsTotalLimitationResult.ErrorMessages;
+                    return actionState;
+                }
+            }
+            actionState.ExcuteSuccessfully = true;
+            return actionState;
+        }
+
+        public async Task<GenerateOrderState> GenerateOrderAsync(AddOrderDTO addOrderDTO)
+        {
+            var generateOrderState = new GenerateOrderState();
+            // Get Current User Id
+            var currentUser = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
+            addOrderDTO.User_Id = currentUser.Id;
+
+            var order = _mapper.Map<AddOrderDTO, Order>(addOrderDTO);
+            // Check And Add Zone & Stock to Order
+            int? zoneId = addOrderDTO.Zone_Id.HasValue ? addOrderDTO.Zone_Id : currentUser.Zone_Id;
+            var addingOrderZoneStockResult = await AddingOrderZoneAndStockAsync(order, zoneId.Value);
+            if (!addingOrderZoneStockResult.ExcuteSuccessfully)
+            {
+                generateOrderState.ErrorMessages = addingOrderZoneStockResult.ErrorMessages;
+                return generateOrderState;
+            }
+            // Check Promo Code Found And Promo Code Zone Equal Order Zone
+            PromoCodeDTO promoCode = null;
+            if (!string.IsNullOrEmpty(addOrderDTO.PromoCode))
+            {
+                var promoResult = await GetOrderPromoCodeAsync(order.Zone_Id, addOrderDTO.PromoCode);
+                if (promoResult != null)
+                {
+                    promoCode = promoResult;
+                }
+                else
+                {
+                    generateOrderState.ErrorMessages.Add(_stringLocalizer["Can Not Found This Promo Code !"]);
+                    return generateOrderState;
+                }
+            }
+
+            if (order.OrderDetails.Any())
+            {
+                var assignOrderDetailsResult = await AssignOrderDetailsAsync(order, promoCode);
+                if (!assignOrderDetailsResult.ExcuteSuccessfully)
+                {
+                    generateOrderState.ErrorMessages = assignOrderDetailsResult.ErrorMessages;
+                    return generateOrderState;
+                }
+            }
+            else
+            {
+                generateOrderState.ErrorMessages.Add(_stringLocalizer["Your Cart Is Empty , Please Add Products"]);
+                return generateOrderState;
+            }
+
+            if (order.SubTotal == 0)
+            {
+                generateOrderState.ErrorMessages.Add(_stringLocalizer["You Can Not Order Product With Zero Price Only !"]);
+                return generateOrderState;
+            }
+
+            // Get Order Delivery Depend on Order Size
+            await CalculateOrderDeliveryAsync(order, promoCode);
+
+            // Calculate Final Order Total Price & Check if Order has No Delivery
+            await CheckOrderHasNoDeliveryAndCalculateOrderFinalTotalPriceAsync(order);
+
+            generateOrderState.OrderGeneratedSuccessfully = true;
+            generateOrderState.Order = order;
+            return generateOrderState;
+        }
+
+
 
         public async Task<PagedResult<ListingOrderDTO>> GetDriverOrdersAsync(PagingParameters pagingParameters)
         {
@@ -442,5 +513,33 @@ namespace LowCost.Business.Services.Orders.Implementation
             var productsTotalSize = await _unitOfWork.ProductsRepository.GetProductsSizeAsync(products.ToArray());
             return await GetDeliveryBySizeAsync(productsTotalSize);
         }
+
+        private async Task<double> GetDeliveryBySizeAsync(double size)
+        {
+            // Get Delivery Value From DataBase and Assign to Order
+            var orderSizeDelivery = await _unitOfWork.OrderSizeDeliveryRepository.FindElementAsync(orderSizeDelivery =>
+            size >= orderSizeDelivery.SizeFrom && size <= orderSizeDelivery.SizeTo);
+            if (orderSizeDelivery != null)
+            {
+                return orderSizeDelivery.Delivery;
+            }
+            else
+            {
+                // Return Default Delivery 
+                double delivery;
+                bool hasDelivery = double.TryParse(await _unitOfWork.SettingsRepository.GetSettingValueUsingKeyAsync(Constants.DeliveryKey), out delivery);
+                return hasDelivery ? delivery : Constants.DefaultDeliveryValue;
+            }
+        }
+
+        private async Task<double> GetPriceWithNoDeliveryAsync()
+        {
+            double priceWithNoDelivery;
+            bool hasPriceWithNoDelivery = double.TryParse(await _unitOfWork.SettingsRepository.GetSettingValueUsingKeyAsync(Constants.PriceWithNoDeliveryKey), out priceWithNoDelivery);
+            double priceWithNoDeliveryValue = hasPriceWithNoDelivery ? priceWithNoDelivery : Constants.DefaultPriceWithNoDelivery;
+
+            return priceWithNoDeliveryValue;
+        }
+
     }
 }
