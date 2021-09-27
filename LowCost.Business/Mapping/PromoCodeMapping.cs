@@ -11,7 +11,11 @@ namespace LowCost.Business.Mapping
     {
         void DashboardPromoCodesMapping()
         {
-            CreateMap<PromoCode, PromoCodeViewModel>().ReverseMap();
+            CreateMap<PromoCode, PromoCodeViewModel>()
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+                .ForMember(dest => dest.SubCategoryName, opt => opt.MapFrom(src => src.SubCategory.Name))
+                .ForMember(dest => dest.ZoneName, opt => opt.MapFrom(src => src.Zone.Name))
+                .ReverseMap();
             CreateMap<AddPromoCodeViewModel, PromoCode>().ReverseMap();
             CreateMap<EditPromoCodeViewModel, PromoCode>().ReverseMap();
         }

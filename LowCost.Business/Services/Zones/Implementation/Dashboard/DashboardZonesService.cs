@@ -89,5 +89,14 @@ namespace LowCost.Business.Services.Zones.Implementation.Dashboard
 
             return zonesViewModel;
         }
+
+        public async Task<IEnumerable<ZoneViewModel>> GetDashboardAllZonesAsync()
+        {
+            var zones = await _unitOfWork.ZonesRepository.GetElementsAsync(zone => true);
+
+            var zonesViewModel = _mapper.Map<IEnumerable<Zone>, IEnumerable<ZoneViewModel>>(zones);
+
+            return zonesViewModel;
+        }
     }
 }

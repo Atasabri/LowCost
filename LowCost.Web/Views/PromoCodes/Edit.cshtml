@@ -25,6 +25,40 @@
                 <span asp-validation-for="DiscountPercent" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label class="control-label">Main Category</label>
+                <select id="MainCategory" onclick="GetCategories();" asp-items="@(new SelectList(ViewBag.MainCategories, "Id", "Name"))" class="form-control">
+                    <option>-- Select Main Category --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Category</label>
+                <span id="message" style="display:none;color:blue">Loading .....</span>
+                <select asp-for="Category_Id" onclick="GetSubCategories();" class="form-control">
+                    <option value="@Model.Category_Id" selected>@Model.CategoryName</option>
+                </select>
+                <span asp-validation-for="Category_Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubCategory_Id" class="control-label"></label>
+                <span id="subCatMessage" style="display:none;color:blue">Loading .....</span>
+                <select asp-for="SubCategory_Id" class="form-control">
+                    <option value="@Model.SubCategory_Id" selected>@Model.SubCategoryName</option>
+                </select>
+                <span asp-validation-for="SubCategory_Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Zone_Id" class="control-label"></label>
+                <select asp-for="Zone_Id" asp-items="@(new SelectList(ViewBag.Zones, "Id", "Name"))" class="form-control">
+                    <option value="">-- Select Zone --</option>
+                </select>
+                <span asp-validation-for="Zone_Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FreeDelivery" class="control-label"></label>
+                <input type="checkbox" asp-for="FreeDelivery" class="form-control" />
+                <span asp-validation-for="FreeDelivery" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -34,4 +68,41 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+<script>
+        function GetCategories() {
+        $("#Category_Id").html("")
+        $("#message").css("display", "block")
+
+            $.post("@Url.Action("CategoriesUsingMainCatId", "Categories")", {
+
+                mainCatId: $("#MainCategory").val()
+            },
+                function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $("#Category_Id").append("<option value=" + data[i].id + ">" + data[i].name + "</option>")
+                    }
+                    $("#message").css("display", "none")
+        }
+
+          )
+    }
+        function GetSubCategories() {
+        $("#SubCategory_Id").html("<option value=''>-- Select Sub Category --</option>")
+            $("#subCatMessage").css("display", "block")
+
+            $.post("@Url.Action("SubCategoriesUsingCatId", "SubCategories")", {
+
+                catId: $("#Category_Id").val()
+            },
+                function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $("#SubCategory_Id").append("<option value=" + data[i].id + ">" + data[i].name + "</option>")
+                    }
+                    $("#subCatMessage").css("display", "none")
+        }
+
+          )
+    }
+</script>
 
