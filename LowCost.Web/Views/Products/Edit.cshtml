@@ -73,6 +73,9 @@
                     <input id="oldprice" type="number" class="form-control" placeholder="Old Price">
                 </div>
                 <div class="col">
+                    <input id="maxQuantity" type="number" class="form-control" placeholder="Max Quantity">
+                </div>
+                <div class="col">
                     <select id="marketId" asp-items="@(new SelectList(ViewBag.Markets, "Id", "Name"))" class="form-control"></select>
                 </div>
                 <div class="col">
@@ -84,6 +87,7 @@
                     <tr>
                         <th scope="col">Price</th>
                         <th scope="col">Old Price</th>
+                        <th scope="col">Max Quantity Per Order</th>
                         <th scope="col">Market</th>
                     </tr>
                 </thead>
@@ -92,13 +96,14 @@
                 <tbody id="currenttbl">
                     @foreach (var item in Model.Prices)
                     {
-                        <tr id="@item.Id">
-                            <td>@item.Price</td>
-                            <td>@item.OldPrice</td>
-                            <td>@item.MarketName</td>
-                            <td><input onclick="DeletePriceById(@(item.Id));" type="button" class="btn btn-danger" value="Delete" /></td>
-                            <td><a class="btn btn-success" target="_blank" asp-action="EditPrice" asp-controller="Products" asp-route-Id="@item.Id">Edit</a></td>
-                        </tr>
+                    <tr id="@item.Id">
+                        <td>@item.Price</td>
+                        <td>@item.OldPrice</td>
+                        <td>@item.MaxQuantityPerOrder</td>
+                        <td>@item.MarketName</td>
+                        <td><input onclick="DeletePriceById(@(item.Id));" type="button" class="btn btn-danger" value="Delete" /></td>
+                        <td><a class="btn btn-success" target="_blank" asp-action="EditPrice" asp-controller="Products" asp-route-Id="@item.Id">Edit</a></td>
+                    </tr>
                     }
                 </tbody>
             </table>
@@ -174,11 +179,28 @@
             alert("Please Add Price.")
             return false;
         }
+        if (price < 0) {
+            alert("Please Add Valid Price.")
+            return false;
+        }
         var oldprice = $("#oldprice").val();
+        if (oldprice && oldprice < 0) {
+            alert("Please Add Valid Old Price.")
+            return false;
+        }
         var marketId = $("#marketId").val();
+        var maxQuantity = $("#maxQuantity").val();
+        if (maxQuantity < 0 || maxQuantity.toString().includes(".") || isNaN(maxQuantity)) {
+            alert("Please Enter Valid Max Quantity")
+            return false;
+        }
+        if (maxQuantity && !oldprice) {
+            alert("Max Quantity For Price With Old Price (Offer)")
+            return false;
+        }
         var marketName = $("#marketId option:selected").text();
 
-        prices.push({ price: price, oldprice: oldprice, marketId: marketId, marketName: marketName });
+        prices.push({ price: price, oldprice: oldprice, maxQuantity: maxQuantity, marketId: marketId, marketName: marketName });
 
         $("#tbl").html("")
         prices.forEach((item, index) =>
@@ -186,6 +208,8 @@
                 + item.price +
                 "</td><td>"
                 + item.oldprice +
+                "</td><td>"
+                + item.maxQuantity +
                 "</td><td>"
                 + item.marketName +
                 "</td><td><input onclick='DeletePrice("
@@ -195,12 +219,15 @@
                 "].Price' value='"
                 + item.price + "' type='hidden' /><input name='AddingPrices["
                 + index + "].OldPrice' value='"
-                + item.oldprice + "' type='hidden' /><input name='AddingPrices["
+                + item.oldprice + "' type='hidden' /><input name='Prices["
+                + index + "].MaxQuantityPerOrder' value='"
+                + item.maxQuantity + "' type='hidden' /><input name='AddingPrices["
                 + index + "].Market_Id' value='"
                 + item.marketId + "' type='hidden' /></td></tr>")
         )
         $("#price").val("")
         $("#oldprice").val("")
+        $("#maxQuantity").val("")
     }
     function DeletePrice(i) {
 
@@ -213,6 +240,8 @@
                 "</td><td>"
                 + item.oldprice +
                 "</td><td>"
+                + item.maxQuantity +
+                "</td><td>"
                 + item.marketName +
                 "</td><td><input onclick='DeletePrice("
                 + index +
@@ -221,7 +250,9 @@
                 "].Price' value='"
                 + item.price + "' type='hidden' /><input name='AddingPrices["
                 + index + "].OldPrice' value='"
-                + item.oldprice + "' type='hidden' /><input name='AddingPrices["
+                + item.oldprice + "' type='hidden' /><input name='Prices["
+                + index + "].MaxQuantityPerOrder' value='"
+                + item.maxQuantity + "' type='hidden' /><input name='AddingPrices["
                 + index + "].Market_Id' value='"
                 + item.marketId + "' type='hidden' /></td></tr>")        )
     }

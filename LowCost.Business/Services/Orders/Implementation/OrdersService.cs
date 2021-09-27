@@ -194,6 +194,15 @@ namespace LowCost.Business.Services.Orders.Implementation
                         orderDetailsItem.Product_Id, orderDetailsItem.Market_Id]);
                     return actionState;
                 }
+                if(orderDetailsItem.Quantity > priceItem.MaxQuantityPerOrder)
+                {
+                    actionState.ErrorMessages.Add(orderDetailsItem.Product_Id.ToString());
+                    actionState.ErrorMessages.Add(orderDetailsItem.Market_Id.ToString());
+                    actionState.ErrorMessages
+                        .Add(_stringLocalizer["You Can Order Just {0} from This Offer in Product Id '{1}' and Market Id '{2}'",
+                        priceItem.MaxQuantityPerOrder, orderDetailsItem.Product_Id, orderDetailsItem.Market_Id]);
+                    return actionState;
+                }
                 if (priceItem.Price == 0)
                 {
                     productsWithZeroCostCount++;

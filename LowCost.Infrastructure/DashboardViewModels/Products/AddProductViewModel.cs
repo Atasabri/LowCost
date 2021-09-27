@@ -24,7 +24,7 @@ namespace LowCost.Infrastructure.DashboardViewModels.Products
         public double Size { get; set; }
 
         private int? offerid;
-        [Display(Name = "Offer")]
+        [Display(Name = "Shop")]
         public int? Offer_Id
         {
             get { return offerid; }
