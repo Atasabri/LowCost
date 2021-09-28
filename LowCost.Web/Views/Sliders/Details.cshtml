@@ -43,7 +43,10 @@
             @Html.DisplayNameFor(model => model.SliderTypeId)
         </dt>
         <dd class="col-sm-10">
-            <a asp-action="Details" asp-controller="@TypeController" asp-route-id="@Model.SliderTypeId" target="_blank">View Type</a>
+            @if (Model.SliderTypeId.HasValue)
+            {
+                <a asp-action="Details" asp-controller="@TypeController" asp-route-id="@Model.SliderTypeId" target="_blank">View Type</a>
+            }
         </dd>
         <dt class="col-sm-2">
             Photo
