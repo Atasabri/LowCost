@@ -38,6 +38,10 @@ namespace LowCost.Web.Controllers.Dashboard
         public async Task<IActionResult> Details(string id)
         {
             var result = await _dashboardUserService.GetUserDetailsAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return View(result);
         }
 

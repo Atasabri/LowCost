@@ -40,5 +40,11 @@ namespace LowCost.Business.Services.Sliders.Interfaces.Dashboard
         /// <param name="Id"></param>
         /// <returns></returns>
         Task<SliderViewModel> GetSliderDetailsAsync(int Id);
+        /// <summary>
+        /// Search in Type Using Search Key (Asynchronous & Paging)
+        /// Return Data As List of Objects
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<object>> SearchTypesForSliderAsync(string searchTerms, SliderType type);
     }
 }

@@ -30,6 +30,10 @@ namespace LowCost.Web.Controllers.Dashboard
         public async Task<ActionResult> Details(int id)
         {
             var result = await _dashboardOrderSizeDeliverysService.GetOrderSizeDeliveryDetailsAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return View(result);
         }
 

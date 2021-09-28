@@ -61,6 +61,10 @@ namespace LowCost.Web.Controllers.Dashboard
         public async Task<ActionResult> Details(int id)
         {
             var result = await _dashboardProductsService.GetProductDetailsAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
             ViewBag.Stocks = await _dashboardStocksService.GetAllStocksAsync();
             return View(result);
         }

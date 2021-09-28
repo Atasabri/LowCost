@@ -17,6 +17,7 @@
     <thead>
         <tr>
             <th scope="col">#</th>
+            <th scope="col">Type</th>
             <th scope="col">Actions</th>
         </tr>
     </thead>
@@ -24,14 +25,15 @@
 
         @foreach (var item in Model.Items)
         {
-            <tr id="@item.Id">
-                <th scope="row">@(counter++)</th>
-                <td>
-                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id" >Details</a>
-                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a class="btn btn-danger" onclick="Delete(@(item.Id));">Delete</a>
-                </td>
-            </tr>
+        <tr id="@item.Id">
+            <th scope="row">@(counter++)</th>
+            <th scope="row">@item.SliderType</th>
+            <td>
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                <a class="btn btn-danger" onclick="Delete(@(item.Id));">Delete</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>

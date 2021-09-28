@@ -76,16 +76,21 @@ namespace LowCost.Business.Services.Sliders.Implementation.Dashboard
         {
             var actionState = new ActionState();
             var slider = _mapper.Map<EditSliderViewModel, Slider>(editSliderViewModel);
-            if (editSliderViewModel.Photo != null)
+            _unitOfWork.SlidersRepository.Update(slider);
+            var result = await _unitOfWork.SaveAsync() > 0;
+            if(result)
             {
                 actionState.ExcuteSuccessfully = true;
-                var imageData = new SavingFileData()
+                if (editSliderViewModel.Photo != null)
                 {
-                     File = editSliderViewModel.Photo,
-                     fileName = slider.Id.ToString(),
-                     folderName = "Sliders"
-                };
-                await _unitOfWork.FilesRepository.SaveFileAsync(imageData);
+                    var imageData = new SavingFileData()
+                    {
+                        File = editSliderViewModel.Photo,
+                        fileName = slider.Id.ToString(),
+                        folderName = "Sliders"
+                    };
+                    await _unitOfWork.FilesRepository.SaveFileAsync(imageData);
+                }
                 return actionState;
             }
             actionState.ErrorMessages.Add("Can Not Edit Slider");
@@ -109,6 +114,24 @@ namespace LowCost.Business.Services.Sliders.Implementation.Dashboard
             var slidersViewModel = sliders.ToMappedPagedResult<Slider, SliderViewModel>(_mapper);
 
             return slidersViewModel;
+        }
+
+        public async Task<IEnumerable<object>> SearchTypesForSliderAsync(string searchTerms, SliderType type)
+        {
+            switch (type)
+            {
+                case SliderType.MainCategory:
+                    return (await _unitOfWork.MainCategoriesRepository.GetElementsWithOrderAsync(mainCat => mainCat.Name.Contains(searchTerms), new PagingParameters(), mainCat => mainCat.Name)).Items;
+                case SliderType.Category:
+                    return (await _unitOfWork.CategoriesRepository.GetElementsWithOrderAsync(cat => cat.Name.Contains(searchTerms), new PagingParameters(), cat => cat.Name)).Items;
+                case SliderType.SubCategory:
+                    return (await _unitOfWork.SubCategoriesRepository.GetElementsWithOrderAsync(subCat => subCat.Name.Contains(searchTerms), new PagingParameters(), subCat => subCat.Name)).Items;
+                case SliderType.Product:
+                    return (await _unitOfWork.ProductsRepository.GetElementsWithOrderAsync(product => product.Serial_Number.Contains(searchTerms) || product.Name.Contains(searchTerms), new PagingParameters(), product => product.Name)).Items;
+                default:
+                    break;
+            }
+            return new List<object>();
         }
     }
 }

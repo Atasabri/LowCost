@@ -1,6 +1,7 @@
 ﻿using LowCost.Business.Services.Sliders.Interfaces.Dashboard;
 using LowCost.Infrastructure.BaseService;
 using LowCost.Infrastructure.DashboardViewModels.Sliders;
+using LowCost.Infrastructure.Helpers;
 using LowCost.Infrastructure.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -27,6 +28,10 @@ namespace LowCost.Web.Controllers.Dashboard
         public async Task<ActionResult> Details(int id)
         {
             var result = await _dashboardSlidersService.GetSliderDetailsAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return View(result);
         }
 
@@ -93,6 +98,14 @@ namespace LowCost.Web.Controllers.Dashboard
                 return Json(id);
             }
             return Json(result.ErrorMessages.FirstOrDefault());
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SearchTypes(string searchTerms, SliderType type)
+        {
+            var result = await _dashboardSlidersService.SearchTypesForSliderAsync(searchTerms, type);
+
+            return Json(result.ToList());
         }
     }
 }
