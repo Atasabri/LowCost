@@ -11,12 +11,25 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data">
+        <form asp-action="Create" autocomplete="off" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Photo" class="control-label"></label>
                 <input asp-for="Photo" class="form-control" />
                 <span asp-validation-for="Photo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SliderType" class="control-label"></label>
+                <select asp-for="SliderType" class="form-control" onchange="ResetValues()" asp-items="Html.GetEnumSelectList<SliderType>()">
+                    <option selected="selected" value="">Please Select</option>
+                </select>                
+                <span asp-validation-for="SliderType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label autocomplete">Search For Item</label>
+                <input type="text" id="Search" onkeyup="Complete(this.value);" class="form-control" />
+                <input type="hidden" asp-for="SliderTypeId" value="" />
+                <div id="Result"></div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -29,3 +42,36 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<script>
+    function Complete(val) {
+        res = document.getElementById("Result");
+        res.innerHTML = 'Loading .......';
+        let list = '';
+            $.post("@Url.Action("SearchTypes", "Sliders")", {
+
+                searchTerms: val,
+                type: $("#SliderType").val()
+            },
+                function (terms) {
+                    for (i = 0; i < terms.length; i++) {
+                        list += `<li class="list-group-item" onclick="AssignValue(${terms[i].id},'${terms[i].name}')" onmouseout="$(this).removeClass('active')" onmouseover="$(this).addClass('active')">${terms[i].name}</li>`;
+                    }
+                    res.innerHTML = '<ul class="list-group">' + list + '</ul>';
+                 }
+
+            ).fail(function () {
+                console.log("error")
+            })
+    }
+
+    function AssignValue(id, text) {
+        $("#Search").val(text);
+        $("#SliderTypeId").val(id);
+        $("#Result").html('');
+    }
+
+    function ResetValues() {
+        $("#Search").val("");
+        $("#SliderTypeId").val("");
+    }
+</script>

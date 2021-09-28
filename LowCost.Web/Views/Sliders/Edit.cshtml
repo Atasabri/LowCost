@@ -3,6 +3,22 @@
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string TypeController = "";
+    switch (Model.SliderType)
+    {
+        case SliderType.MainCategory:
+            TypeController = "MainCategories";
+            break;
+        case SliderType.Category:
+            TypeController = "Categories";
+            break;
+        case SliderType.SubCategory:
+            TypeController = "SubCategories";
+            break;
+        case SliderType.Product:
+            TypeController = "Products";
+            break;
+    }
 }
 
 <h1>Edit</h1>
@@ -11,13 +27,26 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit" enctype="multipart/form-data">
+        <form asp-action="Edit" autocomplete="off" enctype="multipart/form-data">
             <input asp-for="Id" type="hidden" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label name="Photo" class="control-label">Photo</label>
                 <input name="Photo" type="file" class="form-control" />
                 <span name="Photo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SliderType" class="control-label"></label>
+                <select asp-for="SliderType" class="form-control" onchange="ResetValues()" asp-items="Html.GetEnumSelectList<SliderType>()">
+                    <option selected="selected" value="">Please Select</option>
+                </select>
+                <span asp-validation-for="SliderType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label autocomplete">Search For Item <a asp-action="Details" asp-controller="@TypeController" asp-route-id="@Model.SliderTypeId" target="_blank">Previous Type Page</a></label>
+                <input type="text" id="Search" onkeyup="Complete(this.value);" class="form-control" />
+                <input type="hidden" asp-for="SliderTypeId" value="@Model.SliderTypeId" />
+                <div id="Result"></div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -30,3 +59,36 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<script>
+    function Complete(val) {
+        res = document.getElementById("Result");
+        res.innerHTML = 'Loading .......';
+        let list = '';
+            $.post("@Url.Action("SearchTypes", "Sliders")", {
+
+                searchTerms: val,
+                type: $("#SliderType").val()
+            },
+                function (terms) {
+                    for (i = 0; i < terms.length; i++) {
+                        list += `<li class="list-group-item" onclick="AssignValue(${terms[i].id},'${terms[i].name}')" onmouseout="$(this).removeClass('active')" onmouseover="$(this).addClass('active')">${terms[i].name}</li>`;
+                    }
+                    res.innerHTML = '<ul class="list-group">' + list + '</ul>';
+                 }
+
+            ).fail(function () {
+                console.log("error")
+            })
+    }
+
+    function AssignValue(id, text) {
+        $("#Search").val(text);
+        $("#SliderTypeId").val(id);
+        $("#Result").html('');
+    }
+
+    function ResetValues() {
+        $("#Search").val("");
+        $("#SliderTypeId").val("");
+    }
+</script>

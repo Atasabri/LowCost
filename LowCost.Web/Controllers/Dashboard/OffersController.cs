@@ -27,6 +27,10 @@ namespace LowCost.Web.Controllers.Dashboard
         public async Task<ActionResult> Details(int id)
         {
             var result = await _dashboardOffersService.GetOfferDetailsAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return View(result);
         }
 
