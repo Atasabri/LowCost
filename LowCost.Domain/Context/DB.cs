@@ -44,6 +44,7 @@ namespace LowCost.Domain.Context
         public DbSet<Settings> Settings { get; set; }
         public DbSet<SmsCode> SmsCodes { get; set; }
 
+        public DbSet<WalletTransaction> WalletTransactions { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -129,6 +129,9 @@
   <data name="Can Not Close Orde" xml:space="preserve">
     <value>لا يمكن اغلاق الطلب</value>
   </data>
+  <data name="Can Not Complete Transaction" xml:space="preserve">
+    <value>لا يمكن استكمال العملية</value>
+  </data>
   <data name="Can Not Create This Order !" xml:space="preserve">
     <value>لا يمكن انشاء هذا الطلب</value>
   </data>

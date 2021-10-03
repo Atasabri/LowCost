@@ -27,22 +27,6 @@ namespace LowCost.Business.Services.User.Implementation.Dashboard
             this._mapper = mapper;
         }
 
-        public async Task<ActionState> EditUserBalanceAsync(EditBalanceViewModel editBalanceViewModel)
-        {
-            var actionState = new ActionState();
-            var user = await _userManager.FindByIdAsync(editBalanceViewModel.UserId);
-            user.Balance = editBalanceViewModel.Balance;
-
-            var result = await _userManager.UpdateAsync(user);
-            if(result.Succeeded)
-            {
-                actionState.ExcuteSuccessfully = true;
-                return actionState;
-            }
-            actionState.ErrorMessages.Add(result.Errors.FirstOrDefault()?.Description);
-            return actionState;
-        }
-
         public async Task<UserBalanceDetailsViewModel> GetUserBalanceDetailsAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);

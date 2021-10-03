@@ -38,7 +38,7 @@ namespace LowCost.Business.Services.Search.Implementation.Dashboard
         {
             var products = await _unitOfWork.ProductsRepository.GetElementsWithOrderAsync(product => product.Name.Contains(searchTerms) || product.Name_AR.Contains(searchTerms) || product.Serial_Number == searchTerms,
                               pagingParameters, Product => Product.Id, OrderingType.Descending,
-                              nameof(Product.SubCategory));
+                              string.Format("{0},{1}.{2}", nameof(Product.SubCategory), nameof(Product.Prices), nameof(Prices.Market)));
 
             var productsViewModel = products.ToMappedPagedResult<Product, ListingProductViewModel>(_mapper);
 
