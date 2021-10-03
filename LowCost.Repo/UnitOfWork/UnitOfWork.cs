@@ -46,6 +46,8 @@ using LowCost.Repo.Repositories.Implementation.Zones;
 using LowCost.Repo.Repositories.Implementation.Stocks;
 using LowCost.Repo.Repositories.Implementation.StockProducts;
 using LowCost.Repo.Repositories.Implementation.OrderSizeDelivery;
+using LowCost.Repo.Repositories.Interfaces.Wallet;
+using LowCost.Repo.Repositories.Implementation.Wallet;
 
 namespace LowCost.Repo.UnitOfWork
 {
@@ -84,6 +86,7 @@ namespace LowCost.Repo.UnitOfWork
         ISettingsRepository settingsRepository;
         IOrderSizeDeliveryRepository orderSizeDeliveryRepository;
         ISMSCodeRepository smsCodeRepository;
+        IWalletTransactionsRepository walletTransactionsRepository;
 
 
         public IBrandsRepository BrandsRepository
@@ -407,6 +410,18 @@ namespace LowCost.Repo.UnitOfWork
                     smsCodeRepository = new SMSCodeRepository(_context);
                 }
                 return smsCodeRepository;
+            }
+        }
+
+        public IWalletTransactionsRepository WalletTransactionsRepository
+        {
+            get
+            {
+                if (walletTransactionsRepository == null)
+                {
+                    walletTransactionsRepository = new WalletTransactionsRepository(_context);
+                }
+                return walletTransactionsRepository;
             }
         }
 

@@ -88,7 +88,7 @@ namespace LowCost.Business.Services.Orders.Interfaces
         /// </summary>
         /// <param name="orderDetails"></param>
         /// <returns></returns>
-        Task<double> GetOrderDeliveryAsync(List<AddOrderDetailsDTO> orderDetails);
+        Task<CheckOrderDeliveryDTO> GetOrderDeliveryAsync(List<AddOrderDetailsDTO> orderDetails);
     }
 
 

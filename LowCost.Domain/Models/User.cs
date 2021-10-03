@@ -15,8 +15,8 @@ namespace LowCost.Domain.Models
         public Languages CurrentLangauge { get; set; } = Languages.EN;
         public string FullName { get; set; }
         public DateTime? DateOfBirth { get; set; }
-
         public double Balance { get; set; }
+
         public int? Zone_Id { get; set; }
         public int? Stock_Id { get; set; }
 
@@ -35,6 +35,7 @@ namespace LowCost.Domain.Models
         public ICollection<PaymentMethod> Payments { get; set; }
 
         public ICollection<Favorites> Favorites { get; set; }
+        public ICollection<WalletTransaction> WalletTransactions { get; set; }
 
         public ICollection<ProductFollowingUser> ProductFollowingUsers { get; set; }
 

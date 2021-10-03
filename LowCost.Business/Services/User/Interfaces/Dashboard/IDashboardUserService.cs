@@ -35,11 +35,5 @@ namespace LowCost.Business.Services.User.Interfaces.Dashboard
         /// <param name="id"></param>
         /// <returns></returns>
         Task<UserBalanceDetailsViewModel> GetUserBalanceDetailsAsync(string id);
-        /// <summary>
-        /// Edit User Balance Asynchronous
-        /// </summary>
-        /// <param name="editBalanceViewModel"></param>
-        /// <returns></returns>
-        Task<ActionState> EditUserBalanceAsync(EditBalanceViewModel editBalanceViewModel);
     }
 }

@@ -15,6 +15,7 @@ using LowCost.Repo.Repositories.Interfaces.SMSCodes;
 using LowCost.Repo.Repositories.Interfaces.StockProducts;
 using LowCost.Repo.Repositories.Interfaces.Stocks;
 using LowCost.Repo.Repositories.Interfaces.User;
+using LowCost.Repo.Repositories.Interfaces.Wallet;
 using LowCost.Repo.Repositories.Interfaces.Zones;
 using System;
 using System.Collections.Generic;
@@ -86,6 +87,7 @@ namespace LowCost.Repo.UnitOfWork
 
         // Verification Repositories
         ISMSCodeRepository SMSCodeRepository { get; }
+        IWalletTransactionsRepository WalletTransactionsRepository { get; }
 
 
 

@@ -494,8 +494,9 @@ namespace LowCost.Business.Services.Orders.Implementation
             return actionState;
         }
 
-        public async Task<double> GetOrderDeliveryAsync(List<AddOrderDetailsDTO> orderDetails)
+        public async Task<CheckOrderDeliveryDTO> GetOrderDeliveryAsync(List<AddOrderDetailsDTO> orderDetails)
         {
+            var result = new CheckOrderDeliveryDTO();
             double totalPrice = 0;
             List<int> products = new List<int>();
             foreach (var orderDetail in orderDetails)
@@ -509,7 +510,12 @@ namespace LowCost.Business.Services.Orders.Implementation
                 }
                 else
                 {
-                    throw new Exception(string.Format("There is No Item With Product Id {0} and Market Id {1}", orderDetail.Product_Id, orderDetail.Market_Id));
+                    result.ErrorMessages.Add(orderDetail.Product_Id.ToString());
+                    result.ErrorMessages.Add(orderDetail.Market_Id.ToString());
+                    result.ErrorMessages
+                        .Add(_stringLocalizer["There Is No Price With Product Id '{0}' and Market Id '{1}'",
+                        orderDetail.Product_Id, orderDetail.Market_Id]);
+                    return result;
                 }
                 products.Add(orderDetail.Product_Id);
             }
@@ -517,10 +523,13 @@ namespace LowCost.Business.Services.Orders.Implementation
 
             if(totalPrice >= priceWithNoDeliveryValue)
             {
-                return 0;
+                result.Delivery = 0;
+                return result;
             }
             var productsTotalSize = await _unitOfWork.ProductsRepository.GetProductsSizeAsync(products.ToArray());
-            return await GetDeliveryBySizeAsync(productsTotalSize);
+            var delivery = await GetDeliveryBySizeAsync(productsTotalSize);
+            result.Delivery = delivery;
+            return result;
         }
 
         private async Task<double> GetDeliveryBySizeAsync(double size)

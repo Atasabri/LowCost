@@ -93,6 +93,10 @@ using LowCost.Business.Services.Zones.Interfaces;
 using LowCost.Business.Services.Zones.Implementation;
 using LowCost.Business.Services.OrderSizeDelivery.Interfaces.Dashboard;
 using LowCost.Business.Services.OrderSizeDelivery.Implementation.Dashboard;
+using LowCost.Business.Services.Wallet.Interfaces;
+using LowCost.Business.Services.Wallet.Implementation;
+using LowCost.Business.Services.Wallet.Interfaces.Dashboard;
+using LowCost.Business.Services.Wallet.Implementation.Dashboard;
 
 namespace LowCost.Web
 {
@@ -242,6 +246,7 @@ namespace LowCost.Web
             services.AddTransient<IMarketsService, MarketsService>();
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IZonesService, ZonesService>();
+            services.AddTransient<IWalletTransactionsService, WalletTransactionsService>();
 
 
             // Dashboard Dependency Injection Register
@@ -265,6 +270,7 @@ namespace LowCost.Web
             services.AddTransient<IDashboardZonesService, DashboardZonesService>(); 
             services.AddTransient<IDashboardStocksService, DashboardStocksService>();
             services.AddTransient<IDashboardOrderSizeDeliveryService, DashboardOrderSizeDeliveryService>();
+            services.AddTransient<IDashboardWalletTransactionsService, DashboardWalletTransactionsService>();
 
             // Handlers DI Register
             services.AddTransient<AuthenticationHandler>();

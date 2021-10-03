@@ -14,6 +14,5 @@ namespace LowCost.Infrastructure.DashboardViewModels.User.DashboardUsersViewMode
         public string Phone { get; set; }
         [Display(Name = "Full Name")]
         public string FullName { get; set; }
-        public double Balance { get; set; }
     }
 }

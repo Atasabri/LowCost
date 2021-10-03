@@ -1,17 +1,17 @@
 ﻿@model UserBalanceDetailsViewModel
 
 @{
-    ViewData["Title"] = "Edit Balance";
+    ViewData["Title"] = "Add Deposit Transaction";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit Balance</h1>
+<h1>Add Deposit Transaction</h1>
 
 <h4></h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="EditBalance">
+        <form asp-action="AddDepositTransaction">
             <input asp-for="UserId" type="hidden" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -35,9 +35,12 @@
                 <span asp-validation-for="FullName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Balance" class="control-label"></label>
-                <input asp-for="Balance" class="form-control" />
-                <span asp-validation-for="Balance" class="text-danger"></span>
+                <label class="control-label">Money</label>
+                <input name="Money" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label  class="control-label">Comment</label>
+                <input name="Comment" class="form-control" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
