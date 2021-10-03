@@ -6,7 +6,7 @@ namespace LowCost.Infrastructure.Helpers
 {
     public enum SliderType
     {
-        MainCategory,
+        MainCategory = 1,
         Category,
         SubCategory,
         Product,
