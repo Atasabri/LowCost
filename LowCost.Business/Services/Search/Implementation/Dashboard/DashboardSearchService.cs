@@ -25,9 +25,11 @@ namespace LowCost.Business.Services.Search.Implementation.Dashboard
             this._mapper = mapper;
         }
 
-        public async Task<PagedResult<ListingOrderViewModel>> SearchOrdersAsync(int id, PagingParameters pagingParameters)
+        public async Task<PagedResult<ListingOrderViewModel>> SearchOrdersAsync(SearchOrdersViewModel searchOrdersViewModel)
         {
-            var orders = await _unitOfWork.OrdersRepository.GetElementsWithOrderAsync(order => order.Id == id, pagingParameters,
+            PagingParameters pagingParameters = searchOrdersViewModel as PagingParameters;
+            var orders = await _unitOfWork.OrdersRepository.GetElementsWithOrderAsync(order => (searchOrdersViewModel.Id.HasValue ? order.Id == searchOrdersViewModel.Id.Value : true) 
+                                              && (searchOrdersViewModel.Stock_Id.HasValue ? order.Stock_Id == searchOrdersViewModel.Stock_Id.Value : true), pagingParameters,
                                order => order.DateTime, OrderingType.Descending);
 
             var ordersViewModel = orders.ToMappedPagedResult<Order, ListingOrderViewModel>(_mapper);

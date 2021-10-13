@@ -1,4 +1,5 @@
 ﻿using LowCost.Infrastructure.DashboardViewModels.Orders;
+using LowCost.Infrastructure.DashboardViewModels.Wallet;
 using LowCost.Infrastructure.Helpers;
 using System;
 using System.Collections.Generic;
@@ -33,5 +34,7 @@ namespace LowCost.Infrastructure.DashboardViewModels.User.DashboardUsersViewMode
         public string LoginProvider { get; set; }
 
         public List<AddressViewModel> Addresses { get; set; }
+        public List<UserTransactionViewModel> WalletTransactions { get; set; }
+        public List<ListingOrderViewModel> Orders { get; set; }
     }
 }

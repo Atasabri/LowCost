@@ -18,11 +18,10 @@ namespace LowCost.Business.Services.Search.Interfaces.Dashboard
         /// <returns></returns>
         Task<PagedResult<ListingProductViewModel>> SearchProductsAsync(string searchTerms, PagingParameters pagingParameters);
         /// <summary>
-        /// Search in Orders Using Order Id (Asynchronous & Paging)
+        /// Search in Orders Using Order Id Or Stock Id (Asynchronous & Paging)
         /// </summary>
-        /// <param name="searchTerms"></param>
-        /// <param name="pagingParameters"></param>
+        /// <param name="searchOrdersViewModel"></param>
         /// <returns></returns>
-        Task<PagedResult<ListingOrderViewModel>> SearchOrdersAsync(int id, PagingParameters pagingParameters);
+        Task<PagedResult<ListingOrderViewModel>> SearchOrdersAsync(SearchOrdersViewModel searchOrdersViewModel);
     }
 }

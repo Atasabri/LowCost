@@ -1,15 +1,27 @@
 ﻿@model PagedResult<ListingOrderViewModel>
-@{ 
+@using LowCost.Repo.UnitOfWork
+@inject IUnitOfWork _unitOfWork
+@{
     ViewBag.Title = "Orders";
-    var pagingModel = new DashboardPagination() 
+    var pagingModel = new DashboardPagination()
     { PageNumber = Model.PageNumber, PagesCount = Model.PagesCount, Size = Model.Size };
+    var currentUser = await _unitOfWork.CurrentUserRepository.GetCurrentDashboardAdminUser();
+
+    string Id = Context.Request.Query["Id"];
+    string Stock_Id = Context.Request.Query["Stock_Id"];
 
 }
 <h2>Orders</h2>
 
 <form class="form-inline my-2 my-lg-0">
     <input type="hidden" name="size" value="@pagingModel.Size" />
-    <input class="form-control" name="id" type="search" placeholder="Enter Order Id" aria-label="Search">
+    <input class="form-control" name="Id" type="search" value="@Id" placeholder="Enter Order Id" aria-label="Search">
+    @if (currentUser.Stock_Id == null)
+    {
+        <select name="Stock_Id" asp-items="@(new SelectList(ViewBag.Stocks, "Id", "Name", Stock_Id))" class="form-control">
+            <option value="">-- Select Stock --</option>
+        </select>
+    }
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 </form>
 <table class="table" id="ordertbl">
@@ -26,27 +38,27 @@
 
         @foreach (var item in Model.Items)
         {
-        <tr id="@item.Id">
-            <th scope="row">#@item.Id</th>
-            <td>@item.DateTime.ToString("dd-MM-yyyy HH:mm")</td>
-            <td>@Html.DisplayFor(model => item.Paid)</td>
-            <td>
-                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                <a class="btn btn-add" target="_blank" asp-action="AddStatus" asp-route-id="@item.Id">Add Status</a>
-                @if (string.IsNullOrEmpty(item.Driver_Id))
-                {
-                    <a class="btn btn-add" target="_blank" asp-action="AssignDriver" asp-route-id="@item.Id"> Assign Driver</a>
-                }
-                else
-                {
-                    <a class="btn btn-add" target="_blank" asp-action="AssignDriver" asp-route-id="@item.Id"> Change Driver</a>
-                }
-                @if (!item.Closed)
-                {
-                    <a id="close@(item.Id)" class="btn btn-danger" onclick="Close(@(item.Id));">Close</a>
-                }
-            </td>
-        </tr>
+            <tr id="@item.Id">
+                <th scope="row">#@item.Id</th>
+                <td>@item.DateTime.ToString("dd-MM-yyyy HH:mm")</td>
+                <td>@Html.DisplayFor(model => item.Paid)</td>
+                <td>
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a class="btn btn-add" target="_blank" asp-action="AddStatus" asp-route-id="@item.Id">Add Status</a>
+                    @if (string.IsNullOrEmpty(item.Driver_Id))
+                    {
+                        <a class="btn btn-add" target="_blank" asp-action="AssignDriver" asp-route-id="@item.Id"> Assign Driver</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-add" target="_blank" asp-action="AssignDriver" asp-route-id="@item.Id"> Change Driver</a>
+                    }
+                    @if (!item.Closed)
+                    {
+                        <a id="close@(item.Id)" class="btn btn-danger" onclick="Close(@(item.Id));">Close</a>
+                    }
+                </td>
+            </tr>
         }
     </tbody>
 </table>

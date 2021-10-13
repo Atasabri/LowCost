@@ -9,19 +9,28 @@
 <div class="nav-scroller py-1 mb-2">
     <nav class="nav d-flex justify-content-center">
         <ul class="pagination pagination-sm flex-sm-wrap">
-            <li class="page-item@(Model.PageNumber == 1? " disabled" : "")"><a class="page-link" href="?index=@(Model.PageNumber-2)&size=@(Model.Size)">Previous</a></li>
+            <li class="page-item@(Model.PageNumber == 1? " disabled" : "")"><a class="page-link" href="?index=@(Model.PageNumber-2)">Previous</a></li>
             @for (int i = 1; i <= Model.PagesCount; i++)
             {
-                <li class="page-item@(i == Model.PageNumber? " active" : "")"><a class="page-link" href="?index=@(i-1)&size=@(Model.Size)">@i</a></li>
+                <li class="page-item@(i == Model.PageNumber? " active" : "")"><a class="page-link" href="?index=@(i-1)">@i</a></li>
             }
-            <li class="page-item@(Model.PagesCount == Model.PageNumber || Model.PagesCount == 0? " disabled" : "")"><a class="page-link" href="?index=@(Model.PageNumber)&size=@(Model.Size)">Next</a></li>
+            <li class="page-item@(Model.PagesCount == Model.PageNumber || Model.PagesCount == 0? " disabled" : "")"><a class="page-link" href="?index=@(Model.PageNumber)">Next</a></li>
 
         </ul>
     </nav>
 </div>
 <script>
-    if (window.location.href.includes("searchTerms")) {
-        var queryString = window.location.href.slice(window.location.href.indexOf('searchTerms'))
+    if (window.location.href.includes("?index")) {
+        var queryString = window.location.href.slice(window.location.href.indexOf('&'))
+        if (queryString) {
+            var anchors = document.querySelectorAll(".page-link");
+            for (var i = 0; i < anchors.length; i++) {
+                var link = anchors[i].href
+                anchors[i].href = link + queryString
+            }
+        }
+    } else if (window.location.href.includes("?")) {
+        var queryString = window.location.href.slice(window.location.href.indexOf('?')+1)
         if (queryString) {
             var anchors = document.querySelectorAll(".page-link");
             for (var i = 0; i < anchors.length; i++) {
@@ -39,6 +48,7 @@
                 const params = new URLSearchParams(link.slice(link.indexOf('?')));
                 params.delete('size');
                 params.set('size', size);
+                params.delete('index');
                 window.location.href = "?" + params.toString()
             } else {
                 window.location.href = "?size=" + size;
