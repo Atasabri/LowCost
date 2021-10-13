@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using LowCost.Business.Services.User.Interfaces.Dashboard;
 using LowCost.Domain.Models;
+using LowCost.Infrastructure.DashboardViewModels.Orders;
 using LowCost.Infrastructure.DashboardViewModels.User.DashboardUsersViewModels;
 using LowCost.Infrastructure.Helpers;
 using LowCost.Infrastructure.Pagination;
+using LowCost.Repo.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,12 +18,14 @@ namespace LowCost.Business.Services.User.Implementation.Dashboard
 {
     public class DashboardUserService : IDashboardUserService
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<Domain.Models.User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
 
-        public DashboardUserService(UserManager<Domain.Models.User> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
+        public DashboardUserService(IUnitOfWork unitOfWork, UserManager<Domain.Models.User> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
         {
+            this._unitOfWork = unitOfWork;
             this._userManager = userManager;
             this._roleManager = roleManager;
             this._mapper = mapper;
@@ -40,6 +44,8 @@ namespace LowCost.Business.Services.User.Implementation.Dashboard
         {
             var user = await _userManager.Users
                 .Include(nameof(Domain.Models.User.Addresses))
+                .Include(nameof(Domain.Models.User.WalletTransactions))
+                .Include(nameof(Domain.Models.User.Addresses))
                 .Include(nameof(Domain.Models.User.Zone))
                 .FirstOrDefaultAsync(user => user.Id == id);
 
@@ -52,6 +58,10 @@ namespace LowCost.Business.Services.User.Implementation.Dashboard
             var logins = await _userManager.GetLoginsAsync(user);
             var userViewModel = _mapper.Map<Domain.Models.User, UserViewModel>(user);
             userViewModel.LoginProvider = string.Join(",", logins.Select(login => login.LoginProvider).ToArray());
+
+            // Adding User Orders
+            var userOrders = await _unitOfWork.OrdersRepository.GetElementsAsync(order => order.User_Id == user.Id);
+            userViewModel.Orders = _mapper.Map<IEnumerable<Order>, IEnumerable<ListingOrderViewModel>>(userOrders).ToList();
             
             return userViewModel;
         }

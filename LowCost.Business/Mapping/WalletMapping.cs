@@ -21,6 +21,9 @@ namespace LowCost.Business.Mapping
         {
             CreateMap<AddTransactionViewModel, WalletTransaction>()
              .ReverseMap();
+
+            CreateMap<UserTransactionViewModel, WalletTransaction>()
+             .ReverseMap();
         }
     }
 }

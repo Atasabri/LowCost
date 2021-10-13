@@ -1,5 +1,6 @@
 ﻿using LowCost.Business.Services.Orders.Interfaces.Dashboard;
 using LowCost.Business.Services.Search.Interfaces.Dashboard;
+using LowCost.Business.Services.Stocks.Interfaces.Dashboard;
 using LowCost.Business.Services.User.Interfaces.Dashboard;
 using LowCost.Infrastructure.BaseService;
 using LowCost.Infrastructure.DashboardViewModels.Orders;
@@ -17,28 +18,24 @@ namespace LowCost.Web.Controllers.Dashboard
         private readonly IDashboardOrdersService _dashboardOrdersService;
         private readonly IDashboardDriverService _dashboardDriverService;
         private readonly IDashboardSearchService _dashboardSearchService;
+        private readonly IDashboardStocksService _dashboardStocksService;
 
         public OrdersController(IDashboardOrdersService dashboardOrdersService,
             IDashboardDriverService dashboardDriverService, 
-            IDashboardSearchService dashboardSearchService)
+            IDashboardSearchService dashboardSearchService,
+            IDashboardStocksService dashboardStocksService)
         {
             this._dashboardOrdersService = dashboardOrdersService;
             this._dashboardDriverService = dashboardDriverService;
             this._dashboardSearchService = dashboardSearchService;
+            this._dashboardStocksService = dashboardStocksService;
         }
 
         // GET: Orders
-        public async Task<ActionResult> Index(PagingParameters pagingParameters, int? id = null)
+        public async Task<ActionResult> Index(SearchOrdersViewModel searchOrdersViewModel)
         {
-            PagedResult<ListingOrderViewModel> result;
-            if(id.HasValue)
-            {
-                result = await _dashboardSearchService.SearchOrdersAsync(id.Value, pagingParameters);
-            }
-            else
-            {
-                result = await _dashboardOrdersService.GetOrdersAsync(pagingParameters);
-            }
+            var result = await _dashboardSearchService.SearchOrdersAsync(searchOrdersViewModel);
+            ViewBag.Stocks = await _dashboardStocksService.GetAllStocksAsync();
             return View(result);
         }
 

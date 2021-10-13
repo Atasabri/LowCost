@@ -87,12 +87,66 @@
     <tbody id="tbl">
         @foreach (var item in Model.Addresses)
         {
+            <tr>
+                <td>@item.Street</td>
+                <td>@item.Floor</td>
+                <td>@item.Apartment</td>
+                <td>@item.Building</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<h4>Orders</h4>
+<table class="table">
+    <thead>
         <tr>
-            <td>@item.Street</td>
-            <td>@item.Floor</td>
-            <td>@item.Apartment</td>
-            <td>@item.Building</td>
+            <th scope="col">Order ID</th>
+            <th scope="col">Date</th>
+            <th scope="col">Paid</th>
+            <th scope="col">Closed</th>
+            <th scope="col">Actions</th>
         </tr>
+    </thead>
+    <tbody id="tbl">
+        @foreach (var item in Model.Orders)
+        {
+            <tr id="@item.Id">
+                <th scope="row">#@item.Id</th>
+                <td>@item.DateTime.ToString("dd-MM-yyyy HH:mm")</td>
+                <td>@Html.DisplayFor(model => item.Paid)</td>
+                <td>@Html.DisplayFor(model => item.Closed)</td>
+                <td>
+                    <a class="btn btn-info" asp-action="Details" asp-controller="Orders" asp-route-id="@item.Id">Details</a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<h4>Transactions</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Type</th>
+            <th scope="col">Date</th>
+            <th scope="col">Balance</th>
+            <th scope="col">Created By</th>
+            <th scope="col">Comment</th>
+        </tr>
+    </thead>
+    <tbody id="tbl">
+        @foreach (var item in Model.WalletTransactions)
+        {
+            <tr>
+                <th scope="row">@item.TransactionType.ToString()</th>
+                <td>@item.Date.ToString("dd-MM-yyyy HH:mm")</td>
+                <td>@Html.DisplayFor(model => item.Money)</td>
+                <td>@Html.DisplayFor(model => item.CreatedBy)</td>
+                <td>@Html.DisplayFor(model => item.Comment)</td>
+            </tr>
         }
 
     </tbody>
