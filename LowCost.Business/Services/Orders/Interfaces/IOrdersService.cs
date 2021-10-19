@@ -89,6 +89,11 @@ namespace LowCost.Business.Services.Orders.Interfaces
         /// <param name="orderDetails"></param>
         /// <returns></returns>
         Task<CheckOrderDeliveryDTO> GetOrderDeliveryAsync(List<AddOrderDetailsDTO> orderDetails);
+        /// <summary>
+        /// Get Current User Active Order (Not Closed & Not Finished) Count Asynchronous
+        /// </summary>
+        /// <returns></returns>
+        Task<int> GetActiveOrdersCountAsync();
     }
 
 

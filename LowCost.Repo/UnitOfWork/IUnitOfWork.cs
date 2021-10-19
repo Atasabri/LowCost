@@ -101,5 +101,10 @@ namespace LowCost.Repo.UnitOfWork
         /// Save Changes To Database Asynchronous
         /// </summary>
         Task<int> SaveAsync();
+        /// <summary>
+        /// Adding Transaction For Operations Asynchronous
+        /// </summary>
+        /// <returns></returns>
+        Task CommitTransaction();
     }
 }

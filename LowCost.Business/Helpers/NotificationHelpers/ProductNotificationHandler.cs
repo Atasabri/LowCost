@@ -43,10 +43,10 @@ namespace LowCost.Business.Helpers.NotificationHelpers
         private async Task NotifyFollowingUsersAsync(ProductNotificationState productNotificationState)
         {
             var following = await _unitOfWork.ProductFollowingUsersRepository
-                .GetElementsAsync(followUser => followUser.Product_Id == productNotificationState.Product_Id 
-                && followUser.User.Stock_Id.HasValue 
-                && productNotificationState.Stocks.Contains(followUser.User.Stock_Id.Value),
-                string.Format("{0}", nameof(ProductFollowingUser.User)));
+                .GetElementsAsync(followUser => followUser.Product_Id == productNotificationState.Product_Id
+                && followUser.User.Zone != null
+                && productNotificationState.Stocks.Contains(followUser.User.Zone.Stock_Id),
+                string.Format("{0}.{1}", nameof(ProductFollowingUser.User), nameof(ProductFollowingUser.User.Zone))) ;
 
             foreach (int lang in Enum.GetValues(typeof(Languages)))
             {

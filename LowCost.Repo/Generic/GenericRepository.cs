@@ -61,7 +61,7 @@ namespace LowCost.Repo.Generic
             var entities = await _entities.Where(expression).Skip(skip)
                 .Take(pagingParameters.Size).MultiInclude(includes).ToListAsync();
 
-            return new PagedResult<Entity>(pagingParameters.Index, pagingParameters.Size, await GetCount(expression), entities);
+            return new PagedResult<Entity>(pagingParameters.Index, pagingParameters.Size, await GetCountAsync(expression), entities);
         }
 
         public async Task<PagedResult<Entity>> GetElementsWithOrderAsync(Expression<Func<Entity, bool>> expression
@@ -75,10 +75,10 @@ namespace LowCost.Repo.Generic
             var entities = await _entities.Where(expression).Order(orderExpression, orderingType).Skip(skip)
                 .Take(pagingParameters.Size).MultiInclude(includes).ToListAsync();
 
-            return new PagedResult<Entity>(pagingParameters.Index, pagingParameters.Size, await GetCount(expression), entities);
+            return new PagedResult<Entity>(pagingParameters.Index, pagingParameters.Size, await GetCountAsync(expression), entities);
         }
 
-        private async Task<int> GetCount(Expression<Func<Entity, bool>> expression)
+        public async Task<int> GetCountAsync(Expression<Func<Entity, bool>> expression)
         {
             return await _entities.Where(expression).CountAsync();
         }

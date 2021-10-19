@@ -13,6 +13,7 @@ namespace LowCost.Infrastructure.DTOs.Orders
         public bool Paid { get; set; }
         public PaymentWays PaymentWay { get; set; }
 
+        public bool PayWithUserBalance { get; set; }
         public string Street { get; set; }
         public string Building { get; set; }
         public string Floor { get; set; }
