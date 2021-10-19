@@ -18,22 +18,25 @@ using LowCost.Infrastructure.NotificationsHelpers;
 using LowCost.Infrastructure.DashboardViewModels.Orders;
 using LowCost.Business.Helpers;
 using LowCost.Business.Helpers.NotificationHelpers;
+using Microsoft.AspNetCore.Identity;
 
 namespace LowCost.Business.Services.Orders.Implementation
 {
     public class OrdersService : IOrdersService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<Domain.Models.User> _userManager;
         private readonly OrderNotificationHandler _orderNotificationHandler;
         private readonly WebNotificationHandler _webNotificationHandler;
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<SharedResource> _stringLocalizer;
 
-        public OrdersService(IUnitOfWork unitOfWork, OrderNotificationHandler orderNotificationHandler,
+        public OrdersService(IUnitOfWork unitOfWork, UserManager<Domain.Models.User> userManager, OrderNotificationHandler orderNotificationHandler,
             WebNotificationHandler webNotificationHandler,
             IMapper mapper, IStringLocalizer<SharedResource> stringLocalizer)
         {
             this._unitOfWork = unitOfWork;
+            this._userManager = userManager;
             this._orderNotificationHandler = orderNotificationHandler;
             this._webNotificationHandler = webNotificationHandler;
             this._mapper = mapper;
@@ -55,7 +58,7 @@ namespace LowCost.Business.Services.Orders.Implementation
             await _unitOfWork.OrdersRepository.CreateAsync(order);
 
             var result = await _unitOfWork.SaveAsync() > 0;
-            if(result)
+            if (result)
             {
                 createState.CreatedSuccessfully = true;
                 // Sending Notification To Admin Control Panel
@@ -315,11 +318,46 @@ namespace LowCost.Business.Services.Orders.Implementation
             // Calculate Final Order Total Price & Check if Order has No Delivery
             await CheckOrderHasNoDeliveryAndCalculateOrderFinalTotalPriceAsync(order);
 
+            // Create Pull Transaction if User Pay With his Balance
+            if(addOrderDTO.PayWithUserBalance)
+            {
+                var addOrderPullTransactionResult = await AddOrderPullTransactionAsync(currentUser, order);
+                if (!addOrderPullTransactionResult.ExcuteSuccessfully)
+                {
+                    generateOrderState.ErrorMessages = addOrderPullTransactionResult.ErrorMessages;
+                    return generateOrderState;
+                }
+            }
+
             generateOrderState.OrderGeneratedSuccessfully = true;
             generateOrderState.Order = order;
             return generateOrderState;
         }
 
+        private async Task<ActionState> AddOrderPullTransactionAsync(Domain.Models.User user, Order order)
+        {
+            var actionState = new ActionState();
+            // Check If User Balance Available to Use It
+            if(order.Total > 0 && user.Balance >= order.Total)
+            {
+                // Make Order Paid & Decrease User Balance
+                order.Paid = true;
+                user.Balance -= order.Total;
+                // Adding Pull Transaction
+                await _unitOfWork.WalletTransactionsRepository.CreateAsync(new WalletTransaction
+                {
+                    TransactionType = Xedge.Infrastructure.Helpers.TransactionTypes.Pull,
+                    User_Id = user.Id,
+                    Money = order.Total,
+                    Date = DateTimeProvider.GetEgyptDateTime(),
+                    Comment = "This Order Created From Add Order Request"
+                });
+                actionState.ExcuteSuccessfully = true;
+                return actionState;
+            }
+            actionState.ErrorMessages.Add(_stringLocalizer["Your Balance Can Complete This Order"]);
+            return actionState;
+        }
 
 
         public async Task<PagedResult<ListingOrderDTO>> GetDriverOrdersAsync(PagingParameters pagingParameters)
@@ -559,5 +597,10 @@ namespace LowCost.Business.Services.Orders.Implementation
             return priceWithNoDeliveryValue;
         }
 
+        public async Task<int> GetActiveOrdersCountAsync()
+        {
+            var currentUserId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
+            return await _unitOfWork.OrdersRepository.GetCountAsync(order => order.User_Id == currentUserId && (!order.Closed || !order.Finished));
+        }
     }
 }

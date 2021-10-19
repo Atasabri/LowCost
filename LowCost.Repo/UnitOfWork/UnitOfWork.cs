@@ -447,5 +447,12 @@ namespace LowCost.Repo.UnitOfWork
         {
             return await _context.SaveChangesAsync();
         }
+
+        public async Task CommitTransaction()
+        {
+            var transaction = _context.Database.BeginTransaction();
+
+            await transaction.CommitAsync();
+        }
     }
 }

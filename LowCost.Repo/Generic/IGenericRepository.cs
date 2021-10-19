@@ -67,5 +67,12 @@ namespace LowCost.Repo.Generic
             , Expression<Func<Entity, object>> orderExpression
             , OrderingType orderingType = OrderingType.Ascending
             , string includes = null);
+
+        /// <summary>
+        /// Get Items Count Asynchronous
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        Task<int> GetCountAsync(Expression<Func<Entity, bool>> expression);
     }
 }

@@ -285,6 +285,12 @@
   <data name="Verification Code : {0}" xml:space="preserve">
     <value>كود التأكيد : {0}</value>
   </data>
+  <data name="You Already Follow This Product" xml:space="preserve">
+    <value>أنت متابع لهذا المنتج بالفعل</value>
+  </data>
+  <data name="You Are Not Follow This Product" xml:space="preserve">
+    <value>أنت لما تتابع هذا المنتج من قبل</value>
+  </data>
   <data name="You Can Not Order Product With Zero Price Only !" xml:space="preserve">
     <value>لا يمكن انشاء طلب يحتوي منتج واحد مجاني</value>
   </data>
@@ -293,6 +299,9 @@
   </data>
   <data name="You Can Order Only One Product With Zero Cost" xml:space="preserve">
     <value>لا يمكن انشاء طلب يحتوي علي أكثر من منتج  واحد مجاني</value>
+  </data>
+  <data name="Your Balance Can Complete This Order" xml:space="preserve">
+    <value>رصيدك لا يسمح باتمام هذه العملية</value>
   </data>
   <data name="Your Cart Is Empty , Please Add Products" xml:space="preserve">
     <value>السلة الخاصة بك فارغة . من فضلك قم باضافة منتجات الي السلة</value>

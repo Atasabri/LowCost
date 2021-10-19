@@ -102,12 +102,12 @@ namespace LowCost.Business.Services.Products.Implementation.Dashboard
                 {
                     if (productStockQuantity.Quantity != StockQuantity.Quantity)
                     {
-                        productStockQuantity.Quantity = StockQuantity.Quantity;
-                        _unitOfWork.StockProductsRepository.Update(productStockQuantity);
                         if (productStockQuantity.Quantity == 0)
                         {
                             notifyStocks.Add(productStockQuantity.Stock_Id);
                         }
+                        productStockQuantity.Quantity = StockQuantity.Quantity;
+                        _unitOfWork.StockProductsRepository.Update(productStockQuantity);
                     }
                 }
                 else
