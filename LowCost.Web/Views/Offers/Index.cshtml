@@ -19,6 +19,8 @@
             <th scope="col">#</th>
             <th scope="col">Name</th>
             <th scope="col">Name (Arabic)</th>
+            <th scope="col">Is New</th>
+            <th scope="col">Updated Date</th>
             <th scope="col">Actions</th>
         </tr>
     </thead>
@@ -26,16 +28,18 @@
 
         @foreach (var item in Model.Items)
         {
-            <tr id="@item.Id">
-                <th scope="row">@(counter++)</th>
-                <td>@item.Name</td>
-                <td>@item.Name_AR</td>
-                <td>
-                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id" >Details</a>
-                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a class="btn btn-danger" onclick="Delete(@(item.Id));">Delete</a>
-                </td>
-            </tr>
+        <tr id="@item.Id">
+            <th scope="row">@(counter++)</th>
+            <td>@item.Name</td>
+            <td>@item.Name_AR</td>
+            <td>@Html.DisplayFor(model => item.IsNew)</td>
+            <td>@item.UpdatedDate</td>
+            <td>
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                <a class="btn btn-danger" onclick="Delete(@(item.Id));">Delete</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>

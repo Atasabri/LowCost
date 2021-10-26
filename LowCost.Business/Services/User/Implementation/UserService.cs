@@ -175,5 +175,20 @@ namespace LowCost.Business.Services.User.Implementation
             actionState.ErrorMessages.AddRange(result.Errors.Select(error => error.Description).ToList());
             return actionState;
         }
+
+        public async Task<ActionState> ChangeCurrentUserAccessOffersAsync()
+        {
+            var actionState = new ActionState();
+            var user = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
+            user.LastAccessOffers = DateTimeProvider.GetEgyptDateTime();
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                actionState.ExcuteSuccessfully = true;
+                return actionState;
+            }
+            actionState.ErrorMessages.AddRange(result.Errors.Select(error => error.Description).ToList());
+            return actionState;
+        }
     }
 }

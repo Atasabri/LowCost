@@ -521,6 +521,13 @@ namespace LowCost.Business.Services.Orders.Implementation
                 return actionState;
             }
             order.Closed = true;
+            foreach (var orderItem in order.OrderDetails)
+            {
+                var productInStock = await _unitOfWork.StockProductsRepository.FindElementAsync(productStock => productStock.Product_Id == orderItem.Product_Id && productStock.Stock_Id == order.Stock_Id);
+                productInStock.Quantity += orderItem.Quantity;
+
+                _unitOfWork.StockProductsRepository.Update(productInStock);
+            }
             _unitOfWork.OrdersRepository.Update(order);
             var result = await _unitOfWork.SaveAsync() > 0;
             if (result)

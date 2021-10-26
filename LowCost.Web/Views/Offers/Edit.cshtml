@@ -25,6 +25,11 @@
                 <span asp-validation-for="Name_AR" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="IsNew" class="control-label"></label>
+                <input asp-for="IsNew" class="form-control" />
+                <span asp-validation-for="IsNew" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label name="Photo" class="control-label">Photo</label>
                 <input name="Photo" type="file" class="form-control" />
                 <span name="Photo" class="text-danger"></span>

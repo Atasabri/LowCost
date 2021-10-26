@@ -17,6 +17,8 @@ namespace LowCost.Domain.Models
         public DateTime? DateOfBirth { get; set; }
         public double Balance { get; set; }
 
+        public DateTime LastAccessOffers { get; set; }
+
         public int? Zone_Id { get; set; }
         public int? Stock_Id { get; set; }
 
