@@ -43,5 +43,10 @@ namespace LowCost.Business.Services.User.Interfaces
         /// <param name="zoneId"></param>
         /// <returns></returns>
         Task<ActionState> ChangeCurrentUserZoneAsync(int zoneId);
+        /// <summary>
+        /// Change Current User Access Offer to Current Date Time Asynchronous
+        /// </summary>
+        /// <returns></returns>
+        Task<ActionState> ChangeCurrentUserAccessOffersAsync();
     }
 }

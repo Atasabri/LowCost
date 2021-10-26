@@ -13,8 +13,6 @@ using System.Threading.Tasks;
 
 namespace LowCost.Web.Controllers.APIs
 {
-    [Authorize(Roles = Constants.UserRoleName, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [AllowAnonymous]
     public class OffersController : APIController
     {
         private readonly IOffersService _offersService;
@@ -40,6 +38,12 @@ namespace LowCost.Web.Controllers.APIs
         public async Task<IActionResult> GetOfferProducts(int offerId, [FromQuery] PagingParameters pagingParameters)
         {
             return Ok(await _offersService.GetOfferProductsAsync(offerId, pagingParameters));
+        }
+
+        [HttpGet("GetNewOffersCount")]
+        public async Task<IActionResult> GetNewOffersCount()
+        {
+            return Ok(await _offersService.GetOffersCountCurrentUserNotAccessAsync());
         }
     }
 }

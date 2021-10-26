@@ -82,5 +82,16 @@ namespace LowCost.Web.Controllers.APIs
             }
             return BadRequest(result);
         }
+
+        [HttpPost("UserAccessOffers")]
+        public async Task<IActionResult> UserAccessOffers()
+        {
+            var result = await _userService.ChangeCurrentUserAccessOffersAsync();
+            if (result.ExcuteSuccessfully)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
     }
 }

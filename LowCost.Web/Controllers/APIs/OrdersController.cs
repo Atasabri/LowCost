@@ -83,8 +83,8 @@ namespace LowCost.Web.Controllers.APIs
             return Ok(await _ordersService.GetOrderDeliveryAsync(orderDetails));
         }
 
-        [HttpGet("GetActionUserActiveOrdersCount")]
-        public async Task<IActionResult> GetActionUserActiveOrdersCount()
+        [HttpGet("GetActiveOrdersCount")]
+        public async Task<IActionResult> GetActiveOrdersCount()
         {
             return Ok(await _ordersService.GetActiveOrdersCountAsync());
         }

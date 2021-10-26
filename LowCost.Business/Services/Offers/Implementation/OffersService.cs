@@ -7,6 +7,7 @@ using LowCost.Infrastructure.DTOs.Products;
 using LowCost.Infrastructure.Helpers;
 using LowCost.Infrastructure.Pagination;
 using LowCost.Repo.UnitOfWork;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,11 +23,13 @@ namespace LowCost.Business.Services.Offers.Implementation
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly UserManager<Domain.Models.User> _userManager;
 
-        public OffersService(IUnitOfWork unitOfWork, IMapper mapper)
+        public OffersService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<Domain.Models.User> userManager)
         {
             this._unitOfWork = unitOfWork;
             this._mapper = mapper;
+            this._userManager = userManager;
             // Change Current User Favorites Variable & Map Listing ProductDTO IsFav Property if User Logedin 
             if (_unitOfWork.CurrentUserRepository.CheckIfUserLogedin())
             {
@@ -44,6 +47,7 @@ namespace LowCost.Business.Services.Offers.Implementation
         }
         public async Task<OfferDTO> GetLowCostOfferAsync()
         {
+            // Get Low Cost Offer
             var lowCostOffer = await _unitOfWork.OffersRepository.FindByIdAsync(Constants.LowCostOfferId);
 
             var lowCostOfferDTO = _mapper.Map<Offer, OfferDTO>(lowCostOffer);
@@ -64,6 +68,15 @@ namespace LowCost.Business.Services.Offers.Implementation
 
         public async Task<PagedResult<OfferDTO>> GetOffersAsync(PagingParameters pagingparameters)
         {
+
+            // Change Last Access Of Current User
+            var user = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
+            if(user != null)
+            {
+                user.LastAccessOffers = DateTimeProvider.GetEgyptDateTime();
+                await _userManager.UpdateAsync(user);
+            }
+
             // Getting All Offers With Desc Order Except Low Cost Offer
             var offers = await _unitOfWork.OffersRepository.GetElementsWithOrderAsync(offer => offer.Id != Constants.LowCostOfferId
                               , pagingparameters
@@ -71,6 +84,18 @@ namespace LowCost.Business.Services.Offers.Implementation
 
             var offersDTOs = offers.ToMappedPagedResult<Offer, OfferDTO>(_mapper);
             return offersDTOs;
+        }
+
+        public async Task<int> GetOffersCountCurrentUserNotAccessAsync()
+        {
+            var user = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
+            if(user != null)
+            {
+                var offersCount = await _unitOfWork.OffersRepository.GetCountAsync(offer => offer.IsNew && offer.UpdatedDate > user.LastAccessOffers);
+
+                return offersCount;
+            }
+            return 0;
         }
     }
 }
