@@ -44,9 +44,9 @@ namespace LowCost.Business.Services.User.Interfaces
         /// <returns></returns>
         Task<ActionState> ChangeCurrentUserZoneAsync(int zoneId);
         /// <summary>
-        /// Change Current User Access Offer to Current Date Time Asynchronous
+        /// Change Current User Last Access Low Cost Offer to Current Date Time Asynchronous
         /// </summary>
         /// <returns></returns>
-        Task<ActionState> ChangeCurrentUserAccessOffersAsync();
+        Task<ActionState> ChangeCurrentUseLasrAccessLowCostOfferAsync();
     }
 }

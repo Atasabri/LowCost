@@ -9,6 +9,7 @@ namespace LowCost.Infrastructure.DTOs.Products
 {
     public class ListingProductDTO : BaseDTO
     {
+        public DateTime CreatedDate { get; set; }
         public string Name { get; set; }
         public int? Quantity { get; set; }
         public double Size { get; set; }
