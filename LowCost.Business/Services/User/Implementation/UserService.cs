@@ -176,11 +176,11 @@ namespace LowCost.Business.Services.User.Implementation
             return actionState;
         }
 
-        public async Task<ActionState> ChangeCurrentUserAccessOffersAsync()
+        public async Task<ActionState> ChangeCurrentUseLasrAccessLowCostOfferAsync()
         {
             var actionState = new ActionState();
             var user = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
-            user.LastAccessOffers = DateTimeProvider.GetEgyptDateTime();
+            user.LastAccessLowCostOffer = DateTimeProvider.GetEgyptDateTime();
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {

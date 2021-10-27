@@ -14,6 +14,7 @@
     <div class="col-md-4">
         <form asp-action="Edit" onsubmit="CheckPrices();" enctype="multipart/form-data">
             <input asp-for="Id" type="hidden" />
+            <input asp-for="CreatedDate" type="hidden" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -96,14 +97,14 @@
                 <tbody id="currenttbl">
                     @foreach (var item in Model.Prices)
                     {
-                    <tr id="@item.Id">
-                        <td>@item.Price</td>
-                        <td>@item.OldPrice</td>
-                        <td>@item.MaxQuantityPerOrder</td>
-                        <td>@item.MarketName</td>
-                        <td><input onclick="DeletePriceById(@(item.Id));" type="button" class="btn btn-danger" value="Delete" /></td>
-                        <td><a class="btn btn-success" target="_blank" asp-action="EditPrice" asp-controller="Products" asp-route-Id="@item.Id">Edit</a></td>
-                    </tr>
+                        <tr id="@item.Id">
+                            <td>@item.Price</td>
+                            <td>@item.OldPrice</td>
+                            <td>@item.MaxQuantityPerOrder</td>
+                            <td>@item.MarketName</td>
+                            <td><input onclick="DeletePriceById(@(item.Id));" type="button" class="btn btn-danger" value="Delete" /></td>
+                            <td><a class="btn btn-success" target="_blank" asp-action="EditPrice" asp-controller="Products" asp-route-Id="@item.Id">Edit</a></td>
+                        </tr>
                     }
                 </tbody>
             </table>

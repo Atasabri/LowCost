@@ -57,6 +57,16 @@ namespace LowCost.Business.Services.Offers.Implementation
 
         public async Task<PagedResult<ListingProductDTO>> GetOfferProductsAsync(int offerId, PagingParameters pagingParameters)
         {
+            if(offerId == Constants.LowCostOfferId)
+            {
+                // Change Last Access Of Current User
+                var user = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
+                if (user != null)
+                {
+                    user.LastAccessLowCostOffer = DateTimeProvider.GetEgyptDateTime();
+                    await _userManager.UpdateAsync(user);
+                }
+            }
             var products = await _unitOfWork.ProductsRepository.GetElementsWithOrderAsync(product => product.Offer_Id == offerId
                                  , pagingParameters
                                  , product => product.Id, OrderingType.Descending
@@ -68,15 +78,6 @@ namespace LowCost.Business.Services.Offers.Implementation
 
         public async Task<PagedResult<OfferDTO>> GetOffersAsync(PagingParameters pagingparameters)
         {
-
-            // Change Last Access Of Current User
-            var user = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
-            if(user != null)
-            {
-                user.LastAccessOffers = DateTimeProvider.GetEgyptDateTime();
-                await _userManager.UpdateAsync(user);
-            }
-
             // Getting All Offers With Desc Order Except Low Cost Offer
             var offers = await _unitOfWork.OffersRepository.GetElementsWithOrderAsync(offer => offer.Id != Constants.LowCostOfferId
                               , pagingparameters
@@ -86,12 +87,12 @@ namespace LowCost.Business.Services.Offers.Implementation
             return offersDTOs;
         }
 
-        public async Task<int> GetOffersCountCurrentUserNotAccessAsync()
+        public async Task<int> GetLowCostOfferProductsCountCurrentUserNotAccessAsync()
         {
             var user = await _unitOfWork.CurrentUserRepository.GetCurrentUser();
             if(user != null)
             {
-                var offersCount = await _unitOfWork.OffersRepository.GetCountAsync(offer => offer.IsNew && offer.UpdatedDate > user.LastAccessOffers);
+                var offersCount = await _unitOfWork.ProductsRepository.GetCountAsync(product => product.Offer_Id == Constants.LowCostOfferId && product.CreatedDate > user.LastAccessLowCostOffer);
 
                 return offersCount;
             }

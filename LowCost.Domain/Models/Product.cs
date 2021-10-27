@@ -1,4 +1,5 @@
 ﻿using LowCost.Domain.Models.BaseModels;
+using LowCost.Infrastructure.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -20,6 +21,7 @@ namespace LowCost.Domain.Models
 
         public double Size { get; set; }
 
+        public DateTime CreatedDate { get; set; } = DateTimeProvider.GetEgyptDateTime();
 
 
         [ForeignKey(nameof(SubCategory_Id))]

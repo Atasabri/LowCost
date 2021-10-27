@@ -29,9 +29,9 @@ namespace LowCost.Business.Services.Offers.Interfaces
         /// <returns></returns>
         Task<PagedResult<ListingProductDTO>> GetOfferProductsAsync(int offerId, PagingParameters pagingParameters);
         /// <summary>
-        /// Get Count Of Offers That Current User Did not Accessed Before Asynchronous
+        /// Get Count Of Low Cost Offer Products That Current User Did not Accessed Before Asynchronous
         /// </summary>
         /// <returns></returns>
-        Task<int> GetOffersCountCurrentUserNotAccessAsync();
+        Task<int> GetLowCostOfferProductsCountCurrentUserNotAccessAsync();
     }
 }
