@@ -15,6 +15,9 @@ namespace LowCost.Infrastructure.DashboardViewModels.Products
         public string Serial_Number { get; set; }
         public double Size { get; set; }
 
+        [Display(Name = "Created Date")]
+        public DateTime CreatedDate { get; set; }
+
         [Display(Name = "Shop")]
         public int? Offer_Id { get; set; }
         public List<ProductStockQuantityViewModel> StockQuantities { get; set; } = new List<ProductStockQuantityViewModel>();

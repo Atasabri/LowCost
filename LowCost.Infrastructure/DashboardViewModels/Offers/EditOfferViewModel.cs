@@ -10,9 +10,6 @@ namespace LowCost.Infrastructure.DashboardViewModels.Offers
 {
     public class EditOfferViewModel : BaseNamedViewModel
     {
-        [Display(Name = "Is New")]
-        public bool IsNew { get; set; }
-        public DateTime UpdatedDate { get; set; } = DateTimeProvider.GetEgyptDateTime();
         public IFormFile Photo { get; set; }
 
     }

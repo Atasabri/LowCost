@@ -8,8 +8,6 @@ namespace LowCost.Domain.Models
 {
     public class Offer : BaseNamedModel
     {
-        public bool IsNew { get; set; }
-        public DateTime UpdatedDate { get; set; } = DateTimeProvider.GetEgyptDateTime();
         public virtual ICollection<Product> Products { get; set; }
     }
 }

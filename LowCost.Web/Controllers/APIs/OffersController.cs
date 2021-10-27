@@ -40,10 +40,10 @@ namespace LowCost.Web.Controllers.APIs
             return Ok(await _offersService.GetOfferProductsAsync(offerId, pagingParameters));
         }
 
-        [HttpGet("GetNewOffersCount")]
-        public async Task<IActionResult> GetNewOffersCount()
+        [HttpGet("GetNewLowCostOfferProductsCount")]
+        public async Task<IActionResult> GetNewLowCostOfferProductsCount()
         {
-            return Ok(await _offersService.GetOffersCountCurrentUserNotAccessAsync());
+            return Ok(await _offersService.GetLowCostOfferProductsCountCurrentUserNotAccessAsync());
         }
     }
 }

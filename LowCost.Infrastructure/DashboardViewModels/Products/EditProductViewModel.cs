@@ -17,6 +17,9 @@ namespace LowCost.Infrastructure.DashboardViewModels.Products
         [Display(Name = "Brand")]
         public int Brand_Id { get; set; }
 
+        [Display(Name = "Created Date")]
+        public DateTime CreatedDate { get; set; }
+
         [Display(Name = "Serial Number")]
         public string Serial_Number { get; set; }
         [Required]
