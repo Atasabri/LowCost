@@ -35,5 +35,11 @@ namespace LowCost.Business.Services.User.Interfaces.Dashboard
         /// <param name="id"></param>
         /// <returns></returns>
         Task<UserBalanceDetailsViewModel> GetUserBalanceDetailsAsync(string id);
+        /// <summary>
+        /// Notify All Users Or Selected Users Asynchronous
+        /// </summary>
+        /// <param name="notifyUsersViewModel"></param>
+        /// <returns></returns>
+        Task<List<string>> NotifyUsersAsync(NotifyUsersViewModel notifyUsersViewModel);
     }
 }
