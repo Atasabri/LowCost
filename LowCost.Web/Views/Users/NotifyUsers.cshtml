@@ -1,0 +1,149 @@
+﻿@model NotifyUsersViewModel
+
+@{
+    ViewData["Title"] = "Notify Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Notify Users</h1>
+
+<h4></h4>
+<hr />
+<!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Wait For Finish Sending Notifications</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="notificationAlert" class="modal-body">
+                Loading ....
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Header" class="control-label"></label>
+            <input asp-for="Header"  class="form-control" />
+            <span asp-validation-for="Header" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Header_AR" class="control-label"></label>
+            <input asp-for="Header_AR" class="form-control" />
+            <span asp-validation-for="Header_AR" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Message" class="control-label"></label>
+            <input asp-for="Message" class="form-control" />
+            <span asp-validation-for="Message" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Message_AR" class="control-label"></label>
+            <input asp-for="Message_AR" class="form-control" />
+            <span asp-validation-for="Message_AR" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="AllUsers" class="control-label"></label>
+            <input asp-for="AllUsers" class="form-control" />
+            <span asp-validation-for="AllUsers" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label class="control-label autocomplete">Search For User</label>
+            <input type="text" id="Search" onkeyup="Complete(this.value);" class="form-control" />
+            <div id="Result"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Selected Users</label>
+            <div id="users">
+
+            </div>
+        </div>
+        <button type="button" onclick="Notify();" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+            Notify
+        </button>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    var selectedUsers = [];
+    function Complete(val) {
+        res = document.getElementById("Result");
+        res.innerHTML = 'Loading .......';
+        let list = '';
+            $.post("@Url.Action("SearchUsers", "Users")", {
+                searchTerms: val
+            },
+                function (users) {
+                    for (i = 0; i < users.length; i++) {
+                        list += `<li class="list-group-item" onclick="AddUser('${users[i].id}','${users[i].userName}')" onmouseout="$(this).removeClass('active')" onmouseover="$(this).addClass('active')">${users[i].userName}</li>`;
+                    }
+                    res.innerHTML = '<ul class="list-group">' + list + '</ul>';
+                 }
+
+            ).fail(function () {
+                console.log("error")
+            })
+    }
+
+    function AddUser(id, userName) {
+        if (!selectedUsers.some(userId => userId == id))
+        {
+            $("#users").append(`<label class="control-label">${userName}</label>
+                    <input type="hidden" name="SelectedUsers" value="${id}" />`);
+
+            selectedUsers.push(id);
+        }
+    }
+
+
+    function Notify() {
+        var size = 10;
+        $("#notificationAlert").html("")
+        SendNotifyRequest(0, size);
+    }
+
+    function SendNotifyRequest(index, size) {
+        $(".loader").show();
+             $.post("@Url.Action("NotifyUsers", "Users")", {
+                Paging: { Index : index, Size: size},
+                 SelectedUsers: selectedUsers,
+                 AllUsers: $("#AllUsers").prop("checked"),
+                Header: $("#Header").val(),
+                Header_AR: $("#Header_AR").val(),
+                Message: $("#Message").val(),
+                Message_AR: $("#Message_AR").val()
+            },
+                 function (users) {
+                     $(".loader").hide();
+                    if (users.length > 0) {
+                        for (i = 0; i < users.length; i++) {
+
+                            $("#notificationAlert").append(`<div><span>${users[i]} Notified</span></div>`)
+
+                        }
+                        if ($("#AllUsers").prop("checked")) {
+                            SendNotifyRequest(index + 1, size);
+                        } else {
+                            $("#notificationAlert").append(`<span>Finished ...</span>`)
+                        }
+                    } else {
+                        $("#notificationAlert").append(`<span>Finished ...</span>`)
+                    }
+                 }
+
+            ).fail(function () {
+                console.log("error")
+            })
+    }
+</script>
+

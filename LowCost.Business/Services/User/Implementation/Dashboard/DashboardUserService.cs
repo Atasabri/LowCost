@@ -4,6 +4,7 @@ using LowCost.Domain.Models;
 using LowCost.Infrastructure.DashboardViewModels.Orders;
 using LowCost.Infrastructure.DashboardViewModels.User.DashboardUsersViewModels;
 using LowCost.Infrastructure.Helpers;
+using LowCost.Infrastructure.NotificationsHelpers.MobileNotificationModels;
 using LowCost.Infrastructure.Pagination;
 using LowCost.Repo.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
@@ -23,12 +24,24 @@ namespace LowCost.Business.Services.User.Implementation.Dashboard
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
 
+        readonly Action<IMappingOperationOptions<IEnumerable<Domain.Models.User>, IEnumerable<ListingUserViewModel>>> opts = null;
+
+
         public DashboardUserService(IUnitOfWork unitOfWork, UserManager<Domain.Models.User> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
         {
             this._unitOfWork = unitOfWork;
             this._userManager = userManager;
             this._roleManager = roleManager;
             this._mapper = mapper;
+
+            opts = opts => opts.AfterMap((src, dest) => {
+                foreach (var item in dest)
+                {
+                    item.OrdersCount = _unitOfWork.OrdersRepository.GetCountAsync(order => order.User_Id == item.Id).Result;
+                    item.OrdersTotal = _unitOfWork.OrdersRepository.GetOrdersTotalSumAsync(order => order.User_Id == item.Id).Result;
+                }
+            });
+
         }
 
         public async Task<UserBalanceDetailsViewModel> GetUserBalanceDetailsAsync(string id)
@@ -76,9 +89,83 @@ namespace LowCost.Business.Services.User.Implementation.Dashboard
             var users = await _userManager.Users.Include(nameof(Domain.Models.User.UserRoles)).Where(user => user.UserRoles.Any(userRole => userRole.RoleId == role.Id))
                 .Skip(pagingParameters.Index * pagingParameters.Size).Take(pagingParameters.Size).ToListAsync();
 
-            var usersViewModel = _mapper.Map<IEnumerable<Domain.Models.User>, IEnumerable<ListingUserViewModel>>(users);
+            var usersViewModel = _mapper.Map<IEnumerable<Domain.Models.User>, IEnumerable<ListingUserViewModel>>(users, opts);
 
             return new PagedResult<ListingUserViewModel>(pagingParameters.Index, pagingParameters.Size, allUsersCount, usersViewModel);
+        }
+        
+        public async Task<List<string>> NotifyUsersAsync(NotifyUsersViewModel notifyUsersViewModel)
+        {
+            var role = await _roleManager.FindByNameAsync(Constants.UserRoleName);
+            var result = new List<string>();
+
+            if(notifyUsersViewModel.AllUsers)
+            {
+                int index = notifyUsersViewModel.Paging.Index;
+                int size = notifyUsersViewModel.Paging.Size;
+                var users = await _userManager.Users.Include(nameof(Domain.Models.User.UserRoles)).Where(user => user.UserRoles.Any(userRole => userRole.RoleId == role.Id)).Skip(index * size).Take(size).ToListAsync();
+
+                foreach (var user in users)
+                {
+                    string title = (user.CurrentLangauge == Languages.EN) ? notifyUsersViewModel.Header : notifyUsersViewModel.Header_AR;
+                    string body = (user.CurrentLangauge == Languages.EN) ? notifyUsersViewModel.Message : notifyUsersViewModel.Message_AR;
+                    var topicNotifyState = new TopicNotifyState()
+                    {
+                        Topic = user.Id,
+                        Title = title,
+                        Body = body,
+                        NotificationHiddenData = new { }
+                    };
+                    // Sending Notification To User Device 
+                    await _unitOfWork.NotificationsRepository.NotifyTopicAsync(topicNotifyState);
+
+                    // Adding Notification To User
+                    await _unitOfWork.NotificationsRepository.CreateAsync(new Notification()
+                    {
+                        DateTime = DateTimeProvider.GetEgyptDateTime(),
+                        Message = body,
+                        User_Id = user.Id,
+                    });
+
+                    result.Add(user.UserName);
+                }
+            }
+            else
+            {
+                foreach (var userId in notifyUsersViewModel.SelectedUsers)
+                {
+                    // Get User Data
+                    var user = await _userManager.FindByIdAsync(userId);
+                    if(user != null)
+                    {
+
+                        string title = (user.CurrentLangauge == Languages.EN) ? notifyUsersViewModel.Header : notifyUsersViewModel.Header_AR;
+                        string body = (user.CurrentLangauge == Languages.EN) ? notifyUsersViewModel.Message : notifyUsersViewModel.Message_AR;
+                        var topicNotifyState = new TopicNotifyState()
+                        {
+                            Topic = user.Id,
+                            Title = title,
+                            Body = body,
+                            NotificationHiddenData = new { }
+                        };
+                        // Sending Notification To User Device 
+                        await _unitOfWork.NotificationsRepository.NotifyTopicAsync(topicNotifyState);
+
+                        // Adding Notification To User
+                        await _unitOfWork.NotificationsRepository.CreateAsync(new Notification()
+                        {
+                            DateTime = DateTimeProvider.GetEgyptDateTime(),
+                            Message = body,
+                            User_Id = user.Id
+                        });
+
+                        result.Add(user.UserName);
+                    }
+                }
+            }
+
+            await _unitOfWork.SaveAsync();
+            return result;
         }
 
         public async Task<PagedResult<ListingUserViewModel>> SearchUsersAsync(string searchTerms, PagingParameters pagingParameters)

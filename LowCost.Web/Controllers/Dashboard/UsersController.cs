@@ -66,5 +66,26 @@ namespace LowCost.Web.Controllers.Dashboard
             ModelState.AddModelError("", result.ErrorMessages.FirstOrDefault());
             return RedirectToAction(nameof(AddDepositTransaction), new { id = addTransactionViewModel.UserId });
         }
+
+        [HttpGet]
+        public IActionResult NotifyUsers()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> NotifyUsers(NotifyUsersViewModel notifyUsersViewModel)
+        {
+            var result = await _dashboardUserService.NotifyUsersAsync(notifyUsersViewModel);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SearchUsers(string searchTerms)
+        {
+            var result = await _dashboardUserService.SearchUsersAsync(searchTerms, new PagingParameters());
+
+            return Json(result.Items.ToList());
+        }
     }
 }
