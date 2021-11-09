@@ -13,7 +13,7 @@
     <input class="form-control" name="searchTerms" type="search" placeholder="Search" aria-label="Search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 </form>
-
+<a asp-action="NotifyUsers">Notify Users</a>
 <table class="table" id="tbl">
     <caption>Page Number (@(Model.PageNumber))</caption>
     <thead>
@@ -23,6 +23,8 @@
             <th scope="col">Email</th>
             <th scope="col">Phone</th>
             <th scope="col">Full Name</th>
+            <th scope="col">Orders Count</th>
+            <th scope="col">Orders Total</th>
             <th scope="col">Actions</th>
         </tr>
     </thead>
@@ -36,6 +38,8 @@
                 <td>@item.Email</td>
                 <td>@item.Phone</td>
                 <td>@item.FullName</td>
+                <td>@item.OrdersCount</td>
+                <td>@item.OrdersTotal</td>
                 <td>
                     <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
                 </td>

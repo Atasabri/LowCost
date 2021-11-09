@@ -509,7 +509,7 @@ namespace LowCost.Business.Services.Orders.Implementation
         {
             var actionState = new ActionState();
             string currentUserId = await _unitOfWork.CurrentUserRepository.GetCurrentUserId();
-            var order = await _unitOfWork.OrdersRepository.FindElementAsync(order => order.Id == orderId && order.User_Id == currentUserId);
+            var order = await _unitOfWork.OrdersRepository.FindElementAsync(order => order.Id == orderId && order.User_Id == currentUserId, nameof(Order.OrderDetails));
             if (order == null)
             {
                 actionState.ErrorMessages.Add(_stringLocalizer["Can Not Close Order"]);
@@ -524,9 +524,12 @@ namespace LowCost.Business.Services.Orders.Implementation
             foreach (var orderItem in order.OrderDetails)
             {
                 var productInStock = await _unitOfWork.StockProductsRepository.FindElementAsync(productStock => productStock.Product_Id == orderItem.Product_Id && productStock.Stock_Id == order.Stock_Id);
-                productInStock.Quantity += orderItem.Quantity;
+                if(productInStock != null)
+                {
+                    productInStock.Quantity += orderItem.Quantity;
 
-                _unitOfWork.StockProductsRepository.Update(productInStock);
+                    _unitOfWork.StockProductsRepository.Update(productInStock);
+                }
             }
             _unitOfWork.OrdersRepository.Update(order);
             var result = await _unitOfWork.SaveAsync() > 0;

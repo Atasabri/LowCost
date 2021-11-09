@@ -21,8 +21,10 @@
 </div>
 <script>
     if (window.location.href.includes("?index")) {
-        var queryString = window.location.href.slice(window.location.href.indexOf('&'))
-        if (queryString) {
+        var index = window.location.href.indexOf('&');
+        var queryString = window.location.href.slice(index)
+
+        if (queryString && index > 0) {
             var anchors = document.querySelectorAll(".page-link");
             for (var i = 0; i < anchors.length; i++) {
                 var link = anchors[i].href
@@ -30,8 +32,9 @@
             }
         }
     } else if (window.location.href.includes("?")) {
-        var queryString = window.location.href.slice(window.location.href.indexOf('?')+1)
-        if (queryString) {
+        var index = window.location.href.indexOf('?') + 1;
+        var queryString = window.location.href.slice(index)
+        if (queryString && index > 0) {
             var anchors = document.querySelectorAll(".page-link");
             for (var i = 0; i < anchors.length; i++) {
                 var link = anchors[i].href
